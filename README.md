@@ -2,206 +2,141 @@
 
 每日更新的中文技术晨报，持续跟踪最新 arXiv 研究与 GitHub Star 飙升项目。
 
-## 最新一期｜2026-07-25
+## 最新一期｜2026-07-28
 
-- [arXiv 独立报告](reports/2026-07-25/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-07-25/github-trending.md)
+- [arXiv 独立报告](reports/2026-07-28/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-07-28/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶与机器人晨报｜2026-07-25
+# arXiv 自动驾驶与机器人晨报｜2026-07-28
 
-说明：截至北京时间 2026-07-25 06:00，arXiv 已发布 2026-07-23（UTC）提交批次。本期 7 篇均来自该批次，不回填、不重复上一期选题；机构信息未在摘要页披露时不作推断。
+说明：截至北京时间 2026-07-28，API 可核验的最新相关批次为 2026-07-24（UTC）；本期明确回溯该批次，未将旧稿冒充当日新稿。机构信息未在摘要页披露时不作推断。
 
-## 自动驾驶
+## 自动驾驶与空间感知
 
-### 1. Boosting Robustness for All-Weather Self-Supervised Depth Estimation in Autonomous Driving
-
-- 链接：https://arxiv.org/abs/2607.21526
-- 作者：Mengshi Qi、Xiaoyang Bi、Xianlin Zhang、Huadong Ma；提交：2026-07-23；机构：摘要页未披露。
-- 问题：雨雪雾等天气会破坏自监督深度所依赖的像素对应关系，而雷达在相机视角中又过于稀疏，导致恶劣天气下的单目深度不稳定。
-- 创新与机制：以无配对真实全天候数据做自训练；不确定性感知多教师蒸馏按教师可靠度加权知识，并用相机像素射线约束连接 POV 与 BEV 雷达表征，利用更密集的雷达点。
-- 实验与关键结果：摘要称在多个全天候数据集上取得 SOTA，代码与模型已开放；摘要未给绝对误差和相对提升幅度。
-- 关注价值：把恶劣天气域适配与雷达几何融合放在同一训练链路，减少对成对晴天／恶劣天气数据的依赖。
-- 局限／跟进：需核对各天气、距离段和传感器配置的分项结果，以及教师在罕见天气中共同失效时不确定性是否可靠。
-
-### 2. Compact Latent Coordination for Autonomous Vehicles at Unsignalized Intersections
-
-- 链接：https://arxiv.org/abs/2607.21488
-- 作者：Gil Lifshits、Igal Bilik、Gilad Katz；提交：2026-07-23；机构：摘要页未披露。
-- 问题：无信号交叉口的多车强化学习容易遭遇组合动作空间、特权全局信息依赖和固定智能体数量等问题。
-- 创新与机制：MAPS 让中心 Master 生成紧凑连续的 proto-plan 表达全局协调策略，分布式 Worker 再结合本车观测执行控制，使战略意图与战术动作可独立优化。
-- 实验与关键结果：在 HighwayEnv 的 72 种路口配置中实现无碰撞通行并缩短平均旅行时间；用 3 车训练的系统零样本部署到 5 车时成功率为 94%。
-- 关注价值：它探索的不是传输完整轨迹或动作，而是广播一个可复用的低维协调意图，可能降低多车规模扩展的通信与决策复杂度。
-- 局限／跟进：目前仅为仿真概念验证；需评估混合人类驾驶、通信延迟、Master 单点故障及 proto-plan 的可解释与安全约束。
+### 1. SM4RT: Learning Structured Motion Geometry for 4D Reconstruction
+- 链接：https://arxiv.org/abs/2607.22534
+- 作者：Shing Ho J. Lin、Wenzhao Zheng、Dong Zhuo、Yuqi Wu、Jie Zhou、Jiwen Lu；提交：2026-07-24。
+- 问题：点级光流把刚体运动当作独立位移，难以保持物体运动的结构。
+- 创新与机制：用 SE(3) twist 序列构成少量 motion bases，并以共享的像素分配权重恢复稠密运动；几何、世界坐标运动和运动结构一次前向联合预测。
+- 实验与关键结果：摘要报告运动重建强，同时保留刚体运动结构；绝对指标未在摘要披露。
+- 关注价值：把 4D 感知从点级相关性推进到可解释的运动几何。
+- 局限／跟进：需核对动态遮挡、非刚体物体和长序列漂移结果。
 
 ## 机器人／具身智能
 
-### 3. AXIS: A Growable Community-Driven Data Engine for Scalable Robot Manipulation
+### 2. Robot-Factored World Models via Robot Rendering
+- 链接：https://arxiv.org/abs/2607.22535
+- 作者：Byungjun Kim、Taeksoo Kim、Hyunsoo Cha、Hanbyul Joo；提交：2026-07-24。
+- 问题：直接以动作命令条件化世界模型，既要学习动作实现又可能泄漏未来状态。
+- 创新与机制：先用控制器和运动学滚出可部署的 nominal trajectory，再通过 URDF 渲染机器人几何；联合场景 RGB/深度与末端深度消除接触遮挡歧义。
+- 实验与关键结果：渲染接口优于向量条件基线，并能泛化到未见 embodiment；还支持人类示范重定向生成机器人操作视频。
+- 关注价值：把 embodiment-specific 因素移到模型外，形成跨机器人共享接口。
+- 局限／跟进：依赖准确 URDF、控制器和深度；需验证柔性物体与真实传感器噪声。
 
-- 链接：https://arxiv.org/abs/2607.21588
-- 作者：Mengfei Zhao、Dihong Huang、Yikai Tang、Peihao Li、Mingxuan Yan、Ruiqi Zhuang、Yanjia Huang、Jie Wang、Hai Zhai、Tony Zhou、Rui Zhang、Zhexi Luo、Yuchen Huang、Jianfei Yang、Jiachen Li；提交：2026-07-23；机构：摘要页未披露。
-- 问题：机器人示范数据通常依赖专用硬件、集中式操作员和固定任务集，规模扩大后质量控制与评测版本也难维护。
-- 创新与机制：AXIS 用浏览器遥操作开放社区采集，自动生成和验证新任务，再通过成功检查、质量过滤、轨迹平滑及视觉／物理增强产出训练数据；以 task snapshot 和留出协议管理持续增长的数据。
-- 实验与关键结果：当前含 207 个任务、5 万余条轨迹；持续预训练使 π0.5 总成功率提升 5.8%，相对 RoboCasa365 预训练模型高 37.3%，布局、传感器噪声和相机扰动下增益最大。
-- 关注价值：贡献不只是一份静态数据集，而是从社区采集到自动质检、版本化评测和策略训练的可增长数据引擎。
-- 局限／跟进：社区数据的设备偏差、任务版权与隐私、自动成功判定误差和长期版本可比性仍需审计。
+### 3. ViTacWorld: Scaling Visuo-Tactile World Models for Contact-Rich Robot Manipulation
+- 链接：https://arxiv.org/abs/2607.22530
+- 作者：Yunao Huang、Shiyu Sang、Haotao Lu 等；提交：2026-07-24。
+- 问题：接触状态视觉不可见，真实触觉数据昂贵且硬件依赖强。
+- 创新与机制：混合真实触觉和仿真轨迹预训练，再用真实 rollout 微调；给定动作同时预测视觉与触觉反馈，用于合成数据增强和策略评估。
+- 实验与关键结果：摘要称能生成物理合理 rollout，并提升接触操作策略；未披露统一百分比。
+- 关注价值：把触觉世界模型从单任务观测器变成可扩展的数据与评测器。
+- 局限／跟进：仿真触觉到真实触觉的偏差、跨传感器迁移和预测误差累积仍待量化。
 
-### 4. Beyond Episodic Evaluation: Memory Architectural Bottlenecks in Sequential Embodied Question Answering
+### 4. Plug, Play, and Comply: Modular Online Variable Impedance
+- 链接：https://arxiv.org/abs/2607.22483
+- 作者：Mihael Simonič、Xiaocong Li 等；提交：2026-07-24。
+- 问题：柔顺控制实现常与特定机械臂耦合，难复用。
+- 创新与机制：ROS 控制插件分离硬件包装与控制律；基于 URDF/Pinocchio，支持在线旋转刚度与阻尼主轴。
+- 实验与关键结果：多机械臂仿真显示可移植，真机接触任务验证任务相关柔顺。
+- 关注价值：为接触丰富任务提供可插拔、跨平台控制基础设施。
+- 局限／跟进：需关注实时调参稳定性、碰撞保护和高频控制开销。
 
-- 链接：https://arxiv.org/abs/2607.21571
-- 作者：Zikui Cai、Kaushal Janga、Tan Dat Dao、Seungjae Lee、Shivin Dass、Mingyo Seo、Kaiyu Yue、Mintong Kang、Nandhu Pillai、Monte Hoover、Aadi Palnitkar、Ruchit Rawal、Ruijie Zheng、Bo Li、Yuke Zhu、Roberto Martín-Martín、Tom Goldstein、Furong Huang；提交：2026-07-23；机构：摘要页未披露。
-- 问题：EQA 常在每个 episode 后清空状态，但真实机器人需要连续回答同一场景中的多个问题；简单保留旧记忆会遭遇语义缺失或训练／部署时间尺度错配。
-- 创新与机制：比较连续多问设置中的记忆架构，指出 2D 占用图只记得走过哪里，却不保留视觉语义证据；将持续视觉观测锚定到度量 3D 几何的结构化空间记忆能形成可复用场景表征。
-- 实验与关键结果：仿真中同时提高回答准确率并降低导航成本，打破准确率／效率权衡；并在真实移动机器人上验证，摘要未披露绝对数值。
-- 关注价值：它把“长期记忆”从扩大文本上下文转为可查询的 3D 视觉证据层，对长期自治和具身 Agent 的系统架构更具指向性。
-- 局限／跟进：需量化地图增长、遗忘与场景变化处理，并验证跨楼层、动态对象及长达数日的连续运行。
+## 交叉方向：长期自治与 3D
 
-### 5. Grasp, Handover, Rotate: Bimanual Object Reorientation via Compositional Diffusion and Energy-Based Optimization
+### 5. ViTacWorld 与长期自治的共同信号：动作条件预测开始覆盖多模态接触反馈
+- 观察：本批次的世界模型不再只生成 RGB 视频，而是把机器人几何、深度和触觉纳入可执行接口；这使策略搜索和离线评测更接近真实闭环。
+- 跟进：重点看跨 embodiment、跨触觉硬件和长时 rollout 的校准。
 
-- 链接：https://arxiv.org/abs/2607.21341
-- 作者：Wun Lam Yeung、Wenjun Liu、Yui Cheung Yu、Zhengyan Lambo Qin、Qijin She、Heng Li、Ziqi Wang、Ping Tan；提交：2026-07-23；机构：摘要页未披露。
-- 问题：双臂重定向需联合选择抓取、交接、再抓取和运动轨迹，并同时满足碰撞、运动学与最终姿态约束。
-- 创新与机制：BiCompoDiff 将预训练抓取扩散模型与双臂规划 EBM 组合，在逆扩散中注入碰撞避免、可微逆运动学平滑、交接可行性和再抓取安全的梯度，再用退火 MCMC 精修抓取姿态。
-- 实验与关键结果：仿真家庭物体任务中相对强采样基线成功率高 20% 以上、关节位移衡量的轨迹平滑度最高提升 37%；真机验证显示可进行 sim-to-real 迁移。
-- 关注价值：同一生成过程可以组合多个可微约束，比为每种双臂任务重训端到端策略更灵活。
-- 局限／跟进：多轮采样和梯度引导可能影响实时性；需看透明／柔性物体、感知误差和动态交接中的鲁棒性。
-
-## 交叉方向：导航、SLAM 与长期自治
-
-### 6. VoLN: Vision-Only Long-Horizon Navigation—Paradigm, Benchmark, and Method
-
-- 链接：https://arxiv.org/abs/2607.21400
-- 作者：Jiabin Lou、Haopeng Wang、Yuanshuai Wang、Xinyu Liu、Xuxin Lv、Yuxin Guo、Lei Huang、Rongye Shi、Wenjun Wu；提交：2026-07-23；机构：摘要页未披露。
-- 问题：传统 VLN 的路线级语言指令暗含方向、距离和布局先验，使评测混入了部署时未必存在的全局提示。
-- 创新与机制：VoLN 只给目标视图，要求 Agent 从局部可见的场景线索在线选择路线；VoLN-UAV 含 7,210 个长航程连续 3D 飞行 episode，基线用视觉语义 token 检索、历史观测和本体状态预测短程航点。
-- 实验与关键结果：五个未见环境中，Easy／Normal／Hard 成功率仅 7.4%／4.5%／1.8%，直接暴露长时证据整合、跨视角目标匹配和闭环稳定性的巨大缺口。
-- 关注价值：低分在这里是有信息量的基准结果，它剥离语言路线先验，更接近 GPS 拒止开放环境中的真实视觉导航。
-- 局限／跟进：当前实例集中于 UAV；需验证地面机器人、多目标搜索、动态障碍以及目标视图本身存在歧义时的可达性。
-
-### 7. GLAM-SLAM: Real-time Gaussian Large-scale Mapping via Flow Densification and Spatial Decomposition
-
-- 链接：https://arxiv.org/abs/2607.21416
-- 作者：Panagiotis Mermigkas、Argyris Manetas、Petros Maragos；提交：2026-07-23；机构：摘要页未披露。
-- 问题：现有单目 3DGS SLAM 常局限于短序列，或无法实时、显存随场景增长过快，难用于室外长时建图。
-- 创新与机制：以稳健特征 SLAM 前端做轻量跟踪，稀疏 anchor grid 保持大尺度地图一致；用极线约束的 flow densification 满足高斯初始化，再把大地图分区为多场景并以局部 MLP 初始化施加空间归纳偏置。
-- 实验与关键结果：在 KITTI Odometry、Oxford RobotCar 和 Málaga 长序列上，相对第二名重建质量提升 15%，同时保持实时并可扩展到更长序列。
-- 关注价值：把 3DGS 的高保真地图与成熟几何跟踪解耦，直接针对室外长序列的速度和内存约束。
-- 局限／跟进：摘要未给帧率、峰值显存与最长轨迹；还需评估动态交通、回环后的地图一致性和跨分区接缝。
+### 6. SM4RT 的结构化运动表示
+- 观察：以少量 SE(3) 基底表达整场运动，兼顾压缩与物理可解释性，适合后续 SLAM、预测和规划共享。
+- 跟进：需验证动态场景、非刚体和回环一致性。
 
 ## 趋势总结
-
-1. 自动驾驶的鲁棒性从单传感器增强走向“不确定性蒸馏＋跨视角雷达几何”，多车协同则尝试用低维潜计划替代完整动作共享。
-2. 机器人数据扩展正在产品化：AXIS 把采集、质检、增强、版本和评测连成持续增长的闭环，而不只发布一次性数据包。
-3. 长期自治的关键表征愈发空间化：连续 EQA 需要锚定 3D 几何的视觉语义记忆，GLAM-SLAM 则解决这种地图在长序列中的实时与容量问题。
-4. 生成式操作开始把可复用先验与显式约束组合：扩散模型负责候选分布，EBM 和可微运动学负责把双臂任务要求注入采样。
-5. 新基准更愿意主动移除“隐形提示”：VoLN 不再让语言指令泄露路线结构，极低的未见环境成功率说明纯视觉长航程导航仍远未解决。
+1. 世界模型的接口正从“动作向量”转为“可渲染机器人几何＋多模态反馈”，以降低动作实现学习和 embodiment 迁移成本。
+2. 触觉数据扩展倾向于“真实小样本＋仿真规模化＋真实 rollout 校准”，服务策略训练和策略评测两端。
+3. 4D 感知与控制基础设施都在显式引入结构：SE(3) 运动基底、URDF 几何和可插拔阻抗轴，显示物理先验重新成为泛化支点。
 
 
-# GitHub 开源趋势晨报｜2026-07-25
+# GitHub 开源趋势晨报｜2026-07-28
 
-说明：本期使用 GitHub Search／Repository API 筛选 2026-07-18 至 2026-07-25 新建项目。所有当前 star、创建时间、语言和许可证均为 API 确认信息；“创建以来增量”适用于 7 日内新仓库。对上一期已记录项目，另给出两次晨报查询间的快照差；这不是 GitHub Trending 官方 `stars today`。用途来自仓库元数据，走红原因明确标为编辑推断；已排除漏洞利用、注册滥用、泄漏提示词、营销和描述不清项目。查询时间：2026-07-25 06:00（Asia/Shanghai）。
+说明：GitHub Trending 页面可访问，但本期精选以 GitHub Search/Repository API 核验为主，查询 2026-07-28 06:00（Asia/Shanghai）。Star 为当前 API 值；“创建以来增量”仅表示创建日期到查询日的可确认增长，不等同官方 `stars today`。走红原因是编辑推断，已排除漏洞利用和描述不清项目。
 
 ## 精选项目
 
-### 1. andrewyng/openworker
+### 1. MoonshotAI/Kimi-K3
+- 项目：https://github.com/MoonshotAI/Kimi-K3
+- Star：1,052；确认增量：2026-07-27 创建以来 +1,052；语言未标注；类别：开源前沿模型。
+- 用途（确认）：Moonshot AI 的 Kimi-K3 开源模型项目。
+- 走红原因（推断）：新模型发布窗口集中获得关注，社区对可下载权重和评测透明度敏感。
+- 适合人群：模型评测、推理部署和中文 Agent 开发者。
 
-- 项目：https://github.com/andrewyng/openworker
-- Star：3,304；确认增量：2026-07-20 创建以来 +3,304，较上一期快照 825 增加 +2,479／约 24 小时；非 Trending 官方增量。
-- 语言／类别：Python；Agent worker／自动化；MIT。
-- 用途（确认）：仓库提供面向 Agent 工作负载的开源 worker 实现；API 描述仍为空，具体能力以 README 为准。
-- 走红原因（推断）：Andrew Ng 的项目曝光与“让 Agent 持续完成后台任务”的清晰定位共同放大传播，单日快照增长远高于同批新项目。
-- 适合人群：搭建异步 Agent 作业、任务执行服务和自动化后端的工程师。
+### 2. slvDev/esp32-ai
+- 项目：https://github.com/slvDev/esp32-ai
+- Star：1,716；确认增量：2026-07-23 创建以来 +1,716；Python；类别：端侧 AI／IoT。
+- 用途（确认）：面向 ESP32 的 AI 实验与部署代码。
+- 走红原因（推断）：把 Agent/模型能力带到低成本微控制器，符合端侧、离线和低功耗偏好。
+- 适合人群：嵌入式开发者、IoT 原型团队和边缘推理研究者。
 
-### 2. lopopolo/harness-engineering
+### 3. vercel-labs/scriptc
+- 项目：https://github.com/vercel-labs/scriptc
+- Star：1,647；确认增量：2026-07-22 创建以来 +1,647；TypeScript；类别：开发工具／编译器。
+- 用途（确认）：TypeScript-to-Native Compiler。
+- 走红原因（推断）：将熟悉的 TypeScript 语法连接到原生执行，击中性能与开发体验的共同需求。
+- 适合人群：前端基础设施、编译器和高性能脚本工具开发者。
 
-- 项目：https://github.com/lopopolo/harness-engineering
-- Star：2,320；确认增量：2026-07-18 创建以来 +2,320；无相邻日报基线，不宣称 24 小时增量。
-- 语言／类别：Python；Agent harness／工程知识；CC-BY-4.0。
-- 用途（确认）：一套关于 harness engineering 的文章、实践手册和可直接提供给 Agent 的上下文资产。
-- 走红原因（推断）：社区注意力从比较模型转向决定 Agent 成败的外围工程，系统化的上下文包比零散提示更易复用和评审。
-- 适合人群：设计 coding agent 工作流、上下文工程规范和团队级 Agent 基础设施的开发者。
+### 4. VictorTaelin/OptMem
+- 项目：https://github.com/VictorTaelin/OptMem
+- Star：631；确认增量：2026-07-25 创建以来 +631；Python；类别：Agent 记忆。
+- 用途（确认）：用短提示和脚本实现可插拔的持久 Agent memory。
+- 走红原因（推断）：以极小运行时成本解决跨会话记忆，便于审计和本地部署。
+- 适合人群：构建个人 Agent、编码 Agent 和本地长期记忆层的工程师。
 
-### 3. Blaizzy/nativ
+### 5. kvcache-ai/AgentENV
+- 项目：https://github.com/kvcache-ai/AgentENV
+- Star：523；确认增量：2026-07-23 创建以来 +523；Rust；类别：Agent 基础设施。
+- 用途（确认）：分布式平台，用于大规模运行 Agent environments。
+- 走红原因（推断）：多 Agent 评测和生产执行需要隔离、可复现且可横向扩展的环境编排。
+- 适合人群：Agent 平台、评测基础设施和沙箱执行团队。
 
-- 项目：https://github.com/Blaizzy/nativ
-- Star：857；确认增量：2026-07-20 创建以来 +857；无相邻日报基线。
-- 语言／类别：Swift；本地 AI／macOS；MIT。
-- 用途（确认）：在一个原生 macOS 应用中聊天、提供模型服务、监控并连接 MLX 模型。
-- 走红原因（推断）：把模型下载后的运行、服务和观察体验集中到原生桌面端，命中隐私、低延迟与非 Electron 的社区偏好。
-- 适合人群：使用 Apple Silicon、MLX 和本地模型进行开发或日常工作的用户。
+### 6. hahhforest/pi-textbook
+- 项目：https://github.com/hahhforest/pi-textbook
+- Star：588；确认增量：2026-07-21 创建以来 +588；TypeScript；类别：Agent 教程／生产力。
+- 用途（确认）：通过 15 个真实 checkpoint 从零构建 Pi-style Agent 的中文教材。
+- 走红原因（推断）：可运行教程比概念文章更容易形成学习路径和社区复用。
+- 适合人群：希望系统学习 Agent runtime 和工具调用的开发者。
 
-### 4. pireel/pireel
+### 7. makecindy/cindy
+- 项目：https://github.com/makecindy/cindy
+- Star：828；确认增量：2026-07-22 创建以来 +828；TypeScript；类别：开箱即用 Agent 应用。
+- 用途（确认）：面向终端用户的开源 AI Agent。
+- 走红原因（推断）：完整产品入口降低试用门槛，社区对可直接运行的 Agent 应用偏好上升。
+- 适合人群：需要快速部署通用 Agent 的个人和小团队。
 
-- 项目：https://github.com/pireel/pireel
-- Star：708；确认增量：2026-07-20 创建以来 +708；无相邻日报基线。
-- 语言／类别：TypeScript；视频生产力／MCP；AGPL-3.0。
-- 用途（确认）：无后端的开源 talking-head 视频编辑器，支持分镜、动态图形、动效字幕、主题和浏览器 WebCodecs 导出，并可由 Agent 通过 MCP 驱动。
-- 走红原因（推断）：它同时满足本地隐私、可直接交付成片和 Agent 可操作三个需求，比单一生成模型 demo 更接近完整工作流。
-- 适合人群：内容创作者、前端媒体工程师和构建 Agent 视频流水线的团队。
-
-### 5. Gheat1/tuistore
-
-- 项目：https://github.com/Gheat1/tuistore
-- Star：297；确认增量：2026-07-18 创建以来 +297，较上一期快照 285 增加 +12／约 24 小时。
-- 语言／类别：Python；终端生产力／应用分发；许可证 API 标记为 `NOASSERTION`。
-- 用途（确认）：用 TUI 浏览、搜索并一键安装数百个终端应用，基于 ricekit 并以 awesome-tuis 为初始目录。
-- 走红原因（推断）：CLI 工具供给快速增加后，发现、比较和安装本身成为需要产品化的入口。
-- 适合人群：终端重度用户、CLI 作者和统一开发环境的团队。
-
-### 6. OpenBMB/MiniCPM-Robot
-
-- 项目：https://github.com/OpenBMB/MiniCPM-Robot
-- Star：242；确认增量：2026-07-18 创建以来 +242，较上一期快照 232 增加 +10／约 24 小时。
-- 语言／类别：Python；机器人／端侧多模态模型；Apache-2.0。
-- 用途（确认）：MiniCPM 生态中面向机器人端侧运行的多模态 AI brain。
-- 走红原因（推断）：机器人部署关注延迟、隐私、断网可用和硬件预算，端侧方案比纯云端演示更贴近实际约束。
-- 适合人群：移动／人形机器人、端侧 VLM/VLA 和 Apple／国产算力部署团队。
-
-### 7. paxlabs-inc/machine-genome
-
-- 项目：https://github.com/paxlabs-inc/machine-genome
-- Star：213；确认增量：2026-07-20 创建以来 +213，较上一期快照 212 增加 +1／约 24 小时。
-- 语言／类别：Go；AI 供应链／身份与溯源；Apache-2.0。
-- 用途（确认）：为模型、Agent、harness、数据集及关联产物提供开放身份与 provenance 协议。
-- 走红原因（推断）：多组件 Agent 系统需要回答“哪个模型、上下文和工具产生了结果”，溯源正成为调试和治理基础设施。
-- 适合人群：Agent 平台、模型治理、审计链和可复现实验系统团队。
-
-### 8. risa-labs-inc/BossConsole
-
-- 项目：https://github.com/risa-labs-inc/BossConsole
-- Star：175；确认增量：2026-07-21 创建以来 +175，较上一期快照 166 增加 +9／约 24 小时。
-- 语言／类别：Kotlin；多 Agent 操作台／开发环境；Apache-2.0。
-- 用途（确认）：原生 JVM 多平台、多线程 Agent 操作台，可运行 Claude Code、Codex、Gemini 或 OpenCode，并集成浏览器、终端、编辑器、密钥和 100 多个 MCP 工具。
-- 走红原因（推断）：Agent 并行工作后，用户需要可观察、切换、授权和接管多个执行线程的统一操作面。
-- 适合人群：同时运营多个编码或研究 Agent、偏好非 Electron 原生工具的团队。
+### 8. MoonshotAI/MoonEP
+- 项目：https://github.com/MoonshotAI/MoonEP
+- Star：344；确认增量：2026-07-24 创建以来 +344；Python；类别：训练基础设施。
+- 用途（确认）：动态冗余专家并行的 MoE 专家并行库。
+- 走红原因（推断）：大模型训练成本推动社区关注专家负载均衡与集群效率，而非只关注模型结构。
+- 适合人群：分布式训练、MoE 和推理系统工程师。
 
 ## 技术趋势与社区偏好
-
-1. Agent 热点从“又一个聊天界面”转向 harness 和 worker：OpenWorker 承接后台执行，harness-engineering 则沉淀上下文、边界与工程方法。
-2. 本地原生体验继续获得高关注：nativ 把 MLX 的运行、服务与监控合并，BossConsole 用 JVM 原生多线程承载多 Agent 操作。
-3. Agent 开始接管完整媒体生产流程：pireel 将分镜、字幕、动态图形和导出放在浏览器内，并用 MCP 暴露给 Agent。
-4. 机器人开源与 Agent 基础设施出现同一偏好：低延迟、离线可控、清晰身份与可操作界面，比单一模型指标更容易形成持续社区价值。
-5. 数据口径上，OpenWorker 的 +2,479 是相邻日报 API 快照确认的强增长信号；其他新仓库主要采用创建以来增长，不能等同于 Trending 官方日榜。
+1. 新仓库同时覆盖模型发布、端侧推理、Agent 记忆和环境编排，热点从单模型扩展到可运行系统。
+2. TypeScript/原生编译与 Rust 基础设施并行升温，说明开发者既追求 Agent 生产力，也在补性能、隔离和可复现性。
+3. 教程和开箱即用产品获得高 star，社区偏好从“看 demo”转向“能运行、能学习、能部署”。
 
 
-## 历史归档
+## 历史归档与内容标准
 
-已收录 2026-06-03 至 2026-07-25 的全部现存记录，共 76 份报告。目录格式：
-
-```text
-reports/YYYY-MM-DD/arxiv.md
-reports/YYYY-MM-DD/github-trending.md
-```
-
-可直接浏览 [reports](reports/)；每次自动更新会把最新日期、链接和当期重点补充到本 README。
-
-## 内容标准
-
-- arXiv 每期精选 5–8 篇，说明问题、机制、实验结果、关注价值与局限。
-- GitHub 每期精选 5–10 个高质量项目，区分确认的 star 数据与编辑推断。
-- 当天没有 arXiv 新批次时，明确标注回溯日期，不把旧论文写成当日新稿。
-- 避免低质量营销项目、疑似灌星项目和缺少依据的机构/结果推断。
-
-## 更新方式
-
-Codex 定时任务每天联网检索、生成 Markdown、刷新分类总结与 README，然后提交并推送到 `main`。
+- 历史报告按 `reports/YYYY-MM-DD/` 归档。
+- 每期报告区分确认事实与编辑推断，标注回溯日期、数据来源和局限；README 最新一期直接展示两份完整正文。
