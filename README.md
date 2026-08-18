@@ -1,159 +1,62 @@
 # 自动驾驶、机器人与开源趋势日报
 
-每日更新的中文技术晨报，持续跟踪最新 arXiv 研究与 GitHub Star 飙升项目。
+每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub Star 增长项目。
 
-## 最新一期｜2026-08-18
+## 最新一期｜2026-08-19
 
-- [arXiv 独立报告](reports/2026-08-18/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-08-18/github-trending.md)
+- [arXiv 独立报告](reports/2026-08-19/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-08-19/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶与机器人晨报｜2026-08-18
+## arXiv 自动驾驶与机器人晨报｜2026-08-19
 
-说明：截至北京时间 2026-08-18 06:00，arXiv 最新可用常规批次为 2026-08-14 UTC；以下论文均为该批次中未列入 8 月 15—17 日报告的明确回溯，不冒充当日提交。作者、日期与结果来自 arXiv 摘要页。
+说明：截至北京时间 2026-08-19 06:00，最新可用相关批次为 2026-08-17 UTC。
 
-## 自动驾驶
+### 自动驾驶
 
-### 1. Control-Informed Constraint Adaptation in Minimum-Time Trajectory Planning for Autonomous Racing
-- 链接：https://arxiv.org/abs/2608.14448
-- 作者／机构：Ann-Kathrin Schwehn、Alexander Langmann、Mattia Piccinini、Johannes Betz；提交：2026-08-14。
-- 问题：规划器通常假设完美跟踪，只能保守缩小赛道可行域，无法利用系统性控制误差。
-- 创新与机制：在线测量跟踪偏差，动态调整空间约束并迭代扩展自由空间；规划仍以最短时间为目标。
-- 实验与关键结果：高保真闭环仿真中单圈时间减少 1.8 秒，中位运行时 25 ms，未增加计算负担。
-- 关注价值：把执行误差反馈给规划层，展示模块化架构也能持续释放赛道边界性能。
-- 局限／跟进：目前主要是仿真赛车；需验证轮胎变化、真实噪声与安全边界校准。
+#### Q-based Variational Inverse Reinforcement Learning
+链接：https://arxiv.org/abs/2608.16888。以 Q 函数为潜变量联合推断奖励与多峰驾驶偏好，目标是让规划器从示范轨迹恢复可解释的行为分布；摘要报告优于传统 IRL 与行为克隆，真实道路安全结果仍待核验。
 
-### 2. CORAL: Curriculum-Optimized Reward Adaptation for LiDAR-Based Goal-Directed Urban Driving
-- 链接：https://arxiv.org/abs/2608.14332
-- 作者／机构：Anisa Saleem、Duksu Kim；提交：2026-08-14。
-- 问题：长程城市驾驶同时要求到达目标、跟线、避障、信号遵守，固定奖励没有合理学习顺序。
-- 创新与机制：五阶段课程逐步拉长路线、收紧约束，并同步重排进度、跟线、安全、平滑和规则奖励权重；PPO 输入 99 维 LiDAR/遥测/路线状态。
-- 实验与关键结果：CARLA 最长路线 20/20 到达，而两基线仅 5% 与 10%；零样本迁移到七个城镇成功率 68%—98%，横向偏差低于 0.35 m。
-- 关注价值：说明奖励调度与课程设计可比换大感知骨干更直接地改善长程闭环。
-- 局限／跟进：单城训练、短路线迁移；需测试复杂交通参与者与真实传感器。
+#### CaliBench: Are the Stochastic Dynamics of Video World Models Physically Calibrated?
+链接：https://arxiv.org/abs/2608.16829。用骰子、二项分布和轮盘等闭式离散结果测试视频世界模型的概率校准，分离可评分率与不确定性误差；提示驾驶世界模型必须校准风险采样，而不只是生成逼真画面。
 
-## 机器人／具身智能
+### 机器人／具身智能
 
-### 3. Reflex: Enabling Fast and Predictive Vision-Language-Action Models for Reaction-Critical Manipulation
-- 链接：https://arxiv.org/abs/2608.14379
-- 作者／机构：Yuxuan Chen、Wanruo Zhang、Xiao Li；提交：2026-08-14。
-- 问题：静态操作 benchmark 掩盖了动态交互中的延迟与反应失败。
-- 创新与机制：发布支持异步推理和可配置延迟的 ReflexBench；ReflexVLA 用潜在未来预测、多帧融合、批量视觉编码和 CUDA Graph 降低闭环延迟。
-- 实验与关键结果：六项动态任务上持续优于对照，同时保持静态任务竞争力，并在真实机器人验证。
-- 关注价值：把控制频率、推理延迟和动态任务纳入 VLA 一等评价指标。
-- 局限／跟进：摘要未给出统一绝对提升；需公开硬件、延迟分布和更多本体结果。
+#### Don’t Drop the BATON
+链接：https://arxiv.org/abs/2608.16889。冻结 VLA，由语言 Agent 规划、解析原语处理自由空间、VLA 处理接触段，并用 transition-aware memory 记录子任务进出条件，以降低长时操作的指数级探索代价。
 
-### 4. Expected Free Energy-based Informative Path Planning for Robotic Mars Exploration
-- 链接：https://arxiv.org/abs/2608.14466
-- 作者／机构：Ajith Anil Meera、Pablo Lanillos、Wouter Kouw；提交：2026-08-14。
-- 问题：探索机器人既要提高信息地图质量，又要找到高价值区域并控制行驶和测量预算。
-- 创新与机制：以主动推断的 Expected Free Energy 统一信息增益与目标价值；用高斯过程维护信息场，在硬路径长度约束下规划连续轨迹。
-- 实验与关键结果：多种场景中同时获得更准确后验地图和高价值区域定位，优于同预算信息论基线。
-- 关注价值：为行星探索提供可解释、易调参与资源受限的主动感知目标。
-- 局限／跟进：仍是仿真与高斯过程设定；需评估非平稳地形、通信中断和真实能耗。
+#### τ₀-VLA
+链接：https://arxiv.org/abs/2608.16885。层级 VLA 在困难子任务上调用世界模型搜索候选再提交，低层策略跨本体执行；训练数据约 40,115 小时，代表测试时计算按风险伸缩的路线。
 
-### 5. A Temporal Barrier Framework for Collision Avoidance in Multi-Agent Autonomous Aerial Vehicles
-- 链接：https://arxiv.org/abs/2608.14239
-- 作者／机构：Benedikt Barthel Sorensen、Mitchell Black、Erfaun Noorani、Themistoklis Sapsis；提交：2026-08-14。
-- 问题：距离型屏障在近距离编队和对抗意图下反应滞后，过度保守又损害任务进度。
-- 创新与机制：定义对抗时间到碰撞 aTTC，在控制屏障函数中直接约束时间风险；神经网络可微代理实时嵌入 QP 控制器。
-- 实验与关键结果：独立追逐与编队仿真中，相比高阶距离 CBF，航点进度最高翻倍、碰撞率降至一半。
-- 关注价值：把“还有多久会撞”变成安全控制量，适合密集多机协作。
-- 局限／跟进：对抗意图模型决定证书质量；需硬件飞行、通信延迟和感知误差验证。
+#### HAF
+链接：https://arxiv.org/abs/2608.16837。用层级动作流与谱潜空间强化学习适配通用 VLA 到人形全身 loco-manipulation，降低直接在线调大骨干的成本和风险。
 
-## 交叉方向：导航、定位与长期自治
+#### FlexWorm
+链接：https://arxiv.org/abs/2608.16853。对多节吸附软体机器人进行离散吸附转移与连续形变的混合规划，IKHS 仅在自由块求逆运动学并叠加动作原语，推进复杂曲面导航的几何可行性搜索。
 
-### 6. OccPlanner: Goal-Aware Occupancy-Conditioned Diffusion Planner for Pixel-Goal Navigation
-- 链接：https://arxiv.org/abs/2608.14160
-- 作者／机构：Binling Huang、Nianjin Ye、Xi Yang、Liang Hu、Zhou Huang 等；提交：2026-08-14。
-- 问题：像素目标没有深度和可通行性，难以落到连续、无碰撞的三维规划。
-- 创新与机制：扩散规划器把时间视觉上下文、局部 3D occupancy 与像素目标逐级条件化；L3ROcc 从单目视频重建机器人坐标占据监督。
-- 实验与关键结果：5—8 m 闭环场景平均成功率由 NavDP 的 20.81% 提升至 71.55%；Go2 实机开放环实验显示迁移迹象。
-- 关注价值：把像素级指令直接连接到几何占据和动作生成，减少文本化 3D 中间层损失。
-- 局限／跟进：真实闭环结果仍有限；需长程、动态障碍和传感器退化测试。
+### 交叉方向：安全与长期自治
 
-### 7. Sensor-Driven Mission Synthesis for UAV/UGV Swarms
-- 链接：https://arxiv.org/abs/2608.14306
-- 作者／机构：Uwe M. Borghoff、Paolo Bottoni、Remo Pareschi；提交：2026-08-14。
-- 问题：异构群体在不完整、受攻击或通信中断的传感证据下，既要形成任务又要保证执行安全。
-- 创新与机制：TB-CSPN 编排雷达、RF、声学和视觉 token；顾问代理解释，监督代理授权，独立模拟安全包络在执行端钳制或否决危险动作。
-- 实验与关键结果：海岸监视案例展示有界时证据融合、可审计转换和硬件级安全闸门；摘要未给出统一成功率。
-- 关注价值：将 Agent 协同与不可绕过的物理安全边界分层，回应群体系统治理问题。
-- 局限／跟进：案例研究为主；需实机规模化、故障注入与通信攻击量化。
+#### Security of Foundation-Model-Powered Embodied Agents
+链接：https://arxiv.org/abs/2608.16843。以首个失守的信任边界组织具身 Agent 安全，覆盖供应链、指令、记忆、物理环境、感知、规划与动作等五层十二类攻击面，为权限和动作前验证提供统一威胁模型。
 
-## 趋势总结
-1. 自动驾驶规划开始把执行误差、课程奖励和安全证书纳入闭环，而不是把控制当作理想黑盒。
-2. 机器人 VLA 的竞争轴转向反应延迟、阶段性风险和资源预算；动态任务比静态成功率更能暴露部署差距。
-3. 导航与群体自治共同走向“几何证据 + 主动决策 + 可审计安全闸门”，文本接口逐步让位于 occupancy、时间风险和授权状态。
+趋势：VLA 正从固定一次推理转向按风险追加计算；长时操作的核心接口变成过渡条件、失败归因和可恢复记忆；世界模型评价与具身安全都转向可校准、可审计的闭环证据。
 
+## GitHub 开源趋势晨报｜2026-08-19
 
-# GitHub 开源趋势晨报｜2026-08-18
+说明：项目入榜与 `stars today` 来自 GitHub Trending daily 页面；当前 Star、语言和描述由 Repository API 核验，走红原因是编辑推断。
 
-说明：查询于 2026-08-18（Asia/Shanghai）。项目顺序与 `stars today` 来自 GitHub Trending daily 页面；当前 Star、语言和描述由 GitHub Repository API 核验；走红原因是编辑推断。已排除攻击、账号自动化和疑似灌星项目。
+### 精选项目
 
-## 精选项目
+1. [volcengine/OpenViking](https://github.com/volcengine/OpenViking)：298 stars today，Python；统一 Agent Memory、Knowledge RAG 与 Skills 的上下文数据库。
+2. [akitaonrails/ai-memory](https://github.com/akitaonrails/ai-memory)：730 stars today，Rust；编码 CLI 长期记忆与跨 Agent handoff。
+3. [mukul975/Anthropic-Cybersecurity-Skills](https://github.com/mukul975/Anthropic-Cybersecurity-Skills)：726 stars today，Python；映射多套安全框架的 817 个结构化 Skills。
+4. [chaitanyagiri/munder-difflin](https://github.com/chaitanyagiri/munder-difflin)：256 stars today，TypeScript；本地多 Agent harness。
+5. [bojieli/ai-agent-book](https://github.com/bojieli/ai-agent-book)：556 stars today，Python；Agent 原理、PDF 与章节代码。
+6. [jundot/omlx](https://github.com/jundot/omlx)：366 stars today，Python；Apple Silicon continuous batching 与 SSD cache 推理服务。
+7. [agalwood/Motrix](https://github.com/agalwood/Motrix)：607 stars today，TypeScript；跨平台下载管理器，适合模型与数据集获取。
+8. [basecamp/omarchy](https://github.com/basecamp/omarchy)：411 stars today，Shell；现代化、可控的 Linux 桌面环境。
 
-### 1. harry0703/MoneyPrinterTurbo
-- 项目：https://github.com/harry0703/MoneyPrinterTurbo
-- Star／增量（确认）：105,866 Star；Trending daily（页面入榜，页面未稳定显示增量）；Python；AI 视频生产。
-- 用途（确认）：根据主题或关键词，通过自动化工作流生成高清短视频。
-- 走红原因（推断）：Agent 热点从文本生成扩展到可直接交付的视频成品。
-- 适合人群：内容创作者、视频工作流和媒体 Skill 开发者。
-
-### 2. nautechsystems/nautilus_trader
-- 项目：https://github.com/nautechsystems/nautilus_trader
-- Star／增量（确认）：25,868 Star；Trending daily 入榜；Rust；交易基础设施。
-- 用途（确认）：生产级、事件驱动的 Rust 原生交易引擎。
-- 走红原因（推断）：确定性、低延迟和可回放架构符合 Agent 化量化系统的工程需求。
-- 适合人群：量化开发者、交易平台和 Rust 基础设施团队。
-
-### 3. akitaonrails/ai-memory
-- 项目：https://github.com/akitaonrails/ai-memory
-- Star／增量（确认）：1,984 Star；Trending daily 入榜；Rust；Agent 长期记忆。
-- 用途（确认）：为编码 CLI 提供长期记忆，并支持不同 Agent 厂商之间的交接。
-- 走红原因（推断）：上下文持久化和跨工具 handoff 正成为多 Agent 工作流瓶颈。
-- 适合人群：编码 Agent、harness 和本地优先工具开发者。
-
-### 4. AlexsJones/llmfit
-- 项目：https://github.com/AlexsJones/llmfit
-- Star／增量（确认）：32,213 Star；Trending daily 入榜；Rust；本地模型选型。
-- 用途（确认）：根据硬件条件筛选可运行的模型和提供商。
-- 走红原因（推断）：模型数量膨胀后，硬件适配与成本选择成为部署前置步骤。
-- 适合人群：端侧推理、隐私部署和模型运维团队。
-
-### 5. jundot/omlx
-- 项目：https://github.com/jundot/omlx
-- Star／增量（确认）：18,955 Star；Trending daily 入榜；Python；Apple Silicon 推理。
-- 用途（确认）：支持 continuous batching 与 SSD cache 的 Apple Silicon LLM 推理服务器，并可由菜单栏管理。
-- 走红原因（推断）：把本地模型从实验脚本推进到常驻、多请求服务。
-- 适合人群：Mac 本地 AI、端侧 Agent 和推理优化开发者。
-
-### 6. cordiverse/cordis
-- 项目：https://github.com/cordiverse/cordis
-- Star／增量（确认）：5,541 Star；Trending daily 入榜；TypeScript；Agent／事件框架。
-- 用途（确认）：提供时空可组合的元框架，用于插件、事件和上下文状态组织。
-- 走红原因（推断）：有状态、多插件 Agent 需要比单次函数调用更明确的运行时组合模型。
-- 适合人群：Agent 平台、插件系统和实时应用开发者。
-
-### 7. immich-app/immich
-- 项目：https://github.com/immich-app/immich
-- Star／增量（确认）：111,093 Star；Trending daily 入榜；TypeScript；自托管生产力。
-- 用途（确认）：高性能自托管照片与视频管理系统。
-- 走红原因（推断）：完整、可控的数据产品持续受益于本地化和隐私优先偏好。
-- 适合人群：家庭服务器、媒体管理和自托管用户。
-
-### 8. agalwood/Motrix
-- 项目：https://github.com/agalwood/Motrix
-- Star／增量（确认）：53,020 Star；Trending daily 入榜；TypeScript；下载基础设施。
-- 用途（确认）：跨平台全功能下载管理器。
-- 走红原因（推断）：成熟终端工具在大文件、模型和数据集获取场景重新获得关注。
-- 适合人群：开发者、数据工程和本地 AI 用户。
-
-## 技术趋势与社区偏好
-1. 今日榜单把 Agent 的记忆、模型适配、事件运行时和本地推理串成一条基础设施链。
-2. Python 负责快速工作流，Rust 负责确定性与资源效率，TypeScript 负责完整终端产品，语言分工清晰。
-3. 社区继续偏好可直接运行的本地产品：视频、照片、下载和 Mac 推理服务比单纯模型展示更接近真实工作流。
-
+趋势：Agent 社区继续向上下文数据库、长期记忆、可安装 Skills、多 Agent harness 和端侧推理分层；教程资产与可运行本地产品同时升温，语言分工呈现 Rust 资源效率、Python 研究迭代、TypeScript 终端产品和 Shell 宿主环境的组合。
 
 ## 历史归档
 
@@ -161,6 +64,6 @@
 
 ## 内容标准
 
-- arXiv 精选自动驾驶、机器人、具身智能、导航、规划、感知、SLAM 与多智能体方向论文，明确提交日期、机制、实验结果、局限和回溯日期。
+- arXiv 报告明确提交日期、问题、机制、实验、关注价值、局限与回溯日期。
 - GitHub 报告区分 Trending 页面确认的增量、Repository API 元数据与编辑推断，排除营销、攻击、账号自动化和疑似灌星项目。
-- README 最新一期直接展示两份完整正文；跨期判断维护于 [CATEGORY_SUMMARY.md](CATEGORY_SUMMARY.md)。
+- README 最新一期直接展示本次两份报告正文；跨期判断维护于 [CATEGORY_SUMMARY.md](CATEGORY_SUMMARY.md)。
