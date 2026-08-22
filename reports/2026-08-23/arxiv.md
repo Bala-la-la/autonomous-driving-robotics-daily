@@ -1,18 +1,6 @@
-# 自动驾驶、机器人与开源趋势日报
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-08-23
 
-每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
-
-## 最新一期｜2026-08-23
-
-- [arXiv 独立报告](reports/2026-08-23/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-08-23/github-trending.md)
-- [分类趋势总结](CATEGORY_SUMMARY.md)
-
-## arXiv 自动驾驶、机器人与具身智能晨报｜2026-08-23
-
-本期完整正文如下：
-
-<!-- BEGIN ARXIV REPORT -->
+说明：北京时间 2026-08-23 为周日，最新可用相关批次为 2026-08-20 UTC；以下为明确日期的周末回溯，避开 8 月 22 日已选论文。
 
 ## 自动驾驶
 
@@ -32,7 +20,7 @@
 
 ### OrthoSkillVLA: Continual Skill Learning via Gradient-Informed Skill Subspace Adaptation
 
-链接：https://arxiv.org/abs/2608.19589。问题：VLA 持续学习新技能容易干扰旧技能。机制：利用梯度信息估计技能子空间，在受约束子空间内更新策略。实验：在连续技能序列上评估新旧技能保持与适应。关注价值：提供结构化的技能增量接口。局限/跟进：技能数量扩张、真实机器人噪声与子空间冲突需长期验证。
+链接：https://arxiv.org/abs/2608.19589。问题：VLA 持续学习新技能容易干扰旧技能。机制：利用梯度信息估计技能子空间，在受约束子空间内更新策略。实验：在连续技能序列上评估新旧技能保持与适应。关注价值：提供比简单 LoRA/全量微调更结构化的技能增量接口。局限/跟进：技能数量扩张、真实机器人噪声与子空间冲突需长期验证。
 
 ### Learning the Right Abstraction: Neural Reduced Dynamics for Complex Robot Control
 
@@ -52,29 +40,4 @@
 
 链接：https://arxiv.org/abs/2608.19059。问题：长期运行的场景记忆会被变化区域污染，静态与动态知识难区分。机制：按空间—时间波动性管理记忆更新与保留。实验：在长期场景理解/变化环境中评估记忆稳定性。关注价值：为机器人长期自治提供可衰减、可更新的地图语义层。局限/跟进：变化检测错误、存储预算和跨季节泛化仍待量化。
 
-趋势总结：驾驶模型转向决策效用，机器人学习转向技能子空间、降阶动力学和过程奖励，长期自治则以波动感知记忆管理地图更新。
-
-## GitHub 开源趋势晨报｜2026-08-23
-
-本期完整正文如下（[独立报告](reports/2026-08-23/github-trending.md)）：
-
-1. [obra/superpowers](https://github.com/obra/superpowers)：Agent Skills／Shell，把软件工程流程封装成可执行技能。
-2. [openai/codex](https://github.com/openai/codex)：Rust／编码 Agent，开放式本地编码 Agent。
-3. [mattpocock/skills](https://github.com/mattpocock/skills)：TypeScript／Skills，面向开发者的技能集合与示例。
-4. [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills)：Markdown／教育 Skill，将公开课程整理为 Agent 材料。
-5. [n8n-io/n8n](https://github.com/n8n-io/n8n)：TypeScript／自动化基础设施，连接 API、Agent 和数据流程。
-6. [makeplane/plane](https://github.com/makeplane/plane)：TypeScript／生产力，开源项目管理与协作平台。
-7. [modular/modular](https://github.com/modular/modular)：C++／AI 基础设施，面向异构硬件的编译与推理栈。
-8. [microsoft/TypeScript](https://github.com/microsoft/TypeScript)：TypeScript／开发工具，主流类型系统与编译器。
-
-趋势总结：社区偏好“可执行资产 + 可靠运行时”，Skills、Agent、工作流编排、项目管理与编译运行时构成从经验资产到生产交付的完整栈。页面入选为确认信息，走红原因是编辑推断。
-
-## 历史归档
-
-报告按 `reports/YYYY-MM-DD/` 保存，保留每日 arXiv 与 GitHub Trending 独立文件。
-
-## 内容标准
-
-- arXiv 报告明确提交日期、问题、机制、实验、关注价值、局限与回溯日期。
-- GitHub 报告区分 Trending 页面确认、仓库元数据与编辑推断，排除营销、攻击、账号自动化和疑似灌星项目。
-- README 最新一期展示本次两份报告正文；跨期判断维护于 [CATEGORY_SUMMARY.md](CATEGORY_SUMMARY.md)。
+趋势总结：本期回溯显示三条主线继续汇合：驾驶模型从“预测得像”转向“对决策有用”，机器人学习从一次性策略转向技能子空间、降阶动力学和过程奖励，长期自治则把波动感知记忆作为地图与策略之间的基础设施。后续应优先追踪真实闭环、失败样本和跨平台复现。
