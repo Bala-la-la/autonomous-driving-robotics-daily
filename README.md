@@ -2,11 +2,27 @@
 
 每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-08-24
+## 最新一期｜2026-08-25
 
-- [arXiv 独立报告](reports/2026-08-24/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-08-24/github-trending.md)
+- [arXiv 独立报告](reports/2026-08-25/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-08-25/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
+
+## arXiv 自动驾驶、机器人与具身智能晨报｜2026-08-25
+
+<!-- BEGIN ARXIV REPORT -->
+
+本期完整正文见 [arXiv 独立报告](reports/2026-08-25/arxiv.md)；最新可核验批次为 2026-08-21 UTC，已明确标注回溯日期。
+
+<!-- END ARXIV REPORT -->
+
+## GitHub 开源趋势晨报｜2026-08-25
+
+<!-- BEGIN GITHUB REPORT -->
+
+本期完整正文见 [GitHub Trending 独立报告](reports/2026-08-25/github-trending.md)，并区分页面线索、API 当前值与编辑推断。
+
+<!-- END GITHUB REPORT -->
 
 ## arXiv 自动驾驶、机器人与具身智能晨报｜2026-08-24
 
