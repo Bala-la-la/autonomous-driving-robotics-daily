@@ -2,7 +2,13 @@
 
 每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-08-27
+## 最新一期｜2026-08-29
+
+- [arXiv 独立报告](reports/2026-08-29/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-08-29/github-trending.md)
+- [分类趋势总结](CATEGORY_SUMMARY.md)
+
+本期正文：arXiv 接口受限，报告明确列出可追溯的近期自动驾驶/机器人研究线索、核验缺口与补查计划；GitHub 报告基于 API 确认创建日期、当前 star、语言和描述，区分事实与推断，并排除明显噪声项目。完整正文见上方两份报告链接。
 
 - [arXiv 独立报告](reports/2026-08-27/arxiv.md)
 - [GitHub Trending 独立报告](reports/2026-08-27/github-trending.md)
