@@ -1,31 +1,3 @@
-# 自动驾驶、机器人与开源趋势日报
-
-每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
-
-## 最新一期｜2026-09-13
-
-- [arXiv 独立报告](reports/2026-09-13/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-09-13/github-trending.md)
-- [分类趋势总结](CATEGORY_SUMMARY.md)
-
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-09-13
-
-## 检索状态
-
-截至北京时间 2026-09-13 06:00，arXiv Atom/API、`arxiv.org/list` 和 `export.arxiv.org` 均出现连接重置，无法可靠取得 2026-09-10 至 2026-09-12 的官方提交清单与论文页。为避免把未经原始页面核验的题目、作者或实验数字写入日报，本期不虚构“当日新稿”，也不把 2026-08-30 以前的旧稿冒充新稿。下一次运行应优先重试官方端点，并在恢复后补发本期缺失批次。
-
-## 自动驾驶与导航
-
-本期没有可由 arXiv 原始页面直接核验的新条目。待接口恢复后优先检索 autonomous driving、end-to-end driving、planning、perception、world model 和 navigation，并与 2026-08-30 及此前报告去重。
-
-## 机器人与具身智能
-
-本期没有可由 arXiv 原始页面直接核验的新条目。待接口恢复后优先检索 robotics、robot learning、embodied AI、manipulation、VLA、SLAM 和 multi-agent，并补齐作者、机构、提交时间、机制、实验与局限。
-
-## 趋势总结
-
-本期 arXiv 结论仅限于“官方采集链路不可用”，不据此判断研究热度或 SOTA。报告缺失不是内容确认；后续恢复访问后应回补 2026-09-10—13 的论文，并在报告中明确原始提交日期。
-
 # GitHub 开源趋势晨报｜2026-09-13
 
 说明：查询于 2026-09-13（Asia/Shanghai）。GitHub 官方 Trending 页面确认了当天 `stars today`；当前 star、创建日期、语言和描述由 GitHub Repository/Search API 或仓库页面核对。两类数字分开标注；走红原因属于编辑推断。攻击工具、账号自动化和来源不清项目不纳入精选。
@@ -44,13 +16,3 @@
 ## 技术趋势
 
 本期热度可分为三条线：模型基础设施仍由 Transformers 等成熟底座承接；Agent 社区继续投资 harness、长期记忆和业务蓝图；端侧/三维工具则把 AI 推向本地传感、真实物体和可编辑资产。需要注意，除前两项外，本期多数项目的数字是创建至查询的当前 star，不等同官方每日增量；采用前仍应检查维护活跃度、许可证、依赖供应链和权限边界。
-
-## 历史归档
-
-报告按 `reports/YYYY-MM-DD/` 保存，保留每日 arXiv 与 GitHub Trending 独立文件。
-
-## 内容标准
-
-- arXiv 报告明确提交日期、问题、机制、实验、关注价值、局限与回溯日期。
-- GitHub 报告区分 Trending 页面确认、仓库元数据与编辑推断，排除营销、攻击、账号自动化和疑似灌星项目。
-- README 最新一期展示本次两份报告正文；跨期判断维护于 [CATEGORY_SUMMARY.md](CATEGORY_SUMMARY.md)。
