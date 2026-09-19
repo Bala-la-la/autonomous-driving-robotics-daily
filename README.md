@@ -2,136 +2,172 @@
 
 每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-09-18
+## 最新一期｜2026-09-20
 
-- [arXiv 独立报告](reports/2026-09-18/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-09-18/github-trending.md)
+- [arXiv 独立报告](reports/2026-09-20/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-09-20/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-09-18
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-09-20
 
-## 检索状态
+## 日期与证据口径
 
-截至北京时间 2026-09-18 06:00，最新可核验的相关批次为 2026-09-17 UTC；以下选入 11 篇与自动驾驶、机器人操作、VLA 实时性、控制安全和长期自治直接相关的论文。论文提交日期按 arXiv UTC 元数据记录，摘要中的实验数字保留作者报告口径。
+北京时间 2026-09-20 晨间检索。[arXiv cs.RO 最近提交页](https://arxiv.org/list/cs.RO/recent)当前最新公告为 2026-09-18；本期回溯最近 3 天，精选 6 篇 **2026-09-17 UTC 提交、9 月 18 日公告**的论文，均未在本仓库此前报告中选入。它们不是 9 月 20 日新稿。覆盖自动驾驶、越野规划、robot learning、manipulation、SLAM 与多机器人具身感知。
 
-## 自动驾驶与系统验证
+以下作者、时间、机制和实验数字依据各论文官方摘要及版本记录；本期不是全文复现审查。全部页面当前仅列 v1，未见后续更新；未核实的机构不推测补全。关注价值、局限和跟进建议为编辑判断，实验数字为作者报告。
 
-1. [OPTED: On-Policy Fine-Tuning for End-to-End Driving using a Render-Free Teacher](https://arxiv.org/abs/2609.20756v1)
+## 自动驾驶
 
-   - **问题与机制**：端到端驾驶策略用人类数据做开环行为克隆时，闭环误差会把车辆带出训练分布；直接对传感器策略做强化学习又需要昂贵仿真。OPTED 先在 HD map 和 bounding box 等特权向量输入上训练 RL teacher，再用 teacher 在闭环中监督预训练的相机策略。
-   - **实验与关注价值**：在 AlpaSim 和真实驾驶日志的 3D Gaussian 重建上，TransFuser 与 VaVAM 的 driving score 分别提升 1.6 倍和 9.5 倍；作者报告相较直接 RL 后训练约少用三个数量级的仿真交互。它把后训练的主要问题从“再采更多人类数据”转为“如何用可计算的 teacher 提供闭环方向”。
-   - **局限**：特权 teacher 与相机 student 的差距、重建仿真的物理真实性和长尾交通参与者仍会影响安全收益；分数提升不等于真实道路风险下降。
+### 1. Worst-Case Hidden-Vehicle Trajectory Search in Spatiotemporal Occlusion Regions
 
-2. [MILER: Semantic Mid-Level Representation for Sim-to-Real Reinforcement Learning in Unstructured Autonomous Driving](https://arxiv.org/abs/2609.20747v1)
+- **论文与作者**：[arXiv:2609.20480v1](https://arxiv.org/abs/2609.20480v1)；Ruichen Tan、Zengxiang Lei、Satish Ukkusuri。提交／当前版本：2026-09-17 14:33:23 UTC，v1。
+- **问题**：遮挡后的交通参与者不止有一个可能未来；逐帧假设容易保留与历史观测矛盾的对象，而固定对手预测又漏掉自车最佳应对下仍危险的交互。
+- **创新与机制**：HC-MTS 先用多帧可见性、占用、语义地图和类别运动学约束，为有限隐藏状态构造可回溯的历史证据；再做双层 minimax 搜索。内层选择兼顾到达目标与舒适性的自车最佳响应，外层寻找令该最佳响应得分最低的合法隐藏车辆轨迹。重点是把“历史上可能存在”与“交互中最坏”接到同一个验证问题。
+- **实验与关键结果**：8 个 Waymo Open Motion Dataset 场景；可见性记忆从 K=1 增至 K=20 时，总隐藏种子数量平均减少 18.45%。发现 6 个可避免的反例，另 2 个场景在有限预算内未找到合法碰撞攻击轨迹。
+- **关注价值**：适合遮挡风险测试和防御性驾驶验证，可减少不符合历史的虚假危险假设。
+- **局限／跟进**：8 个场景与有限搜索不能给出普遍安全保证；“未找到碰撞”不等于不存在。应跟进动态地图误差、行人行为边界和更大场景集。
 
-   - **问题与机制**：非结构化道路的 sim-to-real 强依赖感知、动力学和控制接口的一致性。MILER 在离线阶段用语义中层表示模拟器训练 RL 策略，部署时用相机与 LiDAR 经 BEVFusion 生成同构的语义 BEV，再通过 trajectory alignment 把策略迁移到真实车辆。
-   - **实验与关注价值**：作者在两辆车、3.0 km 测试赛道上无人工干预行驶 17.3 km，覆盖障碍物、发夹弯、最高 33.6 km/h 和越野路段；完整软件栈运行于 Jetson AGX Orin。它把中层语义接口作为 sim-to-real 的可审计边界，而不是让模拟器直接预测真实传感器像素。
-   - **局限**：17.3 km 的路线与车辆覆盖仍有限；BEVFusion 误差、语义表示缺失和轨迹对齐规则在更复杂道路上的稳健性需要独立验证。
+### 2. HOPHY: A Hierarchical Hypergraph Representation for Off-Road Path and Mission Planning
 
-3. [VAST: V2X/Dynamic Map-Aware Autonomous Driving Systems Validation Toolchain](https://arxiv.org/abs/2609.19681v1)
+- **论文与作者**：[arXiv:2609.20694v1](https://arxiv.org/abs/2609.20694v1)；Pranay Meshram、Charuvahan Adhivarahan、Prithvi Poddar 等。提交／当前版本：2026-09-17 16:59:19 UTC，v1。
+- **问题**：公里级越野地图上，天气、车辆类型和任务变化会触发大量重复规划；像素 A* 昂贵，简单语义抽象又可能破坏连通性和代价。
+- **创新与机制**：用几何连通语义区域 GSNodes、保连通的 Coarse Regions 和表达地形／机器人／天气的类型化超边构成可复用层次。条件改变时，通过超边交集定位受影响区域和边，只局部更新状态，不重建整个层次。
+- **实验与关键结果**：测试地图上规划成功率 100%，相对像素 A* 的代价中位偏差小于 0.01%；多机器人任务分配总计算量相对像素 A* 降低 79 倍，相对最快抽象基线降低 7.2 倍。实体 Jackal 完成 1.5 km、8 个任务及堵塞触发重规划。
+- **关注价值**：让地图成为反复查询的任务规划接口，适合救援、巡检和多车越野调度。
+- **局限／跟进**：测试成功率不代表任意地图的完备性；应检查地形语义误判、频繁变化时的维护成本及真实通行代价校准。
 
-   - **问题与机制**：协同驾驶系统同时包含车辆、基础设施传感器、边缘 Dynamic Map 和车端栈，单一模块 benchmark 难以覆盖接口失效。VAST 把 Scenic、Scenario Simulator v2、AWSIM、Autoware 与 SIM-LDM 接起来，统一场景生成、动态地图注入以及 TTC、PET、碰撞和超时指标。
-   - **实验与关注价值**：在遮挡路口，受 Lanelet2 约束的采样把 edge-case 发现率从 40.0% 提到 80.0%，平均发现时间从 259.7 s 降到 110.4 s；加入 Dynamic Map 后碰撞率从 78.0% 降到 40.0%。价值在于把协同驾驶的互操作和验证成本本身变成研究对象。
-   - **局限**：仿真链路的传感器、通信和重启开销未必代表真实车路云系统；碰撞率受场景分布影响，不能直接外推道路安全。
+## 机器人／具身智能
 
-## 机器人 VLA、记忆与安全执行
+### 3. HIL-UMI: Bringing Human-in-the-Loop Post-Training of Vision-Language-Action Models to Universal Manipulation Interface
 
-4. [Coding Agents with an Obstacle-Aware Harness for Safe Robot Manipulation](https://arxiv.org/abs/2609.20822v1)
+- **论文与作者**：[arXiv:2609.20659v1](https://arxiv.org/abs/2609.20659v1)；Zimu Han、Yiming Zeng、Jiyao Zhang 等。提交／当前版本：2026-09-17 16:38:37 UTC，v1。
+- **问题**：静态示范微调难覆盖部署分布外状态，也不区分真正推进任务的数据；常规人类接管后训练则依赖持续占用实体机器人。
+- **创新与机制**：操作者拿手持 UMI 示范时，让当前策略读取相同观测但不执行预测动作。Energy Score 比较人类轨迹与策略输出差异，触发针对性采集；另一反馈环依据低在线 advantage 找出需标注的关键片段，改进进度估计器，再用基础示范与新数据的平衡混合做 advantage 条件行为克隆。
+- **实验与关键结果**：4 个真实长程／精细操作任务中均优于 SFT；Clean Up Table 上优于 HG-DAgger，并降低逐帧采集时间。摘要未给出具体成功率或耗时，本期不补造数字。
+- **关注价值**：把“策略感知的数据迭代”与“实体机器人执行”分离，有望扩大跨操作者采集规模。
+- **局限／跟进**：手持观测不完全等于策略真正执行后的状态分布；需核查差异分数阈值、人工片段反馈成本及跨场地迁移。
 
-   - **问题与机制**：让 coding agent 直接写机器人控制程序时，模型即使在推理轨迹中提到障碍物，也可能把完成目标置于避障约束之上。SafeHarness 将任务拆成路线阶段与接触阶段：先把物体 grounding 为包围盒，规划并验证 waypoint 路线，必要时重规划，再选择不碰障碍的接触位置。
-   - **实验与关注价值**：SafeHarness 达到 71.9% task success 和 87.5% collision avoidance，相比此前最佳结果分别提高 6.5 和 27.0 个百分点；相比无 harness 的同一 agent，两个数字分别是 2.3 倍和 1.5 倍。它直接证明“提示里写了安全要求”不等于执行层拥有安全优先级。
-   - **局限**：包围盒近似、路线验证和接触位置选择仍依赖准确几何与执行误差模型；实验任务中的障碍约束不能覆盖动态人类和柔性接触。
+### 4. TraceFlow: Guiding Frozen Flow-Matching Robot Policies with Success and Failure Traces
 
-5. [Workspace Models: Lightweight Robotic Memory via Saliency-Driven Supervision](https://arxiv.org/abs/2609.20820v1)
+- **论文与作者**：[arXiv:2609.20646v1](https://arxiv.org/abs/2609.20646v1)；Jiaxuan Zhang、Ruizhe Liu、Yu Zhang、Yanchao Yang。提交／当前版本：2026-09-17 16:26:28 UTC，v1。
+- **问题**：冻结的 flow-matching 动作策略不能直接利用自己刚刚失败的经验；只检索成功演示也丢失了负面证据。
+- **创新与机制**：TraceBank 保存按时间排列的状态—动作序列及每条轨迹的一个终局成败标签。检索成功与失败轨迹后，以进度对齐的动作密度形成有界引导场，修正动作专家积分方向；部署轨迹继续进入库，无须更新策略权重。
+- **实验与关键结果**：真实有序装箱任务，基础策略完成 21/50，TraceFlow 为 39/50，再做一轮经验叠加达 47/50，顺序错误从 20 次降至 0。仿真 Sequence 成功率从 78.92% 到 91.50%，但 26 任务总指标没有提升。
+- **关注价值**：以很低的标签成本复用失败经历，适合研究冻结策略的部署适应。
+- **局限／跟进**：Counting、Occlusion 分别下降 1.12、1.42 个百分点；LIBERO-Plus Long 的 +1.27 点对应 p=0.0733，不能写成显著普适收益。需关注检索失配、不同任务参数选择与经验叠加饱和。
 
-   - **问题与机制**：完整历史会让策略学到伪相关，而部署时每次调用 VLM 压缩历史又太慢。Workspace Models 在训练期让 VLM 找出当前任务真正需要的历史信息，再通过 set-reconstruction decoder loss 蒸馏成轻量 workspace token，部署时直接查询该 latent memory。
-   - **实验与关注价值**：论文在仿真和硬件上都验证了 workspace token 可替代原始观察解决需要长期记忆的任务，并报告它不仅更轻量，策略性能也更好。方向上的关键变化是把“记忆选择”从运行时 VLM 调用转成可部署的策略输入。
-   - **局限**：训练期 saliency 判断错误会把关键历史压掉；跨任务、跨本体和长期在线更新的记忆污染仍未由摘要中的结果解决。
+## 交叉方向：SLAM、3D 与多机器人
 
-6. [StageGuard: Learning Stage Transitions for Long-Horizon Robot Tasks via Agentic Distillation](https://arxiv.org/abs/2609.20791v1)
+### 5. Semantic SLAM in Precision Agriculture using Bayesian Inference
 
-   - **问题与机制**：层级机器人控制需要判断当前 skill 何时完成并切换到下一个子任务，但手工 completion checker 难以覆盖真实执行。StageGuard 用 teacher VLM 对示范轨迹生成带结构化解释的阶段完成信号，再蒸馏轻量 student VLM 做低延迟在线监控，并接入层级控制闭环。
-   - **实验与关注价值**：论文在两个 benchmark 的阶段转换预测、BEHAVIOR-1K 闭环任务以及真实机器人上报告显著改进。它把“阶段边界”从任务脚本中的静态规则提升为可以训练、解释和审计的运行时状态。
-   - **局限**：teacher 解释可能把 benchmark 语言模式带入 student；阶段误判会造成过早切换或重复执行，仍需报告恢复成本和安全边界。
+- **论文与作者**：[arXiv:2609.20604v1](https://arxiv.org/abs/2609.20604v1)；Ruben Beumer、Sander Doodeman、René van de Molengraft、Duarte Antunes。提交／当前版本：2026-09-17 15:51:05 UTC，v1。
+- **问题**：农业机器人不仅需要定位，还要维护作物类型、尺寸和健康等语义状态；仅依赖 GPS 无法完成面向单株植物的操作。
+- **创新与机制**：将物体及属性的概率地图、贝叶斯更新与基于 g2o 的图 SLAM 结合。深度相机观测经 YOLOv8n 提取对象和语义，定位与作物状态维护在同一世界模型中工作，而非将检测结果当成一次性标签。
+- **实验与关键结果**：Gazebo 仿真及 Spot 在室内仿真植物田的实体实验；作者报告至少 400 株植物规模的实时建图。摘要未披露定位误差、更新频率或健康识别精度。
+- **关注价值**：说明语义地图可直接承担业务状态记录，适合精准农业与重复巡检。
+- **局限／跟进**：室内假植物尚不能代表风、遮挡、季节变化下的真实农田；需验证属性不确定性是否校准，以及跨天重访的数据关联。
 
-7. [GeoAAC: Geometry-Based Adaptive Action Chunking from Denoising Trajectories in VLA Policies](https://arxiv.org/abs/2609.20776v1)
+### 6. CoRef-GS: Cooperative Referring Gaussian Splatting for Multi-Agent Scene Understanding
 
-   - **问题与机制**：固定 action horizon 无法同时适应自由空间快速移动和接触阶段高频反馈。GeoAAC 从 flow-matching 去噪轨迹的 prefix 几何变化估计当前动作预测可靠性，在一次生成内按阶段自适应选择 chunk 长度，不需要额外训练。
-   - **实验与关注价值**：在 GR00T N1.5、π0.5、LIBERO、LIBERO-Pro、RoboCasa365 和真实操作任务上，相比固定 horizon 最多提升 8.7 个百分点；真实平均成功率从 53.3% 提到 74.4%。它把实时性控制变成模型内部置信度与反馈频率的联动问题。
-   - **局限**：去噪轨迹几何与实际动作风险的相关性可能随模型、任务和传感器改变；单次生成的 horizon 选择仍需在突发接触与严重延迟下验证。
-
-8. [Agile-WAM: An Agile Tactile World Action Model for Contact-Rich Robot Control](https://arxiv.org/abs/2609.20761v1)
-
-   - **问题与机制**：大生成式 backbone 能建模接触物理，但推理太慢，不适合高频控制。Agile-WAM 将视觉与触觉编码到共享 latent，直接用 vision-tactile-to-action flow matching 同时预测动作块和未来视觉／触觉 latent，并利用视觉慢变化、触觉接触突变的不同时间尺度做 multi-horizon supervision。
-   - **实验与关注价值**：在 9 个模拟和 5 个真实接触操作任务上超过最强 baseline；真实实验报告整体成功率相对提升 29.4%，推理延迟为 11.9 ms。重点不只是融合触觉，而是为触觉旁路保留足够高的控制频率。
-   - **局限**：触觉传感器标定、磨损与材质迁移会改变 latent；低延迟模型是否在未见接触模式下保持安全，需要比平均成功率更细的失败分析。
-
-9. [SkipVLA: Skipping VLA Steps with Classical Planning for Fast Robot Manipulation](https://arxiv.org/abs/2609.20648v1)
-
-   - **问题与机制**：VLA 在长时任务中每个时刻都运行会产生不必要的延迟和能耗，而经典规划器能快速处理自由空间却缺少语义和接触技能。SkipVLA 让运动规划器处理无接触段，只在抓取、放置等接触丰富阶段调用 VLA，并复用冻结的视觉语言 backbone 预测目标位姿。
-   - **实验与关注价值**：用三个 VLA 在 13 个 LIBERO 任务和真实 6-DoF YAM 抓取任务上评估，报告任务完成最多加速 2.5 倍、能耗显著下降，同时保持相同任务成功率。它给“大模型控制全部时间步”提供了一个清晰的系统级替代接口。
-   - **局限**：自由空间与接触阶段的切分依赖可靠几何和目标位姿；真实场景中的接触前异常、规划失败和回退策略仍需覆盖。
-
-10. [MoWAM: Explicit Future Motion Prediction for Efficient World Action Models](https://arxiv.org/abs/2609.20709v1)
-
-   - **问题与机制**：WAM 若在推理时生成未来视频，计算成本高；完全去掉未来监督又会使未来动力学只隐含在 observation feature 中。MoWAM 用紧凑的未来运动表示替代完整视频生成，训练期联合预测 motion 与 action，并用 task-progress verifier 从多个 motion-action 候选中选择。
-   - **实验与关注价值**：在 LIBERO、LIBERO-Plus 和真实操作任务上报告较强的分布内性能、更好的分布外鲁棒性和更高的真实成功率；候选采样增多时性能继续提升。它把 inference-time scaling 从视频采样转成更小的运动候选搜索。
-   - **局限**：紧凑运动是否覆盖不可逆形变、遮挡和接触后果取决于表示设计；候选数量、验证器偏差和控制延迟之间的折中需要明确预算。
-
-## SLAM 与长期自治
-
-11. [EliGSiR: Continual RGB-D Mapping with Gaussian Splatting under Bounded Compute](https://arxiv.org/abs/2609.20348v1)
-
-   - **问题与机制**：传统 3D Gaussian Splatting 假设观测集固定且可以长时间优化，而在线建图必须不断吸收新观测、保留旧区域并受限于计算预算。EliGSiR 用地图状态驱动视角调度、按负载调整监督分辨率，并只在重复 RGB-D 证据显示缺失时扩充几何容量。
-   - **实验与关注价值**：在 Replica、TUM RGB-D、ScanNet++ 和真实 RGB-D 序列上评估；在 TUM fr3/long_office_household 上以相同真值位姿达到 21.52 dB，对比 SplaTAM 的 19.42 dB；配合实时 ORB-SLAM3 位姿时达到 23.02 dB，用时 155.5 s。
-   - **局限**：结果对位姿质量、RGB-D 传感器和场景重复观测依赖明显；动态对象、长期回环和真正低算力平台上的持续运行仍是部署风险。
+- **论文与作者**：[arXiv:2609.20586v1](https://arxiv.org/abs/2609.20586v1)；Zhikun Zhou、Kunyu Peng、Runyi Yang 等。提交／当前版本：2026-09-17 15:39:25 UTC，v1。
+- **问题**：两台机器人拼接地图后，语言所指物体可能来自另一台的观察；“左边”等关系仍必须按发问机器人的视角解释，仅几何配准不足以保留指代语义。
+- **创新与机制**：先建开放词汇、实例感知的局部 Gaussian 地图；跨机器人模块联合几何和语义一致性对齐部分重叠地图，再用视角条件的 mask 关系图完成指代定位。新基准 CoQuad-Ref 包含双四足机器人真实与仿真室内场景。
+- **实验与关键结果**：仿真配准旋转误差从粗初始化 2.58° 降至精化后 0.15°；真实指代 mIoU 相对 ReferSplat 从 52.6% 提至 68.8%，即 +16.2 个百分点。
+- **关注价值**：把协同建图的质量标准从几何重叠推进到融合后语言任务仍可用。
+- **局限／跟进**：结果来自双机器人室内设置；动态对象、低重叠、通信开销和更多机器人仍待验证。摘要称代码与基准将公开，不能据此认定已完成发布。
 
 ## 趋势总结
 
-- **驾驶后训练开始显式拆分 teacher、student 与验证工具链**：OPTED 用特权 teacher 解决闭环探索成本，MILER 用语义中层表示承接 sim-to-real，VAST 则把车路云互操作和 edge-case 发现纳入统一验证。
-- **VLA 实时性从“换更小模型”转为“减少不必要的调用”**：GeoAAC 调 action horizon，SkipVLA 跳过自由空间 VLA 步骤，MoWAM 用未来运动候选替代未来视频生成。
-- **具身安全的重点从最终成功率前移到过程状态**：SafeHarness 约束路线与接触，StageGuard 识别阶段边界，Workspace token 把长期记忆压成可部署状态，Agile-WAM 则把触觉突变保留在高频控制通道。
-- **下一步核查重点**：闭环真实道路和真机中的误差恢复、传感器退化下的 memory／horizon 选择、验证工具链的场景覆盖，以及长期地图在动态环境中的证据保留。
+1. **地图和历史正在变成可查询的决策约束**：HC-MTS 用历史过滤遮挡假设，HOPHY 让场景变化只触发局部规划更新；评价重点是查询和重规划成本，而非单张地图质量。
+2. **机器人适应从再训练扩展到数据与经验接口**：HIL-UMI 改变采集方式，TraceFlow 改变冻结策略推理；但 TraceFlow 的负迁移提醒，局部收益不能代替跨任务总指标。
+3. **语义地图需要保留属性与观察视角**：农业 SLAM 维护作物状态，CoRef-GS 维护跨机器人实例与关系语义。后续值得追踪的是不确定性、状态过期与动态更新，而非仅增加地图规模。
 
-# GitHub 开源趋势晨报｜2026-09-18
+# GitHub 开源趋势晨报｜2026-09-20
 
-说明：查询日期为 2026-09-18（Asia/Shanghai）。`stars today` 取 2026-09-18 GitHub Trending 日榜快照；当前 stars、创建日期、语言、许可证和描述由 GitHub Repository API 查询窗口核对。两类数字来自不同采集时点，不能相减推导增长率；走红原因属于编辑推断。攻击、账号自动化、来源不清和明显高风险项目不纳入精选。
+## 采集与筛选口径
+
+本期采用 2026-09-20 北京时间晨间取得的 [GitHub 官方 Trending 日榜](https://github.com/trending)，并逐仓库查询 GitHub Repository API 与 README。日／周参数页曾返回错误，但默认页面明确显示 Today 与 `stars today`，因此仅使用已取得的日榜增量，不填造 7 日数据。页面可能受缓存和采集时刻影响，增量是官方窗口快照，不是自行计算的精确滚动 24 小时。
+
+下列“当前 star”为 API 查询总数，“日榜增量”为 Trending 的 `stars today`，两者采样时间不同，不能相减求昨日总量。本期未采用第三方增量。仓库用途是 README／元数据确认信息；“走红原因”均为编辑推断，不是已证明的增长因果。
+
+筛选保留具有明确技术交付物、可查 README、许可证及近期活动的 8 个仓库，排除与主题关系弱的资讯集合和用途不清的候选。所选项目未发现仅靠营销页面支撑用途的情况；本次未进行逐个 stargazer 审计，不能据此证明全部星标自然增长。部分延续上期项目，以新的日榜信号更新，避免把它们写成新建仓库。
 
 ## 精选项目
 
-1. [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)：JavaScript，2026-06-18 创建，API 当前 13,460 stars，MIT；Trending 快照 +3,606。面向 coding agent 的多阶段安全审计 skill，输出可机读、可独立验证的 findings。**推断走红原因**：社区开始要求 Agent 产出可复核的安全证据，而不只给一段自然语言建议；采用前仍应检查其覆盖范围、误报处理和权限边界。
+### 1. [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)
 
-2. [alibaba/open-code-review](https://github.com/alibaba/open-code-review)：Go，2026-05-18 创建，API 当前 36,580 stars，Apache-2.0；Trending 快照 +3,290。用确定性流水线分配审查单元，再由 LLM Agent 输出精确到行的评论，并内置 NPE、线程安全、XSS、SQL 注入等规则。**推断走红原因**：代码审查正在形成“规则负责边界、模型负责判断”的混合架构，适合进入 CI，但需要审计数据集、模型调用和规则覆盖。
+- **确认数据**：当前 **16,147 stars**；日榜 **+3,162**。JavaScript／审计 Skills；API 许可证：MIT。
+- **用途（仓库说明）**：把覆盖清单、候选漏洞验证、结构化发现及独立复核组织成多阶段审计工作流；仓库包含发现与覆盖记录校验器。
+- **走红原因（推断）**：Agent 审查的瓶颈开始转向误报控制和可追溯证据；这是对已有 Skills 热潮的工程化延伸。
+- **适合人群与采用边界**：维护者、安全审计团队；应以实际复现与人工复核衡量结果，不能用 star 代替审计准确率。
+- **来源**：[仓库与 README](https://github.com/cloudflare/security-audit-skill)、[Repository API](https://api.github.com/repos/cloudflare/security-audit-skill)；增量统一来自上述官方 Trending 日榜。
 
-3. [Tencent/BrowserSkill](https://github.com/Tencent/BrowserSkill)：TypeScript，2026-06-22 创建，API 当前 5,233 stars，MIT；Trending 快照 +1,350。通过 CLI 加浏览器扩展，让 Agent 复用已登录的真实浏览器，同时在独立窗口执行任务。**推断走红原因**：它直接解决登录态、真实前端和“不要打断用户”三者的冲突；高权限浏览器会话、跨站授权和操作回滚是采用前置条件。
+### 2. [trycua/cua](https://github.com/trycua/cua)
 
-4. [affaan-m/ECC](https://github.com/affaan-m/ECC)：JavaScript，2026-01-18 创建，API 当前 261,982 stars，MIT；Trending 快照 +1,171。面向 Claude Code、Codex、OpenCode、Cursor 等 Agent 的 harness 性能优化系统，覆盖 skills、instincts、memory、security 和 research-first workflow。**推断走红原因**：社区关注点从单次 prompt 转到可复用、可调试、可持续改进的运行时资产；范围较广，实际采用应逐项审查默认指令和外部工具权限。
+- **确认数据**：当前 **24,320 stars**；日榜 **+383**。HTML／电脑操作 Agent 基础设施；API 许可证：MIT。
+- **用途（仓库说明）**：提供桌面自动化驱动、隔离云桌面、本地 macOS 虚拟机和电脑操作评测，支持训练、评估及轨迹采集。
+- **走红原因（推断）**：从一次桌面演示走向批量环境和可复现评测，需要统一驱动与环境生命周期。
+- **适合人群与采用边界**：电脑操作 Agent 开发者、评测和数据团队；不同本地／云环境的能力、凭据和费用边界需分别验证。
+- **来源**：[仓库与 README](https://github.com/trycua/cua)、[Repository API](https://api.github.com/repos/trycua/cua)；增量统一来自上述官方 Trending 日榜。
 
-5. [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)：JavaScript，2026-02-15 创建，API 当前 96,359 stars，MIT；Trending 快照 +680。面向 AI coding agent 的生产级工程 skills 集合。**推断走红原因**：技能正在成为可安装、可版本化的工程资产，成熟度判断不能只看 star，还要看测试、版本锁定、依赖和与不同 Agent 的兼容边界。
+### 3. [coder/coder](https://github.com/coder/coder)
 
-6. [Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec)：TypeScript，2025-08-05 创建，API 当前 69,303 stars，MIT；Trending 快照约 +298。为 AI coding assistant 提供 spec-driven development 工作流，把提案、需求、设计、任务和验证组织成可追踪工件。**推断走红原因**：随着 Agent 获得更大写权限，先形成可审查规格再执行的流程比单纯增加工具数量更有价值；需要关注遥测、生成物校验和团队流程摩擦。
+- **确认数据**：当前 **15,588 stars**；日榜 **+406**。Go／开发环境／Agent 平台；API 许可证：AGPL-3.0。
+- **用途（仓库说明）**：自托管开发工作区，以 Terraform 定义资源；README 描述可在自有基础设施中运行 Agent，并集中处理模型凭据、审计与成本。
+- **走红原因（推断）**：Agent 的部署问题正与企业开发环境治理合流，现成工作区平台具有接入优势。
+- **适合人群与采用边界**：平台工程、DevEx 与企业研发团队；应区分开源功能、商业功能和具体部署配置。
+- **来源**：[仓库与 README](https://github.com/coder/coder)、[Repository API](https://api.github.com/repos/coder/coder)；增量统一来自上述官方 Trending 日榜。
 
-7. [alphaXiv/OpenResearch](https://github.com/alphaXiv/OpenResearch)：Rust，2026-06-07 创建，API 当前 5,285 stars，MIT；Trending 快照 +940。把 coding agent 扩展为 research agent，面向检索、实验、分析和论证链组织长任务。**推断走红原因**：研究型 Agent 的竞争点从回答问题转向并行探索、可追踪中间产物和跨模型运行；使用时应核查引用真实性、实验复现和长任务成本。
+### 4. [docling-project/docling](https://github.com/docling-project/docling)
 
-8. [anthropics/claude-code](https://github.com/anthropics/claude-code)：TypeScript，2025-02-22 创建，API 当前 146,255 stars，许可证未由 API SPDX 字段标出；Trending 快照 +538。运行在终端中的 coding agent，能够理解代码库、执行日常任务并处理 Git 工作流。**推断走红原因**：终端 Agent 已成为其他 skills、harness、审查和规格项目的共同宿主；生产使用的核心问题仍是命令授权、敏感文件访问和可回滚性。
+- **确认数据**：当前 **67,000 stars**；日榜 **+94**。Python／文档解析／数据基础设施；API 许可证：MIT。
+- **用途（仓库说明）**：解析 PDF、Office 等文档，处理阅读顺序、表格和 OCR，提供统一文档表示及 Markdown／JSON 导出，可本地执行。
+- **走红原因（推断）**：RAG 和知识工作 Agent 的可靠性受输入结构影响，文档转换是模型前的关键工程环节。
+- **适合人群与采用边界**：RAG、知识库和文档流程团队；需用自己的扫描件、复杂表格与语言样本衡量信息保真度。
+- **来源**：[仓库与 README](https://github.com/docling-project/docling)、[Repository API](https://api.github.com/repos/docling-project/docling)；增量统一来自上述官方 Trending 日榜。
 
-9. [TencentCloud/Octop](https://github.com/TencentCloud/Octop)：Python，2026-07-08 创建，API 当前 3,926 stars，MIT；Trending 快照 +367。可自托管、多用户、多 Agent 的 AI assistant。**推断走红原因**：Agent 正从单聊天窗口进入带记忆、工具、渠道和团队状态的控制平面，适合观察本地部署与多用户隔离如何落地；应先审查插件、MCP、浏览器和 Shell 权限。
+### 5. [cloudflare/quiche](https://github.com/cloudflare/quiche)
 
-10. [anthropics/knowledge-work-plugins](https://github.com/anthropics/knowledge-work-plugins)：Python，2026-01-23 创建，API 当前 24,854 stars，Apache-2.0；Trending 快照 +287。面向知识工作者的开源插件集合，目标是把常见工作流程封装为可调用能力。**推断走红原因**：Agent 生态正在从通用工具转向领域工作流与角色化插件；组织采用前需要评估数据驻留、产品耦合、权限继承和插件更新策略。
+- **确认数据**：当前 **11,995 stars**；日榜 **+84**。Rust／网络基础设施；API 许可证：BSD-2-Clause。
+- **用途（仓库说明）**：Rust 实现 QUIC 与 HTTP/3，为应用集成现代传输协议提供底层构件。
+- **走红原因（推断）**：日榜并非只有 Agent 封装；高并发服务对传输效率和协议实现的需求仍有持续关注。
+- **适合人群与采用边界**：网络工程、边缘服务与基础设施开发者；其受关注原因不能直接归结为某个未经核实的新版本。
+- **来源**：[仓库与 README](https://github.com/cloudflare/quiche)、[Repository API](https://api.github.com/repos/cloudflare/quiche)；增量统一来自上述官方 Trending 日榜。
 
-## 数据边界与排除
+### 6. [asciimoo/hister](https://github.com/asciimoo/hister)
 
-- `stars today` 是 Trending 日榜在 2026-09-18 的页面快照；API 当前 stars 是另一采集时点的总量，不能当作同一天的增量。
-- 本期保留 Agent harness、Skills、浏览器执行、代码审查、规格工作流、研究 Agent 和自托管控制面，排除逆向工程、账号自动化、攻击工具、用途不清和明显灌星风险项目。
-- 项目描述、许可证字段和趋势解释分别来自仓库元数据、API 与编辑判断；进入生产前仍需审查代码、依赖、模型／数据来源、网络访问和默认权限。
+- **确认数据**：当前 **5,207 stars**；日榜 **+430**。Go／个人搜索／生产力；API 许可证：AGPL-3.0。
+- **用途（仓库说明）**：个人搜索引擎项目，为用户维护自己的可搜索信息入口；本期已核对仓库 README 和许可证。
+- **走红原因（推断）**：用户对自己掌握检索入口和数据的需求，可能推动轻量个人知识工具传播。
+- **适合人群与采用边界**：个人知识管理用户和自托管爱好者；采用前应核查索引内容、浏览器集成权限及数据保留设置。
+- **来源**：[仓库与 README](https://github.com/asciimoo/hister)、[Repository API](https://api.github.com/repos/asciimoo/hister)；增量统一来自上述官方 Trending 日榜。
 
-## 趋势总结
+### 7. [cactus-compute/needle](https://github.com/cactus-compute/needle)
 
-本期 GitHub 信号集中在四层：安全与代码审查的可验证 Agent、可安装的 Skills／规格工作流、复用真实浏览器和终端的高权限执行，以及带记忆和多用户隔离的自托管控制面。社区关注点继续从“模型能否完成一次任务”转向“能力能否版本化、执行能否授权、结果能否复核、状态能否回滚”。
+- **确认数据**：当前 **11,575 stars**；日榜 **+207**。Python／端侧模型／工具调用；API 许可证：Apache-2.0。
+- **用途（仓库说明）**：提供面向小设备的工具调用、结构化抽取与 embedding。README 标称单模型二进制 8–29 MB，并描述受 schema 约束的解码和置信度输出。
+- **走红原因（推断）**：把任务限定为工具路由与结构化输出，有望在移动、可穿戴和机器人设备上降低部署成本。
+- **适合人群与采用边界**：端侧 AI、IoT 和机器人应用工程师；体积及性能为项目方说法，未独立复测，结构合法也不等于动作安全。
+- **来源**：[仓库与 README](https://github.com/cactus-compute/needle)、[Repository API](https://api.github.com/repos/cactus-compute/needle)；增量统一来自上述官方 Trending 日榜。
+
+### 8. [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)
+
+- **确认数据**：当前 **96,973 stars**；日榜 **+547**。JavaScript／工程 Skills／开发工具；API 许可证：MIT。
+- **用途（仓库说明）**：把需求、计划、构建、验证和发布流程打包为工程技能与命令；README 明确单技能安装可能缺少仓库级共享参考文件。
+- **走红原因（推断）**：跨 Agent 复用流程有较低试用门槛；共享依赖问题也说明 Skills 已进入打包与版本管理阶段。
+- **适合人群与采用边界**：使用 coding agent 的开发者和技术负责人；重点核查安装完整性、质量门禁与本团队实际工作流是否一致。
+- **来源**：[仓库与 README](https://github.com/addyosmani/agent-skills)、[Repository API](https://api.github.com/repos/addyosmani/agent-skills)；增量统一来自上述官方 Trending 日榜。
+
+## 技术趋势与社区偏好
+
+- **Agent 基础设施向环境层扩展**：Cua 的电脑环境和 Coder 的开发工作区共同出现，说明“给模型工具”之后还要解决环境供给、隔离、身份和评测。此处是选中样本的趋势判断，不是全站统计。
+- **Skills 的价值更依赖验证与交付**：独立审计记录校验与共享参考文件的安装边界，分别体现结果可复核和依赖完整性问题；不能只统计技能数量。
+- **数据入口与小设备输出都在获得关注**：Docling 和 Hister 改善信息获取，Needle 将生成能力压缩到受约束的工具调用。社区同时关注可本地掌握的数据和可部署的模型接口。
+- **成熟基础设施仍有独立需求**：quiche 的增长规模低于头部 Skills，但传输协议是更长期的工程底座；不宜用单日 star 横向判断不同类别的软件质量。
 
 ## 历史归档
 
-报告按 `reports/YYYY-MM-DD/` 保存，保留每日 arXiv 与 GitHub Trending 独立文件。
+报告按 [reports/](reports/) 下的 `YYYY-MM-DD/` 保存，保留每日 arXiv 与 GitHub Trending 独立文件。
 
 ## 内容标准
 
