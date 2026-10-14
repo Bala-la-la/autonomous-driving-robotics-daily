@@ -2,150 +2,167 @@
 
 每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-10-14
+## 最新一期｜2026-10-15
 
-- [arXiv 独立报告](reports/2026-10-14/arxiv.md)
+- [arXiv 独立报告](reports/2026-10-15/arxiv.md)
 
-- [GitHub Trending 独立报告](reports/2026-10-14/github-trending.md)
+- [GitHub Trending 独立报告](reports/2026-10-15/github-trending.md)
 
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-10-14
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-10-15
 
 ## 日期与证据口径
 
-北京时间 2026-10-14 检索 [arXiv API](https://export.arxiv.org/api/query?search_query=cat%3Acs.RO%20AND%20submittedDate%3A%5B202610090000%20TO%20202610092359%5D&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending)。最新可取得的相关常规批次仍为 **2026-10-09 UTC**；以下 7 篇均为该日期此前未选论文，明确作为回溯，**不是 10 月 14 日新稿**。实验数值均为作者报告、未经独立复现；“关注价值／局限”是编辑判断。
+北京时间 2026-10-15 检索 [arXiv API](https://export.arxiv.org/api/query?search_query=%28cat%3Acs.RO%20OR%20cat%3Acs.AI%20OR%20cat%3Acs.CV%29%20AND%20submittedDate%3A%5B202610120000%20TO%202610142359%5D&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending)。以下 8 篇均在 **2026-10-13 UTC** 首次提交，是本期新入选论文；实验数值均为作者报告、未经独立复现。“关注价值／局限”为编辑判断。
 
-## 自动驾驶、感知与移动自治
+## 自动驾驶、感知与安全运行时
 
-### 1. Beyond the Snowflakes: Disentangling Weather Effects from Confounding Meta-Factors in LiDAR Object Detection
+### 1. AutoAgent0: An Agentic Runtime for Safe Closed-Loop Driving
 
-- **论文／作者／时间**：[arXiv:2610.13891](https://arxiv.org/abs/2610.13891)；Yiming Yang、Jeremy P. Bos；v1：2026-10-09 17:38 UTC。
-- **问题**：恶劣天气基准常把“雪越大、检测越差”当因果结论，但雪天同时改变目标可见点数与反射特性，可能混淆鲁棒性判断。
-- **创新与机制**：在 WADS-3D、CADC 上按天气与目标级元信息细分评估，并以消融拆开空中雪粒噪声、车体积雪和点云密度；提出“积雪改变表面／反射、增加目标点数”是反向收益的候选物理解释。
-- **实验与关键结果**：作者发现检测准确率会随雪强度上升而提高；分析显示雪粒负面影响被对象点数增加主导，说明宽泛天气分桶会给出误导性的鲁棒性结论。
-- **关注价值／局限**：提醒驾驶感知不能把相关天气标签直接当干扰强度，数据集切分应报告对象点数等协变量；物理解释仍是假设，尚待跨传感器、车型、降雪类型的受控采集验证。
+- **论文／作者／时间**：[arXiv:2610.18866](https://arxiv.org/abs/2610.18866)；Jiageng Liu 等；v1：2026-10-13 17:59 UTC。
+- **问题**：端到端驾驶专家单帧规划即使准确，未见场景中的感知误差也会在闭环累积，且同一策略常不能从危险状态恢复。
+- **创新与机制**：AutoAgent0 将既有驾驶专家包在运行时 harness 内：独立检测技能建立场景上下文，规则验证器检查候选轨迹，失败时由 Recovery Planning 把动作原语组合为备选方案，并依据验证反馈迭代。
+- **实验与关键结果**：在 Fail2Drive 和 NavSafe-∞ 的长尾／安全关键场景中，作者报告相对单一驾驶专家提升闭环鲁棒性；摘要未公布统一百分比，需查正文中的失败类型与干预代价分解。
+- **关注价值／局限**：把安全改造成可插拔的执行期监督，因而可复用于多个底座模型；规则覆盖、独立检测器同源错误、恢复搜索时延和规则与真实交通法规不一致，仍可能成为新的失效面。
 
-### 2. Tracking the Invisible: Self-Supervised Wheel Track Detection with Thermal-RGB Fusion
+### 2. RadarGSOcc: Doppler-Aware 3D Semantic Occupancy Prediction Using 4D Radar Tensor with Geometric-Semantic Feature Extraction
 
-- **论文／作者／时间**：[arXiv:2610.13872](https://arxiv.org/abs/2610.13872)；Yiming Yang、Jeremy P. Bos；v1：2026-10-09 17:21 UTC。
-- **问题**：白茫路面中一般可通行区域估计无法区分已有车辙；而车辙往往是已验证的附着与路径稳定线索。
-- **创新与机制**：用同步 RGB 与长波红外组成四通道 RGB-I 输入，将记录 GNSS 的未来车轮轨迹反投影为自监督标注，训练网络检测雪面轮迹，并发布 ThermalTrack 数据集。
-- **实验与关键结果**：作者在低纹理、近白化的雪路数据上展示轮迹检测有效性；摘要未披露统一 IoU／F1 数值，重点证据是低成本标签生成与跨可见／热成像融合。
-- **关注价值／局限**：可将“可走”从纯外观分类改为具有车辆动力学含义的历史通行证据；GNSS 对齐、轮迹时效、其他车辆轨迹及冰层变化都会限制部署，不能把可见轮迹等同于当前安全轨迹。
-
-### 3. Mapless, Stabilizing, and Anti-Stuck Flipper Control for Articulated Tracked Robots
-
-- **论文／作者／时间**：[arXiv:2610.13838](https://arxiv.org/abs/2610.13838)；Valentýn Číhala、Pavel Sarga、Martin Pecka、Tomáš Svoboda、Karel Zimmermann；v1：2026-10-09 16:48 UTC。
-- **问题**：履带翻转臂控制依赖车底高程图，而该区域观测被遮挡、只能靠里程计累积，漂移会污染控制依据。
-- **创新与机制**：SAS 不建图，仅用 IMU、翻转臂关节角和短窗口“是否运动”提示，组合机身横滚／俯仰稳定项与脱困项；运动线索不累计，因此不继承积分漂移。
-- **实验与关键结果**：仿真和真实障碍对比中，作者称 SAS 的通行质量可比拟 map-based SOTA；在 LiDAR 看不见的草丛圆木上，最佳地图控制器卡住，SAS 成功越过。
-- **关注价值／局限**：为遮挡严重的野外移动平台提供“少状态、可退化”的控制基线；实验对象和障碍类型有限，短窗运动判断可能在湿滑、打滑或长时间悬空时失效。
+- **论文／作者／时间**：[arXiv:2610.18686](https://arxiv.org/abs/2610.18686)；Christofel Rio Goenawan 等；v1：2026-10-13 16:40 UTC。
+- **问题**：相机在暗光、LiDAR 在恶劣天气会退化；4D 雷达更稳健却稀疏，雷达 tensor 的计算又昂贵。
+- **创新与机制**：RadarGSOcc 将 4D 雷达的几何与语义特征分支提取，以可变形注意力做几何细化并显式利用 Doppler；同时给出 K-Radar 3DSemOcc 基准及无逐帧真值恶劣天气下的 EBKL 代理指标。
+- **实验与关键结果**：在 51.2 m、15 类预测上达到 **38.2% IoU、7.6% mIoU、25.5% weighted mIoU**；后者较 RadarOcc **21.9% 提升 17%（相对）**，且参数和计算更低，但 car 精度有取舍。
+- **关注价值／局限**：为天气鲁棒占据建模补上运动线索与可复现数据基准；EBKL 是代理而非碰撞风险，稀疏雷达对弱小静态物体、跨雷达硬件与融合延迟的边界还需闭环验证。
 
 ## 机器人／具身智能
 
-### 4. Dream to Remember: Continual Steering of Generalist Robot Policies with World Models
+### 3. LoopWAM: Closed-Loop Generalist Policy Improvement from Deployment Rollouts
 
-- **论文／作者／时间**：[arXiv:2610.13816](https://arxiv.org/abs/2610.13816)；Bahey Tharwat、Iman Nematollahi、Marvin Alles、Xingyuan Zhang、Akshay L. Chandra、Abhinav Valada；v1：2026-10-09 16:28 UTC。
-- **问题**：连续任务适配会使全参微调或共享 steering 模块遗忘旧技能，真实回放数据又昂贵或不可得。
-- **创新与机制**：D2R 冻结通用策略与世界模型，仅训练噪声 steering 模块；学习新任务时由冻结世界模型想象旧任务轨迹，作为无 replay buffer 的行为锚点。世界模型足够可信时可完全在想象中适配，否则只用它复习旧技能。
-- **实验与关键结果**：CALVIN 八任务序列平均成功率从 **63.7%** 到 **74.8%**，同条件 LoRA 降至 **11.7%**；作者还报告在 Franka 上连续改进三个任务并保留先前改善。
-- **关注价值／局限**：把持续学习代价限制到小接口，并明确区分“世界模型能优化新任务”与“只能做旧任务复习”；世界模型幻觉可能固化旧错误，任务切换、真实接触失败和长期累计偏差仍需安全评测。
+- **论文／作者／时间**：[arXiv:2610.18873](https://arxiv.org/abs/2610.18873)；Wenxuan Guo、Yingping Liang、Zhaoguo Wang 等；v1：2026-10-13 17:59 UTC。
+- **问题**：部署 rollout 混有成功、次优和失败；全盘模仿会强化坏动作，筛掉失败又会丢掉接触后果证据。
+- **创新与机制**：LoopWAM 用依赖数据来源的噪声采样统一行为学习与 action-conditioned world modeling，保留全质量视频监督，再以 quality steering 和质量加权的动作模仿调节策略；视频 token 与动作 token 在并行去噪中交互。
+- **实验与关键结果**：RoboChallenge Table30-V2 三轮部署—训练从 **23.67% 升至 43.33%（+19.7 点）**；RoboTwin 2.0 平均 **94.5%**、RoboCasa365 **49.5%**；衬衫折叠两轮从 **13.20%** 到 **55.56%**。
+- **关注价值／局限**：把失败轨迹从“噪声”转成可受控的学习信号，契合真实机器人持续改进；多轮收益是否能覆盖罕见危险失败、质量标签如何防止奖励投机、真实采集成本和灾难性回归仍须报告。
 
-### 5. SmolWAM: A Latent World-Action Model for Robotic Manipulation on Edge Devices
+### 4. ChunkAct: Action Chunking for Agentic Robotics
 
-- **论文／作者／时间**：[arXiv:2610.13740](https://arxiv.org/abs/2610.13740)；Timi Owolabi、Hikmah Olawore、Frances Adelakun、Ayotomiwa Oyewumi；v1：2026-10-09 15:34 UTC。
-- **问题**：视频扩散型 world-action model 的未来预测与动作能力强，但端侧难以承担完整视觉 token 和多步去噪。
-- **创新与机制**：从 2B Cosmos Policy 保留预训练主干，改为单帧 latent、缓存文本 attention sink、仅用 28 层中的 12 层与 1,008 token，并以一步 rectified flow 同时读出动作和未来视觉 latent。
-- **实验与关键结果**：作者称仅 **3.6 GPU-hours** 训练；400 个 LIBERO episode 成功率 **95.5%**，每 16 动作块 **57 ms**、2.3 TFLOP、2.4 GiB，较教师 **11×** 更快、**18.5×** 更少 FLOPs、**3.2×** 更少显存。
-- **关注价值／局限**：给端侧世界模型提供可量化的延迟／显存接口；结果集中于 LIBERO，单帧与压缩层数是否保留遮挡、长程接触和真实安全风险尚未证明。
+- **论文／作者／时间**：[arXiv:2610.18874](https://arxiv.org/abs/2610.18874)；Bingxin Xu 等；v1：2026-10-13 17:59 UTC。
+- **问题**：Agentic robotics 每个 primitive 都让 LLM 重新读取完整历史并推理，费用随 primitive 数增长，即使子目标确定后动作往往是固定套路。
+- **创新与机制**：在线时一次 LLM 调用启动一串自主执行的 primitive，仅失败才回到规划；离线把记忆编译为这些 chunk，测试时常规执行不再检索记忆，规划器只处理真正需要决策的节点。
+- **实验与关键结果**：在 LIBERO-Pro，作者称相对当时 agentic-robotics 最优方法成功率提高 **5.0 点**，LLM 调用少 **2.9×**、输入 token 少 **4.4×**、输出 token 少 **2.3×**。
+- **关注价值／局限**：将 Skill／记忆变为可预测延迟的执行单元，适合板载或受预算约束的系统；chunk 的前置条件、执行中环境突变与失败检测的漏报，决定了“少调用”是否会牺牲安全恢复。
 
-### 6. VLMs are Native Action Models: Unleashing the Manipulation Capabilities of VLMs with Explicit Action-Space Grounding
+### 5. EgoExplorer: A Vision-Motion-Touch Observatory for Human Loco-Manipulation In Situ
 
-- **论文／作者／时间**：[arXiv:2610.12832](https://arxiv.org/abs/2610.12832)；Jingkun Yi、Shujie Zhang、Zirui Zhou、Haoxiao Wang 等；v1：2026-10-09 00:33 UTC。
-- **问题**：VLA 通常另学动作 token／head，需大量机器人动作数据；纯模块化 VLM 操作又难端到端微调。
-- **创新与机制**：EASG 把以 TCP 为中心的动作坐标系投影进腕部相机画面，并把连续动作表达为 VLM 原生的文本生成接口，让预训练视觉—空间推理直接看到动作语义；同一接口也可用轨迹继续微调。
-- **实验与关键结果**：作者报告无需机器人动作预训练即可实现零样本操作，且跨物体位置、类别与机器人本体泛化；摘要未给出统一成功率数值。
-- **关注价值／局限**：将关键瓶颈从“再训练一个动作头”转为可审计的视觉动作接口；文本化连续动作的精度、相机标定误差、时延和接触力约束仍是上真机前必须量化的边界。
+- **论文／作者／时间**：[arXiv:2610.18872](https://arxiv.org/abs/2610.18872)；Yunsong Zhou 等；v1：2026-10-13 17:59 UTC。
+- **问题**：人形机器人学习既要看到行走、姿态和物体交互如何联动，又需要可扩展、轻量的真实环境采集；现有数据常只覆盖其中一部分。
+- **创新与机制**：EgoExplorer 用可穿戴设备采集 100 小时职业活动，将第一视角视频、重建全身运动、手指关节、触觉与步骤描述对齐；Calibrate-Complete-Constrain 先固定个体／传感器安装偏差，再由时间先验补全观测不到的关节并施加多层一致性约束。
+- **实验与关键结果**：对 tracker-fitted 参考，作者报告身体点误差较最强基线降低 **71.9%**，手部稳定和接触估计也改善，并给出人形重定向与仿真全身控制的初步研究。
+- **关注价值／局限**：为人形“走过去再操作”的连贯数据提供多模态证据；重建标注并非真值，职业人群与任务覆盖、隐私治理、触觉校准漂移及从人到机器人形态映射仍需审计。
 
-## 交叉方向：世界模型规划
+### 6. Interaction Latents as Actions for Contact-Rich Manipulation
 
-### 7. Sampling-based Kinodynamic Planning with World Models
+- **论文／作者／时间**：[arXiv:2610.18855](https://arxiv.org/abs/2610.18855)；Yuhang Zheng 等；v1：2026-10-13 17:59 UTC。
+- **问题**：多数策略将动作仅表示为轨迹，触觉只是输入或辅助预测，无法把接触时序和施力本身变成可生成、可比较的动作目标。
+- **创新与机制**：ILA 以视觉条件的动作—触觉联合重建学习可解码 interaction latent，用时序隐式解码器同时表达运动、接触和力；该 latent 可作为 flow-matching 的目标，也能用触觉条件专家参考做离线加权改善与失败修正。
+- **实验与关键结果**：跨三类策略家族、四项真机任务，平均成功率相对触觉条件的直接动作基线提高 **21.0–36.5 个百分点**。
+- **关注价值／局限**：将“怎样接触”提升为策略可迁移的 action interface，而不是额外传感通道；latent 可解释性、不同末端／材料的解码稳定性和高速碰撞时的力安全约束尚未由平均成功率证明。
 
-- **论文／作者／时间**：[arXiv:2610.12910](https://arxiv.org/abs/2610.12910)；Yitian Gao、Hanlan Yang、Zachary Kingston；v1：2026-10-09 03:01 UTC。
-- **问题**：CEM、MPPI 等优化器会在长时任务中陷入只奖励眼前进展的局部解，例如需要先绕开障碍再推物体的动作。
-- **创新与机制**：以视觉世界模型作 latent-space tree search 的传播器，将 RRT 最近邻引导和 KPIECE 投影探索移植到高维 latent，并用 GPU 批量扩展树节点。
-- **实验与关键结果**：在四个仿真域及真实推块任务中，作者称相对 CEM／MPPI 以最高 **13.8×** 更低规划时间达到或超过成功率，真机成功率提高 **20%**。
-- **关注价值／局限**：为世界模型补上可解释的“搜索中间状态”能力，适合长程重排与导航；latent 距离和世界模型 rollout 的物理偏差会决定树是否扩到真实可达状态，真机样本规模仍有限。
+### 7. ForceWAM: Decoupling Future and Response Learning from Demo and Play Data for Contact-Rich Manipulation
+
+- **论文／作者／时间**：[arXiv:2610.18852](https://arxiv.org/abs/2610.18852)；Zijun Xu 等；v1：2026-10-13 17:58 UTC。
+- **问题**：专家演示会告诉机器人任务应如何完成，却很少覆盖“不同动作会产生怎样的力响应”；无目标 play 则相反。
+- **创新与机制**：ForceWAM 的世界模型从成功演示预测未来视频与六维力／矩，独立 inverse dynamics model 同时由任务与 play 数据学习，将视觉—wrench future 映射为动作；部署时 IDM 用新鲜 wrench 反馈在两次世界模型更新之间反应式执行。
+- **实验与关键结果**：在真机力控滑动、带／不带扰动的翻盒与套环任务上，作者报告 **85–95%** 平均成功；加入任务无关 play 比只用演示提高 **15–45 点**。
+- **关注价值／局限**：清晰分离“任务期望的未来”与“局部接触响应”，让非任务 play 有可解释用途；力传感器噪声、接触材料转移、IDM 对分布外 wrench 的安全退化与多步模型误差仍待检验。
+
+### 8. EmbodiedEvo: Self-improving Coding Agents for Physical Intelligence
+
+- **论文／作者／时间**：[arXiv:2610.18867](https://arxiv.org/abs/2610.18867)；Wenyi Li 等；v1：2026-10-13 17:59 UTC。
+- **问题**：VLA 将观测直接映射为动作不易复用与审计；把 SWE 式“检查—改代码—执行—反馈”搬进物理世界又会遇到持续失败与经验遗忘。
+- **创新与机制**：EmbodiedEvo 让 coding agent 在一个 Playground 场景的反馈中沉淀可复用 Skills 与 Lessons，再冻结该 harness 用于新场景；代码既是控制表示，也是修改和验证工作区。
+- **实验与关键结果**：RoboDojo-Sim 平均分 **44.48**、成功率 **37.82%**，作者称超过已验证结果；Astra 经验使 Sol／Luna 较无经验提高 **8.86／5.50 点**，与原始交互历史相近的任务表现下执行成本低 **53.0%**。
+- **关注价值／局限**：可读代码与经验资产有利于复现和跨模型迁移；结果主要在仿真，细粒度接触仍困难，代码执行的权限、沙箱、技能错误累积及真机动作确认必须成为系统一部分。
 
 ## 趋势总结
 
-- **退化环境的证据需要拆因果而非加标签**：雪天 LiDAR 与热成像车辙均把天气、表面、点密度和历史通行从一个“雪”标签中拆开；安全报告应同时给协变量、时效与误判代价。
-- **世界模型正分成持续记忆、端侧预算和规划搜索三个接口**：D2R、SmolWAM、kinodynamic tree search 分别处理遗忘、算力与长程探索；它们的共同前提是模型误差要被显式审计，而非仅展示平均成功率。
-- **动作语义逐步向可观察接口靠拢**：SAS 用局部运动证据摆脱漂移地图，EASG 把动作坐标可视化给 VLM；下一步应报告接口在标定、时延、接触与 OOD 下何时不再可信。
-# GitHub 开源趋势晨报｜2026-10-14
+- **安全从模型属性变为运行时合同**：AutoAgent0 用独立感知、规则检查和恢复形成闭环，RadarGSOcc 用 Doppler 与代理指标补足退化感知；下一步应报告每个守卫的延迟、误报和未拦截风险。
+- **世界模型开始利用“坏数据”和接触后果**：LoopWAM 保留混合质量 rollout，ILA／ForceWAM 将力与接触写入动作表示或未来预测；核心评测不应只看成功率，还要看错误接触的严重度与复原成本。
+- **Agent 化机器人走向编译与可复用经验**：ChunkAct 将记忆编译为 action chunk，EmbodiedEvo 将反馈写进 Skills／Lessons；效率收益取决于前置条件、权限边界和失败时能否可靠回退。
+
+# GitHub 开源趋势晨报｜2026-10-15
 
 ## 时间与证据口径
 
-北京时间 2026-10-14，GitHub Trending 页面未能稳定取得，故本期**不声称官方 `stars today` 或 24 小时增量**。改以 [GitHub Search API](https://api.github.com/search/repositories?q=created%3A%3E%3D2026-10-07&sort=stars&order=desc) 与逐仓库 API 核对 2026-10-07 至 10-12 创建项目；“增量”均为**创建至本次查询的当前 stars**。星数、语言、许可证、创建时间和项目自述为确认信息；走红原因与适合人群为编辑推断。
+北京时间 2026-10-15，GitHub Trending 页面请求超时，因此本期**不声称官方 `stars today` 或 24 小时／7 天增量**。改以 [GitHub Search API](https://api.github.com/search/repositories?q=created%3A%3E%3D2026-10-08&sort=stars&order=desc) 筛选、逐仓库 [Repository API](https://docs.github.com/rest/repos/repos#get-a-repository) 核验 2026-10-08 至 10-10 创建项目；下表“增量依据”均为**创建至本次查询的当前 star 数**，不是日增量。星数、语言、许可证、创建时间与自述为确认信息；走红原因和适合人群均为编辑推断。
 
 | 项目 | 当前 stars | 增量依据 | 语言／类别 |
 | --- | ---: | --- | --- |
-| storytold/soundcraft | 2,543 | 创建至查询 | Rust／音频生产力 |
-| onehumanbeing/esp32-iphone-agent | 1,481 | 创建至查询 | Python／实体设备 Agent |
-| NVIDIA-Omniverse/usd-brep | 1,099 | 创建至查询 | C++／3D 几何基础设施 |
-| anthropics/oss-scanner | 963 | 创建至查询 | Dockerfile／开源安全服务 |
-| zhuyansen/new-term-radar | 855 | 创建至查询 | Python／AI 趋势数据工具 |
-| alejandrobujan/tendedero | 2,083 | 创建至查询 | Swift／macOS 生产力 |
-| marclou/mailcheap | 887 | 创建至查询 | JavaScript／自托管通信生产力 |
+| wheresryan22/anatomy | 9,909 | 创建至查询 | JavaScript／Agent Skill 与可视化 |
+| ARahim3/DigUp | 3,578 | 创建至查询 | Swift／本地语义检索 |
+| t4t5/omdrop-owl | 2,673 | 创建至查询 | Shell／跨设备传输 |
+| storytold/craft-launcher | 2,627 | 创建至查询 | Rust／桌面生产力 |
+| opengeos/RustGIS | 1,037 | 创建至查询 | Rust／GIS 基础设施 |
+| rociiu/talorys | 997 | 创建至查询 | TypeScript／个人 Agent |
+| storytold/figcraft | 872 | 创建至查询 | Rust／设计工具 |
+| tcchen2026/VibeOffice | 781 | 创建至查询 | JavaScript／本地 Office |
 
-### 1. storytold/soundcraft
+## 精选项目
 
-- **确认信息**：[仓库](https://github.com/storytold/soundcraft)／[API](https://api.github.com/repos/storytold/soundcraft)：2026-10-07 创建，2,543 stars，Rust、Apache-2.0；自述为 Avid Pro Tools 的 clean-room 开源重实现，支持多轨编辑、混音、插件、MIDI、录音、命令行与 Agent 脚本化。
-- **用途**：提供本地、可编辑的数字音频工作站底座。
-- **走红原因（推断）／适合人群**：与近期文档、表格、演示软件一起，说明社区希望 Agent 操作持续可编辑的原生工件；适合音频工具、创作工作流与本地优先产品开发者。项目标注 pre-alpha，音频驱动、插件兼容、工程文件保真和自动化权限应先隔离验证。
+### 1. wheresryan22/anatomy
 
-### 2. onehumanbeing/esp32-iphone-agent
+- **确认信息**：[仓库](https://github.com/wheresryan22/anatomy)／[API](https://api.github.com/repos/wheresryan22/anatomy)：2026-10-08 创建，**9,909 stars**，JavaScript、MIT。自述为供 Agent 创建真实机器与复杂系统交互式等轴插画的 Skill，输出 SVG，可选 WebGL shader 与 3D 效果。
+- **用途**：把结构化讲解与交互式工程示意图封装成可调用的视觉工作流。
+- **走红原因（推断）／适合人群**：可见、可交付的 SVG 比纯文字 prompt 更易展示和复用；适合技术教育、开发者文档与产品演示。采用前应检查生成素材许可证、SVG／shader 的脚本安全和复杂图的事实校验。
 
-- **确认信息**：[仓库](https://github.com/onehumanbeing/esp32-iphone-agent)／[API](https://api.github.com/repos/onehumanbeing/esp32-iphone-agent)：2026-10-11 创建，1,481 stars，Python、MIT；使用约 7 美元 ESP32-S3，经 AirPlay 看屏、USB HID 输入，让兼容 OpenAI API 的视觉模型操作真实 iPhone；项目称无需 Mac、开发者账号或越狱。
-- **用途**：把真实 iPhone 接入 Agent 的视觉—点击／输入自动化与测试回路。
-- **走红原因（推断）／适合人群**：实体 computer-use 从模拟器走向低成本实机，适合移动端测试和具身 Agent 原型。只能在隔离测试机使用；USB 信任、屏幕隐私、误触敏感 App 与不可逆操作须设置人类确认。
+### 2. ARahim3/DigUp
 
-### 3. NVIDIA-Omniverse/usd-brep
+- **确认信息**：[仓库](https://github.com/ARahim3/DigUp)／[API](https://api.github.com/repos/ARahim3/DigUp)：2026-10-08 创建，**3,578 stars**，Swift、MIT；自述为基于 EmbeddingGemma 2 的 Mac、Windows、Linux 本地搜索，可检索照片、PDF、文档、录音、视频和代码中的内容。
+- **用途**：为个人资料库提供跨模态、端侧的语义发现入口。
+- **走红原因（推断）／适合人群**：Agent 上下文的第一步往往是“找得到原始文件”，本地跨格式检索同时回应隐私与效率需求；适合资料密集型个人和本地优先产品团队。需先验证索引目录排除、模型下载、资源占用、敏感内容留存与删除同步。
 
-- **确认信息**：[仓库](https://github.com/NVIDIA-Omniverse/usd-brep)／[API](https://api.github.com/repos/NVIDIA-Omniverse/usd-brep)：2026-10-08 创建，1,099 stars，C++、Apache-2.0；提供 NURBS boundary-representation（BRep）实体建模库，依赖 OpenUSD、Python、pybind11，并含 STEP／IGES／JT 等 fixture。
-- **用途**：为 OpenUSD 场景与工程级边界表示提供可编程几何基础层。
-- **走红原因（推断）／适合人群**：机器人仿真、数字孪生和 Agent 生成 CAD 都需要超越网格外观的可制造几何；适合 Omniverse、CAD 与机器人场景管线团队。应先核查构建链、LFS 资产、几何内核正确性、格式往返和生产许可证。
+### 3. t4t5/omdrop-owl
 
-### 4. anthropics/oss-scanner
+- **确认信息**：[仓库](https://github.com/t4t5/omdrop-owl)／[API](https://api.github.com/repos/t4t5/omdrop-owl)：2026-10-08 创建，**2,673 stars**，Shell，未标注许可证；项目自述为“非 Apple 设备的 AirDrop”。
+- **用途**：提供轻量的跨设备文件传输替代方案。
+- **走红原因（推断）／适合人群**：AI 工作流持续在手机、边缘设备和桌面间移动，低摩擦传输是基础设施；适合个人多设备协作用户。未标注许可证不能默认复用，且应核验发现协议、传输加密、局域网暴露面和大文件可靠性。
 
-- **确认信息**：[仓库](https://github.com/anthropics/oss-scanner)／[API](https://api.github.com/repos/anthropics/oss-scanner)：2026-10-08 创建，963 stars，Dockerfile、Apache-2.0。README 说明该服务为关键开源项目在隔离、无互联网的 VM 中构建扫描，并通过邮件提供可复现信息与候选修复；报告为模型生成、无人审阅。
-- **用途**：为开源维护者提供面向漏洞发现的受控构建与报告接入配置。
-- **走红原因（推断）／适合人群**：Agent 写代码普及后，社区也更需要可复现的供应链安全回路；适合有维护能力的开源项目。扫描并非安全认证，需审阅服务条款、提交的构建脚本／联系方式、误报处理和负责任披露流程。
+### 4. storytold/craft-launcher
 
-### 5. zhuyansen/new-term-radar
+- **确认信息**：[仓库](https://github.com/storytold/craft-launcher)／[API](https://api.github.com/repos/storytold/craft-launcher)：2026-10-09 创建，**2,627 stars**，Rust、Apache-2.0；描述为 Craft App Launcher。
+- **用途**：为该系列原生创作／生产力应用提供统一启动入口。
+- **走红原因（推断）／适合人群**：近期 Word、CAD、音频与设计工具的 clean-room 开源重实现表明，社区希望 Agent 操作的是可编辑本地工件而非一次性导出；适合桌面生产力和工作流工具开发者。应先看实际可启动的应用范围、更新机制、签名／沙箱与跨平台完整度。
 
-- **确认信息**：[仓库](https://github.com/zhuyansen/new-term-radar)／[API](https://api.github.com/repos/zhuyansen/new-term-radar)：2026-10-12 创建，855 stars，Python、MIT；每日从 X、Hugging Face Trending、GitHub breakout 与 sitemap 等源捕捉新 AI 模型、产品、工具和仓库名称，并提供命令行、Skills 和 MCP 接口。
-- **用途**：在传统关键词工具出现趋势前，追踪新名词的早期公开信号。
-- **走红原因（推断）／适合人群**：越来越多团队将“发现什么”也纳入 Agent 工作流；适合研究情报、开发者内容与产品研究团队。它处理的是弱信号，需审计数据源条款、API key、误报率和把热度误读成可信度的风险。
+### 5. opengeos/RustGIS
 
-### 6. alejandrobujan/tendedero
+- **确认信息**：[仓库](https://github.com/opengeos/RustGIS)／[API](https://api.github.com/repos/opengeos/RustGIS)：2026-10-10 创建，**1,037 stars**，Rust、Apache-2.0；自述为纯 Rust 的快速、免费开源 GIS。
+- **用途**：提供可扩展地理空间数据处理与制图基础层。
+- **走红原因（推断）／适合人群**：空间数据正从科研与专业 GIS 下沉到机器人、数字孪生和 Web 工作流，Rust 的性能／部署可控性很有吸引力；适合地理数据、无人机与空间智能开发者。采用前要压测坐标系、格式兼容、精度、许可证与大数据集内存表现。
 
-- **确认信息**：[仓库](https://github.com/alejandrobujan/tendedero)／[API](https://api.github.com/repos/alejandrobujan/tendedero)：2026-10-07 创建，2,083 stars，Swift、未标注许可证；面向 macOS 14+，把截图沿屏幕顶端的“晾衣线”暂存并支持复制。
-- **用途**：减少截图采集、筛选与粘贴之间的上下文切换。
-- **走红原因（推断）／适合人群**：轻量、具象的本地交互仍很受欢迎，尤其适合高频记录与视觉协作用户。未标注许可证意味着不能默认可复用；还应检查截图留存位置、敏感内容清理与企业设备策略。
+### 6. rociiu/talorys
 
-### 7. marclou/mailcheap
+- **确认信息**：[仓库](https://github.com/rociiu/talorys)／[API](https://api.github.com/repos/rociiu/talorys)：2026-10-10 创建，**997 stars**，TypeScript、MIT；可一条命令部署到用户自己的 Cloudflare 账户，提供聊天、记忆、任务、笔记与定时提醒，定位为单用户、无遥测、free-tier friendly 的个人 Agent。
+- **用途**：把个人 Agent 的状态、提醒与任务放入自有云账户。
+- **走红原因（推断）／适合人群**：用户对 Agent 的偏好正从聊天窗口转为长期状态与可控托管；适合熟悉 Cloudflare 的个人自动化用户。密钥、OAuth、cron 权限、记忆删除语义和单用户隔离边界必须先审计。
 
-- **确认信息**：[仓库](https://github.com/marclou/mailcheap)／[API](https://api.github.com/repos/marclou/mailcheap)：2026-10-10 创建，887 stars，JavaScript、MIT；自托管 newsletter 应用，使用 Amazon SES，含编辑器、订阅／退订、退信投诉处理、统计、公开归档、批量与定时发送。README 标注不提供支持。
-- **用途**：让个人或小团队以自有数据库与 SES 账户运营邮件通讯。
-- **走红原因（推断）／适合人群**：生产力工具的吸引力正从“有 AI”转向数据和成本可控的完整成品；适合能自行运维的独立发布者。部署前应核验 SES 沙箱／退信合规、密钥管理、退订与隐私义务、备份和项目无人支持的维护风险。
+### 7. storytold/figcraft
+
+- **确认信息**：[仓库](https://github.com/storytold/figcraft)／[API](https://api.github.com/repos/storytold/figcraft)：2026-10-09 创建，**872 stars**，Rust、Apache-2.0；自述为纯 Rust 的界面设计与原型制作、协作式设计工作流 clean-room 重实现。
+- **用途**：在本地创建和编辑界面设计／原型工件。
+- **走红原因（推断）／适合人群**：当 Agent 开始生成 UI，持续可编辑、可 diff 的设计文件比静态截图更重要；适合设计工具、产品原型和设计系统团队。应关注导入／导出保真、协作冲突、字体资产与插件／脚本的权限模型。
+
+### 8. tcchen2026/VibeOffice
+
+- **确认信息**：[仓库](https://github.com/tcchen2026/VibeOffice)／[API](https://api.github.com/repos/tcchen2026/VibeOffice)：2026-10-08 创建，**781 stars**，JavaScript、Apache-2.0；浏览器中运行的免费 Office 套件，项目称不需安装、账户或服务器，文件在用户电脑打开、编辑、保存。
+- **用途**：提供本地文件为中心的文档、表格和演示编辑表面。
+- **走红原因（推断）／适合人群**：本地可编辑 Office 是 Agent 交付业务工件的关键最后一公里；适合隐私敏感的个人与轻量协作场景。需实际验证 DOCX/XLSX/PPTX 兼容性、宏／外链处理、浏览器存储清理和离线恢复。
 
 ## 技术趋势与社区偏好
 
-- **Agent 操作面扩展为音频、手机与工程几何**：SoundCraft、ESP32 iPhone Agent、USD BRep 分别把可执行工件延伸到音频工程、真实设备和实体建模；每一层都需要相应的权限、格式和物理正确性检查。
-- **“发现—构建—审计”正在成为相连的基础设施**：new-term-radar 提供早期信号，oss-scanner 提供隔离扫描；社区兴趣已不止于调用模型，也关注输入如何出现、代码如何被验证。
-- **本地优先产品的评估从体验走向数据治理**：Tendedero 与 Mailcheap 强调低摩擦、低成本和自托管，但截图、联系人、邮件发送都是敏感数据面，许可证、留存、删除与合规不能被 star 数替代。
+- **Agent 的产物正由回答转向可继续编辑的原生工件**：Anatomy、FigCraft、Craft Launcher 与 VibeOffice 覆盖视觉说明、设计和办公表面；评估重点应是格式保真、脚本权限与后续编辑，而非 demo 图的美观。
+- **“本地可发现、自己可托管”形成个人 Agent 的数据底座**：DigUp 处理端侧检索，Talorys 将长期状态放进自有账户；两者都需要将索引范围、删除传播、密钥与记忆授权当作产品功能审查。
+- **空间与跨设备能力进入通用工具层**：RustGIS 和 omdrop-owl 分别对应空间数据与设备间素材流动。开源热度说明边界在扩大，但坐标精度、传输认证、许可证与实际可靠性仍不能由 star 数替代。
+
 ## 历史归档
 
 报告按 [reports/](reports/) 下的 `YYYY-MM-DD/` 保存，保留每日 arXiv 与 GitHub Trending 独立文件。
