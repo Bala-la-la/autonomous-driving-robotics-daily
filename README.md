@@ -2,140 +2,139 @@
 
 每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-10-16
+## 最新一期｜2026-10-17
 
-- [arXiv 独立报告](reports/2026-10-16/arxiv.md)
+- [arXiv 独立报告](reports/2026-10-17/arxiv.md)
 
-- [GitHub Trending 独立报告](reports/2026-10-16/github-trending.md)
+- [GitHub Trending 独立报告](reports/2026-10-17/github-trending.md)
 
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-10-16
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-10-17
 
 ## 日期与证据口径
 
-北京时间 2026-10-16 检索 [arXiv API](https://export.arxiv.org/api/query?search_query=%28cat%3Acs.RO%20OR%20cat%3Acs.AI%20OR%20cat%3Acs.CV%29%20AND%20submittedDate%3A%5B202610140000%20TO%202610142359%5D&start=0&max_results=100&sortBy=submittedDate&sortOrder=descending)。以下 7 篇均为 **2026-10-14 UTC** 首次提交的新稿；实验数字均为作者报告，未独立复现；“关注价值／局限”为编辑判断。
+北京时间 2026-10-17 检索 [arXiv API](https://export.arxiv.org/api/query?search_query=all%3Arobot&start=0&max_results=35&sortBy=submittedDate&sortOrder=descending)。以下选题均为 **2026-10-15 UTC** 首次提交；实验数字均为作者报告，未独立复现；“关注价值／局限”为编辑判断。
 
-## 自动驾驶、感知与安全运行时
+## 自动驾驶、预测与导航
 
-### 1. SafeDriveVLA: Navigation-Conditioned World Model Dreaming for Conflict-Aware End-to-End Autonomous Driving
+### 1. FutureLift: Lifting Trajectory Proposals into Bidirectional Future Graphs for Motion Forecasting
 
-- **论文／作者／时间**：[arXiv:2610.20609](https://arxiv.org/abs/2610.20609)；Shaoyuan Xie、Zihan Zhang、Jingxuan Wang 等（含 Lingdong Kong、Henrik I. Christensen、Qi Alfred Chen）；v1：2026-10-14 17:59 UTC。
-- **问题、创新与机制**：自由文本导航让驾驶 VLA 能理解更多指令，也引入“指令与当前交通冲突”的攻击面。SafeDriveVLA 新建同时评测语言跟随、冲突感知与对抗鲁棒性的基准；先预测三档 navigation-compliance mode，将“该不该服从”从动作生成中拆出，再让世界模型假设严格执行指令进行 dreaming，以识别跟随是否安全。
-- **实验与关键结果**：Bench2Drive 上报告 **88.16 DS、68.64% SR**；相对最强 SimLingo 变体，闭环语言跟随提升 **49.3%**，不安全指令下碰撞从 **60 降至 38**。**关注价值／局限**：世界模型不只预测“专家会做什么”，而用于反事实的指令安全审查；但三档模式、仿真冲突覆盖与 dream 误差能否承受真实感知延迟、法规差异和长尾交互仍待验证。
+- **论文／作者／时间**：[arXiv:2610.22215](https://arxiv.org/abs/2610.22215)；Daniel Grimm、J. Marius Zöllner；v1：2026-10-15 17:00 UTC。
+- **问题、创新与机制**：多模态轨迹预测器会留下相关、可修正的残差，但既有 refiner 常把整条候选压缩，或按时间单向修改，后段证据无法反过来纠正前段。FutureLift 将每个候选未来表示为异构 future graph：时间节点连接历史、地图、其他 mode，以及联合预测中的其他体未来；双向时间边一次消息传递后共同输出坐标与置信度残差。
+- **实验与关键结果**：在 Argoverse2、Waymo Open Motion Dataset 上为冻结候选持续改进；WOMD 标准输入比较中报告 **minADE 0.5049 m、minFDE 0.9942 m**，并有 **0.4874 Soft mAP**。**关注价值／局限**：这是能接到不同 backbone 后的结构化“预测校正层”，对多车交互有直接价值；但榜单离线误差未证明其对闭环风险、计算时延和低概率危险 mode 的校准收益。
 
-### 2. VITAL: From Visual Motion to Precise Action
+### 2. Onboard Lightweight LLM Reasoning for Human-Aware Safe UAV Navigation
 
-- **论文／作者／时间**：[arXiv:2610.20604](https://arxiv.org/abs/2610.20604)；Ao Liang、Youquan Liu、Mingxiao Li 等（含 Lingdong Kong）；v1：2026-10-14 17:59 UTC。
-- **问题、创新与机制**：世界—动作模型通常把视觉未来和轨迹 token 分开训练，导致动作没有以视觉动力学为主坐标。VITAL 将动作拆成视觉推导的运动 scaffold 与编码厘米级轨迹偏差的紧凑 residual；flow matching 仅由当前图像、车体状态和导航命令预测二者，后训练只在残差坐标内受限优化，不必在线生成未来视频。
-- **实验与关键结果**：NAVSIM v1 navtest 一步去噪即 **90.8 PDMS**，距十步仅 **0.13**，端到端速度 **3.29×**；不重训迁至 NAVSIM v2 报告 **91.1 EPDMS**、navhard **38.6**。**关注价值／局限**：把可解释视觉运动和高精度校正分层，直接对准实时部署；不过离线指标未替代真实闭环安全，视觉 scaffold 在遮挡、湿滑和传感器失效时的误差上界仍需给出。
+- **论文／作者／时间**：[arXiv:2610.22092](https://arxiv.org/abs/2610.22092)；Siwei Cai、Yuwei Wu、Vijay Kumar、Lifeng Zhou；v1：2026-10-15 15:43 UTC。
+- **问题、创新与机制**：占据栅格将人、车、墙一律当障碍，且遮挡会丢掉人的专属安全间距。该系统以 BLIP 生成场景描述与文本条件分割，结合深度定位；Qwen-2.5-0.5B 经 RAG 和 grammar-constrained JSON 推理“类别—间距”规则。LLM 只对新类别调用、按类别缓存，物体身份跨遮挡持久化，因而不在控制临界回路内。
+- **实验与关键结果**：Jetson Orin NX 感知链 **10 Hz**，LLM 回退约 **0.8 s**；Gazebo 城市场景碰撞约降 **3×**，动态落地成功率由 **34% 升至 96%**。**关注价值／局限**：展示语言推理可变成明确、缓存的规划约束；小物体远距感知、类别判断错配、缓存过期与仿真到真实人群行为仍是安全边界。
 
 ## 机器人／具身智能
 
-### 3. HiRe-MoMa: Hierarchical Residual Policy Learning for Real-World Mobile Manipulation with Sparse Human Guidance
+### 3. Value as Memory: Online Value-Guided Post-training for General Robot Policies
 
-- **论文／作者／时间**：[arXiv:2610.20607](https://arxiv.org/abs/2610.20607)；Zhefei Gong、Hefeifei Jiang、Zehao Wang、Jiachen Li 等；v1：2026-10-14 17:59 UTC。
-- **问题、创新与机制**：移动底盘与机械臂耦合、动作维高，真机微调既昂贵又容易破坏底座策略。HiRe-MoMa 冻结基策略，只学习 policy-agnostic additive residual；将残差拆为底盘与手臂 head，并用单向条件减少梯度干扰；Expert-Guided Value Alignment 用覆盖不足 20% 的稀疏人类干预重塑 critic，指引探索。
-- **实验与关键结果**：作者称在 TIAGo++ 上仅约 **30 分钟**在线交互即可稳定提升不同底座策略的任务表现。**关注价值／局限**：残差与稀疏干预提供低风险、低样本的真机适配接口；摘要没有统一成功率、碰撞或回退统计，跨平台、人与环境动态变化、以及人为纠正偏差是否会被价值函数放大仍需审计。
+- **论文／作者／时间**：[arXiv:2610.22368](https://arxiv.org/abs/2610.22368)；Wenye Yu、Yijin Chen、Kaiyi Xiong 等（含 Cewu Lu、Chuan Wen）；v1：2026-10-15 17:59 UTC。
+- **问题、创新与机制**：部分可观测的长任务让单帧动作歧义，离线后训练又无法及时利用真机经验。VaM 把近期 value prediction 缓存为任务进度记忆，并将离线演示、离策略干预与在线 rollout 合并：先以 offline RL warm-up，再在稀疏奖励下自主更新。
+- **实验与关键结果**：可变形与接触密集任务中，value cache 平均成功率绝对提升 **29.4%**，在线自主学习比配套离线训练高 **32.8%**；在同一梯度预算下完成 **8×** policy iteration，记录的单 step 时间低逾 **2×**。**关注价值／局限**：把 value 从训练信号变成固定长度控制状态；value 漂移、错误干预和在线探索的碰撞／恢复成本需要独立报告。
 
-### 4. KinoGen: Customizable Humanoid Loco-Manipulation References via Kinematically Grounded Video Generation
+### 4. T2-z: Test-Time Optimization of Environment Latents for Robotic World Models
 
-- **论文／作者／时间**：[arXiv:2610.20552](https://arxiv.org/abs/2610.20552)；Qi Wu、Lulu Zhao、Sanghyun Hahn 等；v1：2026-10-14 17:43 UTC。
-- **问题、创新与机制**：视频生成的类人参考通常要经人体代理重定向，容易造成穿透、脚滑和无法精确满足物体目标。KinoGen 以目标机器人和物体的标定仿真渲染条件化视频生成器，再将同一模型拟合回双视角视频，令参考天然落在机器人构型空间；编辑关键帧的物体位姿即可重新生成并反优化参考。
-- **实验与关键结果**：八项 loco-manipulation 任务中，相比视频基线穿透与脚滑更低、保留 **90% 以上**标注接触；定制参考满足全部指定目标，并在 Unitree G1 灵巧手上部署跟踪策略。**关注价值／局限**：把生成先验绑定到运动学可执行性，而不是仅追求视觉真实；物理接触、摩擦、动力学稳定和生成偏差是否会在长时全身执行中累积仍需实机风险曲线。
+- **论文／作者／时间**：[arXiv:2610.22364](https://arxiv.org/abs/2610.22364)；Chenyuan Zhou、Yining Hong、Huang Huang 等（含 David Held、Li Fei-Fei、Jiajun Wu、Yejin Choi）；v1：2026-10-15 17:59 UTC。
+- **问题、创新与机制**：摩擦、质量和人为规则等环境变量未必可见，世界模型遇到新环境会失配。T2-z 在 action-conditioned world model 上加紧凑 environment latent；训练交替冻结 latent 学通用动力学、冻结模型优化 latent 使结构自行涌现；测试时冻结世界模型，只从一次或数次交互优化新 latent。
+- **实验与关键结果**：7 个仿真设置和 4 个真机任务中，对象预测误差从 **15.20 降至 7.00**，动作成功率从 **33.73% 升至 72.96%**，并称单条交互轨迹即可推断变量。**关注价值／局限**：以小型可适配状态连接环境变化和计划模型；测试时优化可能受噪声、局部极值和不安全探测动作影响，潜变量可解释性并非因可分离而自动成立。
 
-### 5. TacClaw-Infinity: A Large-Scale Vision-Tactile-Language-Action Dataset for Dexterous Manipulation
+### 5. CoDA: Co-Evolution of Data Engines and Action Policies
 
-- **论文／作者／时间**：[arXiv:2610.20320](https://arxiv.org/abs/2610.20320)；论文团队；v1：2026-10-14 15:06 UTC。
-- **问题、创新与机制**：触觉操作数据难大规模收集，且多模态数据常缺乏质量控制和结构化接触监督。TacClaw 以带触觉的 UMI 式手持接口同步记录视觉、指尖触觉与末端轨迹，无需采集时指定目标机器人；分布式采集后通过轨迹重建、多模态质检、具身过滤、接触分段、子任务描述和空间标注形成 VTLA 数据。
-- **实验与关键结果**：论文报告全球家庭、实验室、工厂、零售与户外采集超过 **10,000 小时、100 万 episode、10 亿帧、1,000+ 任务类型**，并展示向三种异构机器人迁移且不使用机器人专属演示。**关注价值／局限**：数据规模首次把触觉、语言和接触过程放进同一可筛选管线；采集设备校准、触觉材料／传感器差异、分布式标注一致性、隐私和任务长尾仍比帧数更决定可用性。
+- **论文／作者／时间**：[arXiv:2610.22362](https://arxiv.org/abs/2610.22362)；Tianjiao Yu、Zhilin Ou、Yifan Shen 等；v1：2026-10-15 17:59 UTC。
+- **问题、创新与机制**：生成出物理有效的仿真环境不代表它正好训练到策略失败点。CoDA 将环境构造、策略失败和学习进度写入异构记忆，由 VLM critic 的验证诊断编译为生成程序与训练程序；Text2potential 将诊断转为阶段化 potential，给 action-chunk value learning 稠密监督，同时保留最优策略的理论形状约束。
+- **实验与关键结果**：四类操作任务的 OOD 成功率从 SFT 的 **5.3% 到 27.6%**，比最强闭环基线高 **9.5 个百分点**；LIBERO-Pro 在 15 轮生成—训练后，位置扰动成功由 **25% 到 84%**，指令扰动由 **1% 到 76%**。**关注价值／局限**：数据引擎终于按失败诊断而非视觉多样性自适应；critic 误诊、程序可执行性与生成分布偏置可能形成自证循环，需公开失败样本和停止条件。
 
-### 6. AdaRSI: On-Demand Recursive Self-Improvement for Embodied Agents
+### 6. Spark-0: Scaling Spatially Aligned Tactile Pretraining for Robot Dexterous Manipulation
 
-- **论文／作者／时间**：[arXiv:2610.20474](https://arxiv.org/abs/2610.20474)；论文团队；v1：2026-10-14 16:51 UTC。
-- **问题、创新与机制**：具身 RSI 若只改 harness，补不了执行器缺失技能；若见失败就微调，又会浪费数据并拟合系统调用错误。AdaRSI 先由 coding agent 修改 Skills／harness，再从保存状态重试失败子步骤作归因；仅对持续不可靠的子步骤用自采演示微调 VLA，并跨任务保留经验。
-- **实验与关键结果**：以 GR00T N1.5 为执行器、无人工演示，在 RoboCasa365 未见组合任务成功率从 **4.6% 到 13.8%**；相较每个子步骤都微调，略高成功且仅用 **28% GPU 时间、22% 自采演示**。**关注价值／局限**：把“改调用方式”与“改权重”作为可验证决策，减少盲目在线训练；仿真存档状态、代码 agent 权限和自采失败样本的安全／偏差，仍是上真机前的硬约束。
+- **论文／作者／时间**：[arXiv:2610.22342](https://arxiv.org/abs/2610.22342)；Tianxing Chen、Wenwei Lin、Chuqiao Lyu 等（含 Renjing Xu、Ping Luo、Wenbo Ding）；v1：2026-10-15 17:56 UTC。
+- **问题、创新与机制**：视觉预训练难看见力、顺应性和初始滑移。Spark-0 将触觉手套生成的图像空间接触图和冻结 3D teacher 用作视觉 token 的预训练监督（推理时移除）；触觉支路则编码区域力历史与 3D taxel，条件化 action expert。HumanTouch 提供 **1,000 小时**全手人类触觉操作，SparkArena 同时含仅视觉仿真与触觉真机轨道。
+- **实验与关键结果**：作者报告 SparkArena 两轨最高均值成功率、Ego Humanoid Manipulation Benchmark 八项 aggregate 第一；保留触觉监督令 vision-only 的 Ego Humanoid 成功率 **52.5%→71.7%**，真机触觉轨 **44.0%→52.0%**。**关注价值／局限**：触觉不只是部署输入，也是可规模化的视觉预训练监督；手套—机器人接触几何、材料和 taxel 标定迁移，以及大规模人类采集许可需核验。
 
-## 交叉方向：SLAM／3D／多智能体世界模型
+### 7. Mem4Act: Learning Effective Latent Memory for Long-Horizon Robotic Manipulation
 
-### 7. Tiered-Resolution Volumetric Mapping for Real-Time Simultaneous Planning and Mapping on Natural Outdoor Environments
-
-- **论文／作者／时间**：[arXiv:2610.20476](https://arxiv.org/abs/2610.20476)；论文团队；v1：2026-10-14 16:51 UTC。
-- **问题、创新与机制**：全局细粒度 LiDAR 体素图占用集成、存储和 CPU，但规划器真正要走的区域很少。方法把同一地图同时以路径走廊内细分辨率、其他区域粗分辨率集成；规划反向给建图反馈，动态调节 leaf resolution，而非传统单向“建图后再规划”。
-- **实验与关键结果**：两个真实遥操作数据集离线回放中，分层图比统一细图小 **13–15×**、集成 CPU 少 **6–8×**，路径每米成本近似；统一粗图虽同样省空间，困难场景路径成本却恶化 **210%**。**关注价值／局限**：为长期户外自主把地图预算与任务相关性绑定；离线路径代价不等于在线安全，走廊外突发障碍、规划变更滞后和多传感器不一致还需闭环评测。
+- **论文／作者／时间**：[arXiv:2610.22323](https://arxiv.org/abs/2610.22323)；Yun Zhang、Zhiyu Huang、Tianhui Cai 等；v1：2026-10-15 17:51 UTC。
+- **问题、创新与机制**：保留原始历史会让控制输入越来越长，只压缩视觉 token 又会丢任务证据。Mem4Act 用多粒度时间聚合生成固定长度 memory，以 QA 监督保留语义、以关键帧 DINO 重建保留感知；memory-first 两阶段训练迫使策略实际使用它。
+- **实验与关键结果**：RoboMME、RMBench 和四个真机操作任务的成功率分别报 **49.88%／61.0%／81.5%**。**关注价值／局限**：把长期记忆做成受限、可训练的动作接口，与今天 value cache 形成互补；固定容量在任务突变、误记和多阶段纠错下的失效证据尚需显示。
 
 ## 趋势总结
 
-- **把“是否执行”从动作模型中剥离**：SafeDriveVLA 审查语言指令，AdaRSI 诊断失败属于 harness 还是执行器；后续应报告该决策层的误报、漏报、时延与权限边界。
-- **生成模型正被约束为可执行中间表示**：VITAL 的视觉 scaffold+残差、KinoGen 的运动学视频参考都不是只生成内容；评价必须延伸到真实闭环、接触与回退成本。
-- **真实数据和地图走向“任务条件化”**：TacClaw-Infinity 以接触与具身过滤组织大规模数据，Tiered Mapping 以规划走廊配置空间分辨率；规模收益需要附带采集质量、传感器迁移与异常场景覆盖证据。
+- **未来与历史都被显式结构化**：FutureLift 用未来图做残差校正，VaM 和 Mem4Act 把进度／历史压缩成控制状态；接下来应同时量化精度、记忆污染和端到端时延。
+- **世界模型走向测试时环境适配与失败驱动数据闭环**：T2-z 以低维 latent 解释环境差异，CoDA 以诊断重排数据预算；两者的关键风险都是错误归因后的自强化。
+- **部署约束进入学习目标**：Spark-0 用触觉作可迁移监督，UAV 系统把 LLM 推理降为缓存的非关键路径约束；高分不应替代传感器偏差、权限、回退和真机安全曲线。
 
-# GitHub 开源趋势晨报｜2026-10-16
+# GitHub 开源趋势晨报｜2026-10-17
 
 ## 时间与证据口径
 
-北京时间 2026-10-16，官方 Trending 入口的可复现归档仅稳定到 [2026-10-15 07:00 UTC 快照](https://githubtrending.today/archive/2026-10-15/)，故下列“日增量”是该快照所载 GitHub `stars that day`，而非当前时刻实时数。当前 star、语言、许可证、创建时间与仓库简介由 [Repository API](https://docs.github.com/rest/repos/repos#get-a-repository) 于本次运行复核；“走红原因／适合人群”均为编辑推断。已排除渗透测试与营销不明项目。
+北京时间 2026-10-17 使用 [2026-10-16 06:58 UTC 的 Trending 归档快照](https://githubtrending.today/archive/2026-10-16/)；表中“日增量”是快照记录的 GitHub `stars that day`，不是本次查询时的实时增量。当前 star、语言、许可证与项目简介以本次 [Repository API](https://docs.github.com/rest/repos/repos#get-a-repository) 查询为准；“走红原因／适合人群”均为编辑推断。已排除攻击、营销或用途不明项目。
 
-| 项目 | 当前 stars | 10-15 日增量依据 | 语言／类别 |
+| 项目 | 当前 stars | 10-16 日增量依据 | 语言／类别 |
 | --- | ---: | ---: | --- |
-| morluto/rea | 268,189 | Trending +41,034 | TypeScript／Agent 逆向工程 |
-| debpalash/VoiceStudio | 68,877 | Trending 日榜入选 | Python／本地语音生产 |
-| K-Dense-AI/scientific-agent-skills | 50,379 | Trending +163 | Python／科研 Skills |
-| HKUDS/CLI-Anything | 53,055 | Trending +103 | Python／Agent CLI 接口 |
-| ifixai-ai/iFixAi | 28,332 | Trending +2,109 | Python／Agent 审计 |
-| mksglu/context-mode | 29,752 | AI/LLM Trending +947 | TypeScript／上下文基础设施 |
-| xtool-org/xtool | 11,573 | Trending +1,502 | Swift／跨平台构建工具 |
-| NationalSecurityAgency/ghidra | 88,647 | Trending +1,008 | Java／逆向工程基础设施 |
+| morluto/rea | 289,949 | Trending +32,314 | TypeScript／Agent 逆向 |
+| anthropics/claude-plugins-official | 40,441 | Trending +307 | Python／官方插件目录 |
+| K-Dense-AI/scientific-agent-skills | 51,423 | Trending +1,091 | Python／科研 Skills |
+| JuliusBrussee/caveman | 113,051 | Trending +433 | Go／上下文压缩 |
+| debpalash/VoiceStudio | 70,951 | Trending +3,024 | Python／本地语音生产 |
+| obra/superpowers | 300,630 | Trending +582 | Shell／Agent 工程方法 |
+| mksglu/context-mode | 30,193 | Trending +904 | TypeScript／Agent 上下文基础设施 |
+| xerj-org/xerj | 6,857 | Trending +715 | Rust／数据检索基础设施 |
 
 ## 精选项目
 
 ### 1. morluto/rea
 
-- **确认信息**：[仓库](https://github.com/morluto/rea)／[API](https://api.github.com/repos/morluto/rea)：TypeScript、MIT，当前 **268,189 stars**；10-15 日榜快照 **251k、+41,034**。自述为“以 Agent 从应用行为一路逆向到原生二进制”。
-- **用途**：将运行时观察、反编译与 Agent 驱动分析汇到一个逆向工作流。
-- **走红原因（推断）／适合人群**：能把复杂、难演示的二进制分析变成可见的 Agent 任务链，具传播性；适合研究人员、兼容性／迁移与授权安全测试团队。高权限样本执行、许可证兼容、输出证据可复核性与合法授权范围应先明确。
+- **确认信息**：[仓库](https://github.com/morluto/rea)／[API](https://api.github.com/repos/morluto/rea)：TypeScript、MIT，当前 **289,949 stars**；10-16 Trending 快照 **277k、+32,314**，项目自述将运行时行为分析延伸到原生二进制逆向。
+- **用途**：把观察、反编译与 Agent 分析编成一条可执行的逆向工作流。
+- **走红原因（推断）／适合人群**：把高门槛分析转成可见的任务链，兼具实用和演示性；适合获授权的兼容性、迁移与安全研究团队。样本执行隔离、证据可复核性、许可证与合法授权范围必须先于自动化推进。
 
-### 2. debpalash/VoiceStudio
+### 2. anthropics/claude-plugins-official
 
-- **确认信息**：[仓库](https://github.com/debpalash/VoiceStudio)／[API](https://api.github.com/repos/debpalash/VoiceStudio)：Python、AGPL-3.0，当前 **68,877 stars**，10-15 日榜入选；自述为全本地 ElevenLabs 替代品，含语音克隆、设计、视频配音、听写、转录和有声书。
-- **用途**：提供本地语音内容生产与处理界面。
-- **走红原因（推断）／适合人群**：本地运行同时满足多语内容需求和隐私担忧；适合创作者、无障碍工具和媒体原型团队。必须验证语音授权／同意、模型与数据许可、GPU 需求、合成音标识及对敏感内容的滥用防护。
+- **确认信息**：[仓库](https://github.com/anthropics/claude-plugins-official)／[API](https://api.github.com/repos/anthropics/claude-plugins-official)：Python、Apache-2.0，当前 **40,441 stars**；Trending 日榜 **+307**。简介称为官方维护的高质量 Claude Code 插件目录。
+- **用途**：分发、发现与安装面向编码 Agent 的插件能力。
+- **走红原因（推断）／适合人群**：官方目录降低发现和兼容成本，反映 Skills/插件已成为生产力层的主要分发面；适合平台管理员和工具作者。采用时仍须逐插件确认权限、供应链版本锁定、遥测与可卸载性，目录“官方”不等于每项工作流已适配本地治理。
 
 ### 3. K-Dense-AI/scientific-agent-skills
 
-- **确认信息**：[仓库](https://github.com/K-Dense-AI/scientific-agent-skills)／[API](https://api.github.com/repos/K-Dense-AI/scientific-agent-skills)：Python、MIT，当前 **50,379 stars**；日榜快照 **49.7k、+163**。项目称含 177 个科研 Skills 和 100+ 科学数据库接口，兼容多种 Agent。
-- **用途**：把检索、分析与科研数据库操作封装为可安装的能力资产。
-- **走红原因（推断）／适合人群**：Skill 从 prompt 集合向可复用工作流分发转变；适合数据驱动的科研团队和构建科研 Agent 的开发者。采用前应逐 Skill 审计数据库条款、版本锁定、可复现实验环境和结论来源，不能将“验证”自述等同于科学结论验证。
+- **确认信息**：[仓库](https://github.com/K-Dense-AI/scientific-agent-skills)／[API](https://api.github.com/repos/K-Dense-AI/scientific-agent-skills)：Python、MIT，当前 **51,423 stars**；Trending **+1,091**。项目自述 177 个科研 Skills、100+ 科学数据库接口，兼容多种 Agent。
+- **用途**：把检索、分析和数据库操作封装成可安装能力资产。
+- **走红原因（推断）／适合人群**：科研工作流里“工具和来源”比泛化 prompt 更有复用价值；适合科研数据团队。数据库条款、结果可追溯性和所谓验证范围需要逐 Skill 审计，不能将工具可用性误作结论可信度。
 
-### 4. HKUDS/CLI-Anything
+### 4. JuliusBrussee/caveman 与 mksglu/context-mode
 
-- **确认信息**：[仓库](https://github.com/HKUDS/CLI-Anything)／[API](https://api.github.com/repos/HKUDS/CLI-Anything)：Python、Apache-2.0，当前 **53,055 stars**；日榜快照 **52.7k、+103**，定位为使软件 Agent-native 的 CLI。
-- **用途**：为既有图形软件或工具建立 Agent 可调用的命令行操作面。
-- **走红原因（推断）／适合人群**：Agent 真正落地需要稳定动作接口，而非屏幕坐标；适合开发工具维护者与自动化平台。应检查命令幂等、参数校验、撤销／预演、鉴权、版本兼容和命令注入边界。
+- **确认信息**：[caveman](https://github.com/JuliusBrussee/caveman)／[API](https://api.github.com/repos/JuliusBrussee/caveman)：Go、Apache-2.0，当前 **113,051 stars**、Trending **+433**，自述为减少 coding agent token 的 Skill/proxy；[context-mode](https://github.com/mksglu/context-mode)／[API](https://api.github.com/repos/mksglu/context-mode)：TypeScript、未声明 SPDX，当前 **30,193 stars**、Trending **+904**，自述以 MCP+hooks 隔离工具输出、持久记忆及跨平台路由。
+- **用途**：前者压缩表达与调用成本，后者管理上下文、记忆和工具噪声。
+- **走红原因（推断）／适合人群**：长任务成本和稳定性成为 Agent 的共同痛点；适合运行频繁、工具输出重的开发团队。压缩可能丢失安全关键信息；持久记忆还要明确保留、删除、访问控制，未声明许可证限制复用判断。
 
-### 5. ifixai-ai/iFixAi
+### 5. debpalash/VoiceStudio
 
-- **确认信息**：[仓库](https://github.com/ifixai-ai/iFixAi)／[API](https://api.github.com/repos/ifixai-ai/iFixAi)：Python、Apache-2.0，当前 **28,332 stars**；日榜快照 **27.9k、+2,109**。项目定位为独立审计 AI Agent 是否按预期行动。
-- **用途**：面向 Agent 执行轨迹提供审计／核验层。
-- **走红原因（推断）／适合人群**：社区注意力正从“Agent 能不能做”转向“做了什么、能否证明”；适合有合规、生产变更或高权限工具调用的团队。独立性、审计覆盖率、日志保密、评审基准和误报成本必须由部署方单独验证。
+- **确认信息**：[仓库](https://github.com/debpalash/VoiceStudio)／[API](https://api.github.com/repos/debpalash/VoiceStudio)：Python、AGPL-3.0，当前 **70,951 stars**、Trending **+3,024**；项目称提供全本地语音克隆、设计、视频配音、听写、转录与有声书流程。
+- **用途**：在本地端完成多语音频与视频语音生产。
+- **走红原因（推断）／适合人群**：本地化将隐私、离线和一体化交付放进同一个产品；适合创作者、无障碍和媒体原型团队。语音授权／同意、模型和素材许可、算力、输出标识及 AGPL 合规是先决条件。
 
-### 6. mksglu/context-mode
+### 6. obra/superpowers
 
-- **确认信息**：[仓库](https://github.com/mksglu/context-mode)／[API](https://api.github.com/repos/mksglu/context-mode)：TypeScript、未声明 SPDX 许可证，当前 **29,752 stars**；AI/LLM Trending 快照 **29.4k、+947**。项目称以 MCP 与 hooks 压缩工具输出、持久化会话记忆并跨平台路由。
-- **用途**：为 coding agent 管理上下文长度、记忆和工具输出。
-- **走红原因（推断）／适合人群**：实际 Agent 成本与稳定性常被上下文污染而非模型能力限制；适合长任务编码团队。应先审计压缩丢失是否影响安全决策、持久记忆的保留／删除策略、MCP 连接权限和未声明许可证的复用边界。
+- **确认信息**：[仓库](https://github.com/obra/superpowers)／[API](https://api.github.com/repos/obra/superpowers)：Shell、MIT，当前 **300,630 stars**、Trending **+582**，定位为 Agentic Skills 框架与软件开发方法论。
+- **用途**：提供可复用的开发步骤、约束和 Skill 编排范式。
+- **走红原因（推断）／适合人群**：社区正在从单次提示转向可传递的工程过程；适合想标准化 Agent 编码流程的团队。必须用自身仓库评估测试、审查、失败恢复和工具权限，不能直接把流程文档当质量保证。
 
-### 7. xtool-org/xtool 与 NationalSecurityAgency/ghidra
+### 7. xerj-org/xerj
 
-- **确认信息**：[xtool](https://github.com/xtool-org/xtool)／[API](https://api.github.com/repos/xtool-org/xtool)：Swift、MIT，当前 **11,573 stars**，日榜 **+1,502**，提供跨平台 Xcode 替代与 SwiftPM 构建部署；[Ghidra](https://github.com/NationalSecurityAgency/ghidra)／[API](https://api.github.com/repos/NationalSecurityAgency/ghidra)：Java、Apache-2.0，当前 **88,647 stars**，日榜 **+1,008**，是软件逆向工程框架。
-- **用途**：前者补齐跨平台原生应用构建，后者提供成熟的二进制分析底座。
-- **走红原因（推断）／适合人群**：两者说明热榜并非只奖励 LLM wrapper；可部署构建链与可验证底层分析同样是 Agent 自动化的关键依赖。适合移动／系统工程与安全研究团队；需按平台 SDK、签名、供应链及合法授权范围做评估。
+- **确认信息**：[仓库](https://github.com/xerj-org/xerj)／[API](https://api.github.com/repos/xerj-org/xerj)：Rust、Apache-2.0，当前 **6,857 stars**、Trending **+715**；项目自述能索引代码、文档、日志和 PDF，提供兼容 Elasticsearch 的 Agent 数据搜索。
+- **用途**：为 RAG、代码检索、审计和记忆提供统一索引入口。
+- **走红原因（推断）／适合人群**：Agent 需要的不只是更长上下文，还要可搜索、可控成本的数据层；适合已有 Elasticsearch 客户端或多数据源研发团队。索引范围、敏感日志脱敏、ACL 同步、召回评估与“40×”等自述性能需在真实语料中复核。
 
 ## 技术趋势与社区偏好
 
-- **Agent 栈进入“动作—记忆—审计”三件套**：CLI-Anything 提供动作面，context-mode 管理状态，iFixAi 强调独立核验；生产采用应把权限、回滚和证据保留作为共同接口。
-- **Skills 正在垂直化为领域分发物**：scientific-agent-skills 将工具、数据库和流程打包；热度不能代替数据条款、版本和研究结论的核验。
-- **本地与底层能力仍是开源注意力中心**：VoiceStudio、xtool、Ghidra 和 rea 分别覆盖本地媒体、构建、二进制与 Agent 逆向。社区偏好的是可以真正执行与检查的完整工作流，但高权限边界比 star 数更值得先审。
+- **能力资产化进入官方目录和垂直包并存阶段**：官方插件目录、科研 Skills 与 superpowers 分别解决发现、领域流程和方法模板；重点从“能安装”转向版本、权限和可验证效果。
+- **Agent 的成本层成为独立基础设施**：caveman、context-mode 与 xerj 指向表达、工具输出和数据检索三类 token/上下文成本；压缩、缓存和检索必须连同遗漏风险与数据治理一并设计。
+- **社区仍奖励端到端、可本地交付的工作流**：VoiceStudio 及 rea 将媒体生产和高权限分析封装为完整链路；热度不能替代授权、沙箱和审计，尤其是能直接作用于用户数据或可执行样本的工具。
+
 ## 历史归档
 
 报告按 [reports/](reports/) 下的 `YYYY-MM-DD/` 保存，保留每日 arXiv 与 GitHub Trending 独立文件。
