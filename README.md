@@ -2,165 +2,126 @@
 
 每日更新中文技术晨报，跟踪最新 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-10-19
+## 最新一期｜2026-10-20
 
-- [arXiv 独立报告](reports/2026-10-19/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-10-19/github-trending.md)
+- [arXiv 独立报告](reports/2026-10-20/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-10-20/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-10-19
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-10-20
 
 ## 日期与证据口径
 
-截至北京时间 2026-10-19，arXiv API 可核验的最新相关批次仍为 **2026-10-15 UTC 首次提交、10 月 16 日公告**；周末没有新的常规公告。本期从该批次中避开 10 月 17–18 日已选论文，明确作为回溯，不冒充 10 月 19 日新稿。实验数字为作者摘要报告，价值与局限为编辑判断。
+arXiv API 可核验的最新相关批次为 **2026-10-16 UTC 首次提交、10 月 19 日公告**。本期均来自该批次；实验数字来自摘要，价值与局限为编辑判断。
 
 ## 自动驾驶与导航
 
-### 1. [FastVLA: Task-Conditioned and Temporally Adaptive Visual Token Compression for Efficient Vision-Language-Action Models](https://arxiv.org/abs/2610.22146)
+### 1. [SparseMax-dSTL](https://arxiv.org/abs/2610.23837)
 
-- **作者与时间：** 论文团队；v1 2026-10-15 17:19 UTC。
-- **问题与创新：** 固定比例视觉压缩会在关键动作阶段丢细节；FastVLA 让压缩率由任务和时间上下文共同决定。
-- **机制：** 任务条件路由器预测 token 重要性，时间自适应模块在动作变化快或接触临界阶段保留更多 token，其他阶段激进合并；训练同时约束动作质量和计算预算。
-- **实验与关键结果：** 摘要报告在机器人操作基准上以更少视觉 token 保持或提升成功率并降低推理成本，具体收益需以论文完整表格核验。**关注价值／局限：** 视觉预算成为策略状态，适合端侧部署；重要性误判可能在风险窗口造成不可逆信息损失。
+- **作者与时间：** Sai Sandeep Damera、Ryan Matheu、John S. Baras、Calin Belta；v1 2026-10-16 17:54 UTC。
+- **问题、创新与机制：** 现有 STL 平滑鲁棒性会在长时域梯度消失甚至误估违规；以 sparsemax 构造 min/max 下近似，非负即满足规格，并将梯度集中于违规样本。
+- **实验与关键结果：** 单车/机械臂仿真中，80 秒时既有近似违规梯度 **0.22→0.04**，本法为 **1** 且返回满足 margin 的轨迹。**关注价值／局限：** 长时安全优化接口；感知误差、时延和真机动力学待验证。
 
-### 2. [FALCON: FPGA-Accelerated Latency-Certifiable Occupancy Networks for Camera-Based Autonomous Driving](https://arxiv.org/abs/2610.22143)
+### 2. [TransNav](https://arxiv.org/abs/2610.23635)
 
-- **作者与时间：** 论文团队；v1 2026-10-15 17:17 UTC。
-- **问题与创新：** 摄像头占据网络通常只报平均吞吐，难给最坏时延；FALCON 将占据预测与 FPGA 数据流协同设计。
-- **机制：** 以可流水化稀疏/定点算子组织多视角特征和占据解码，用硬件调度约束推理路径，使时延上界可估计。
-- **实验与关键结果：** 摘要强调低延迟、可证明时延曲线和竞争力精度。**关注价值／局限：** 把实时性提升为模型—硬件接口；跨分辨率和软件栈迁移成本仍需核查。
+- **作者与时间：** Jianghan Zhu、Zhuo Li、Yanjun Zhang、Jian Sun 等；v1 2026-10-16 15:39 UTC。
+- **问题、创新与机制：** 同时处理静态/动态障碍且不依赖专家轨迹；patch 点云编码、有限时域动作序列与点质量动力学自监督联合训练。
+- **实验与关键结果：** 摘要报告密集静态场景强表现、动态避障竞争力与机载低成本，未给统一成功率。**关注价值／局限：** 无演示控制有价值；动力学近似、时域截断及高速障碍安全余量需核验。
 
 ## 机器人／具身智能
 
-### 3. [Perceive, Predict, and Plan: a Unified World Action Model for Egocentric Dexterous Manipulation](https://arxiv.org/abs/2610.22363)
+### 3. [Blind Precise Assembly](https://arxiv.org/abs/2610.23849)
 
-- **作者与时间：** 论文团队；v1 2026-10-15 17:59 UTC。
-- **问题与创新：** 分离的感知、未来预测和规划难以让预测约束动作；该工作统一三者为 world action model。
-- **机制：** 从第一视角观测编码场景与手部状态，预测动作条件未来，再在预测空间搜索可执行动作；同时使用视觉未来和动作结果监督。
-- **实验与关键结果：** 摘要报告在灵巧操作任务上较分离式基线取得更好的预测和执行表现。**关注价值／局限：** 统一接口便于世界模型服务动作；遮挡、长时误差和接触动力学仍可能令 rollout 失真。
+- **作者与时间：** Antonia Bronars、Younghyo Park、Kushal Kedia、Pulkit Agrawal；v1 2026-10-16 17:58 UTC。
+- **问题、创新与机制：** 仅凭关节位置、速度和动作历史进行接触搜索；在随机部件/抓取/接触的程序化 MuJoCo 装配中训练 RL。
+- **实验与关键结果：** 多形状零样本真机插销 **73%** 成功，未见部件泛化优于视觉策略但更慢。**关注价值／局限：** 本体感觉可作接触通道；摩擦、柔顺性和磨损可能破坏迁移。
 
-### 4. [Value as Memory: Online Value-Guided Post-training for General Robot Policies](https://arxiv.org/abs/2610.22368)
+### 4. [PRIME: Learning Precise Progress Estimation from Imprecise Demonstrations](https://arxiv.org/abs/2610.23769)
 
-- **作者与时间：** Wenye Yu、Yijin Chen、Kaiyi Xiong 等；v1 2026-10-15 17:59 UTC。
-- **问题与创新：** 部分可观测长任务让单帧动作歧义，离线后训练又不能及时吸收真机经验。
-- **机制：** value prediction 缓存作为任务进度记忆，合并离线演示、离策略干预和在线 rollout；先 warm-up，再在稀疏奖励下自主更新。
-- **实验与关键结果：** 平均成功率绝对提升 **29.4%**，在线学习比匹配离线训练高 **32.8%**；同梯度预算下 policy iteration 为 **8×**，单步时间低逾 **2×**。**关注价值／局限：** value 漂移、错误干预和在线探索碰撞成本需独立报告。
+- **作者与时间：** Huanqian Wang、Boshi Tang、Botong Xiao、Jie Zhang、Yang Yue、Danhua Tao、Shiji Song、Gao Huang；v1 2026-10-16 17:07 UTC。
+- **问题、创新与机制：** 不再将含失误演示的每步都视作推进；以空间接近和视觉一致性建加权状态图，最短路径测地距离区分推进、停滞和回退。
+- **实验与关键结果：** 真机/仿真精密操作对次优演示稳定，充电器插入成功率相对 SFT 最高 **5×**。**关注价值／局限：** 失败成为奖励证据；匹配误差、图搜索和稀缺成功终点需审计。
 
-### 5. [T2-z: Test-Time Optimization of Environment Latents for Robotic World Models](https://arxiv.org/abs/2610.22364)
+### 5. [Learning Robot Metareasoning](https://arxiv.org/abs/2610.23662)
 
-- **作者与时间：** Chenyuan Zhou、Yining Hong、Huang Huang 等；v1 2026-10-15 17:59 UTC。
-- **问题与创新：** 摩擦、质量和人为规则等环境变量不可直接观察，世界模型遇到新环境会失配。
-- **机制：** 训练交替固定 latent 学通用动力学、固定模型优化 latent；测试时冻结模型，仅从一次或数次交互更新环境 latent。
-- **实验与关键结果：** 7 个仿真设置和 4 个真机任务中，预测误差 **15.20→7.00**，成功率 **33.73%→72.96%**。**关注价值／局限：** 测试时试探动作可能不安全，latent 可解释性和跨任务稳定性仍需验证。
+- **作者与时间：** Lorenzo Magnino、Antonio Marino、Michael Amir、Daigo Shishika、Amanda Prorok；v1 2026-10-16 15:55 UTC。
+- **问题、创新与机制：** 固定求解时间难兼顾反应和思考；SMDP 策略以状态、计划和 planner 统计量选择求解预算与开放环动作块。
+- **实验与关键结果：** 地面导航、四旋翼和接触操作均胜过固定预算基线。**关注价值／局限：** “何时再算”进入控制状态；最坏算力和紧急回退尚待补齐。
 
-## 交叉方向：空间表示与多智能体
+## 交叉方向：空间表示与自治系统
 
-### 6. [Velox: Spatial Memory Makes World Models Efficient](https://arxiv.org/abs/2610.22311)
+### 6. [StopWatch: Goal Grounding for Object-goal Navigation](https://arxiv.org/abs/2610.23841)
 
-- **作者与时间：** 论文团队；v1 2026-10-15 17:56 UTC。
-- **问题与创新：** 视频世界模型反复处理冗余历史；Velox 用空间记忆替代无差别时间堆叠。
-- **机制：** 以空间索引持久状态，只更新新视角或变化区域；预测器读取动作相关上下文而非重算全部帧。
-- **实验与关键结果：** 摘要报告减少历史计算并保持预测质量。**关注价值／局限：** 动态遮挡、错误更新和坐标漂移决定其能否服务长期自治。
+- **作者与时间：** Xinhao Liu、Yunsheng Tian、Yuheng Qiu、Pieter Abbeel、Xi Chen、Guanya Shi、Chen Feng；v1 2026-10-16 17:57 UTC。
+- **问题、创新与机制：** VLM 导航会探索却未确认已见目标；把目标可见性与距离显式纳入感知接口，并修正基准标注。
+- **实验与关键结果：** 六个基准达 SOTA；真值 grounding 时几乎追平演示 expert。**关注价值／局限：** 失败归因明确；遮挡、光照与开放词表目标的真实可靠性待验证。
 
-### 7. [Learning Self-Orchestration in Decentralized Agent Swarms](https://arxiv.org/abs/2610.22322)
+### 7. [F-LIVO](https://arxiv.org/abs/2610.23595)
 
-- **作者与时间：** 论文团队；v1 2026-10-15 17:51 UTC。
-- **问题与创新：** 去中心化系统依赖预设编排，难在通信受限和任务变化时重组。
-- **机制：** 每个 Agent 根据局部观测、进度和邻居消息选择角色、动作及通信时机，并共同优化任务回报、通信成本和冲突避免。
-- **实验与关键结果：** 摘要称协作任务适应性优于固定编排，并在通信预算受限时保持性能。**关注价值／局限：** 消息误解、故障传播、可验证性和真实无线延迟仍是部署门槛。
+- **作者与时间：** Xinye Dai 等；v1 2026-10-16 15:14 UTC。
+- **问题、创新与机制：** 用视觉点—LiDAR 平面约束替代稠密外观地图；弱三角化时从局部平面恢复深度，并按可靠度调节协方差。
+- **实验与关键结果：** 文中配置下 CPU、峰值 RSS、RSS 增长率最低，R2LIVE 的平均 RSS 更低。**关注价值／局限：** 紧凑可校准；代码待公开，动态/弱平面边界需核验。
+
+### 8. [Self-Building Labs](https://arxiv.org/abs/2610.23826)
+
+- **作者与时间：** Jiaru Bai、Yuchi Zhao、Han Hao、Miroslav Bogdanovic、Yang Cao、Varinia Bernales、Alán Aspuru-Guzik；v1 2026-10-16 17:48 UTC。
+- **问题、创新与机制：** 自驱实验室从预设流程推进到按科学目标构建布局、孪生、机器人 Skills 和工作流。
+- **实验与关键结果：** 展示单工作站至多机器人扩展，并以真实量子点合成验证；摘要未给成本/成功率细节。**关注价值／局限：** 环境构建成为 Agent 能力；安全、合规和审批不可省略。
 
 ## 趋势总结
 
-本期回溯显示：视觉/历史信息按任务和空间重要性分配计算预算；世界模型变成可在测试时适配环境、服务动作选择的状态接口；多 Agent 编排把角色、通信和资源约束写进策略。共同风险是压缩、latent 适配或自治协作的错误会在闭环中放大，后续应补充时延上界、失败归因、回退和真实硬件证据。
+安全梯度、任务进度、计算时机、目标确认与跨模态测量正成为显式运行时接口；下一步须同步报告感知误差、最坏时延、回退与真机失败。
 
-# GitHub 开源趋势晨报｜2026-10-19
+# GitHub 开源趋势晨报｜2026-10-20
 
 ## 时间与证据口径
 
-2026-10-19 约 06:00（中国时间）读取 [GitHub Daily Trending](https://github.com/trending?since=daily)，随后查询 GitHub Repository API。`stars today` 为 Trending 页面显示值，不等同精确滚动 24 小时；总 star、语言、描述来自约 10 月 18 日 22:00 UTC 的 API 查询。走红原因是编辑推断，排除攻击、账号自动化、描述不清或明显营销项目。
+GitHub Daily Trending 请求在 20 秒内未返回，因此**不声明 `stars today` 或日榜入选**。以下使用 Search/Repository API 检索 2026-10-13 至 10-19 创建的项目；总 star 为查询时“创建至查询”增长，不是 24 小时增量。用途来自 API 描述/README，走红原因均为编辑推断。
 
 ## 精选项目
 
-### 1. [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)
+### 1. [feder-cr/git-ai](https://github.com/feder-cr/git-ai)
+- **数据：** 2,443 stars；Go；2026-10-15 创建；Agent 开发工具。
+- **确认用途：** 为 AI agents 设计的 Git。**走红原因（推断）：** 版本、恢复和提交成为长期 Agent 接口。**适合人群：** 编码 Agent 团队；核查 Git/CI、签名与合并策略兼容性。
 
-- **数据：** 52,854 stars；Trending **+2,213 today**；Python；Agent/生产力。
-- **确认用途：** 本机求职自动化框架，评估职位、定制简历和求职信、准备面试；仓库描述称基于 Claude Code。
-- **走红原因（推断）：** 把 Agent 接到高频个人工作流，并以本机数据降低隐私顾虑。
-- **适合人群：** 研究端侧 Agent 或个人自动化的开发者；需核查网站条款、个人信息留存和生成内容准确性。
+### 2. [Tencent-Hunyuan/Hy-Memory](https://github.com/Tencent-Hunyuan/Hy-Memory)
+- **数据：** 954 stars；Python；2026-10-15 创建；Agent 记忆基础设施。
+- **确认用途：** 双系统认知记忆 SDK，覆盖聊天长期记忆、工作经验/事实、代码版本 diff 链和本地优先 MemHub。**走红原因（推断）：** 记忆、冲突处理和跨应用检索成为统一运行时。**适合人群：** 跨会话团队；审计数据目录、保留期和删除机制。
 
-### 2. [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official)
+### 3. [Leonxlnx/earshot](https://github.com/Leonxlnx/earshot)
+- **数据：** 1,492 stars；Python；2026-10-15 创建；多模态 Agent 工具。
+- **确认用途：** CPU-only 声音输入、检查与生成工具。**走红原因（推断）：** 低资源音频 I/O 补足媒体测试循环。**适合人群：** 音频自动化团队；检查录音授权和质量。
 
-- **数据：** 42,616 stars；Trending **+1,187 today**；Python；插件/Skills 目录。持续观察。
-- **确认用途：** Anthropic 管理的 Claude Code 官方插件目录，插件可含命令、Agent、Skills 与 MCP 配置。
-- **走红原因（推断）：** 能力成为可发现、可安装、可版本化资产。
-- **适合人群：** 插件维护者和评估 Agent 工作流的团队；第三方插件需逐项检查权限和供应链。
+### 4. [LiCinCan/blender-ai-mcp-addon](https://github.com/LiCinCan/blender-ai-mcp-addon)
+- **数据：** 964 stars；Python；2026-10-15 创建；3D/MCP 工具。
+- **确认用途：** Blender AI 插件/MCP server，提供场景工具、视觉对话、bpy 脚本和多 Agent 工作流。**走红原因（推断）：** Agent 进入可编辑三维工件。**适合人群：** Blender 自动化团队；最小化文件修改权限并留备份。
 
-### 3. [anomalyco/opencode](https://github.com/anomalyco/opencode)
+### 5. [OpenMOSS/MOSS-Image](https://github.com/OpenMOSS/MOSS-Image)
+- **数据：** 941 stars；Python；2026-10-16 创建；图像生成模型。
+- **确认用途：** 5B DiT 图像基础模型，聚焦文字渲染、版式和高效微调。**走红原因（推断）：** 版式/文字是生成设计物缺口。**适合人群：** 自托管设计生成；核查权重许可、算力、训练数据和版权。
 
-- **数据：** 216,473 stars；Trending **+1,417 today**；TypeScript；开源编码 Agent。持续观察。
-- **确认用途：** 开源 AI 编码 Agent，提供终端界面和多平台安装方式。
-- **走红原因（推断）：** 完整可运行工作台比单一模型封装更容易形成生态。
-- **适合人群：** 评估自托管编码 Agent 的开发者；需评估服务费用、执行权限和代码外泄风险。
+### 6. [Zfinix/eleven](https://github.com/Zfinix/eleven)
+- **数据：** 791 stars；TypeScript；2026-10-13 创建；Agent 原生逆向工具。
+- **确认用途：** 让 ACP Agent 读取、重命名和补丁多平台二进制、Android 应用与 GPU kernel。**走红原因（推断）：** 授权软件理解被工具化。**适合人群：** 授权审计/兼容性团队；限制目标、保留溯源并遵守法律。
 
-### 4. [cursor/plugins](https://github.com/cursor/plugins)
+### 7. [datalab-to/indra](https://github.com/datalab-to/indra)
+- **数据：** 676 stars；Python；2026-10-13 创建；文档/OCR 基础设施。
+- **确认用途：** CPU OCR，覆盖行检测、CTC、阅读顺序和 Markdown 输出。**走红原因（推断）：** 结构化本地文档入口适合 Agent/RAG。**适合人群：** 文档摄取团队；以多语言、扫描件、表格/公式错误率验收。
 
-- **数据：** 12,704 stars；Trending **+351 today**；TypeScript；插件规范/官方插件。
-- **确认用途：** Cursor 插件规范与官方插件集合，为编码 Agent 提供可组合扩展。
-- **走红原因（推断）：** 规范与目录同时出现，竞争点转向可安装工具和领域能力层。
-- **适合人群：** 构建 IDE Agent 扩展的工程师；应关注规范稳定性、权限声明和可移植性。
-
-### 5. [ruvnet/ruflo](https://github.com/ruvnet/ruflo)
-
-- **数据：** 76,454 stars；Trending **+502 today**；TypeScript；多 Agent harness。
-- **确认用途：** 支持多 Agent 协作、记忆、向量 RAG、联邦和多种编码 Agent 的运行框架。
-- **走红原因（推断）：** 将并行 Agent、状态共享和部署编排集中在控制面。
-- **适合人群：** 实验多 Agent 编排的团队；自学习、联邦和共享记忆需先验证权限与可观测性。
-
-### 6. [akitaonrails/ai-memory](https://github.com/akitaonrails/ai-memory)
-
-- **数据：** 10,424 stars；Trending **+513 today**；Rust；Agent 记忆基础设施。
-- **确认用途：** 多编码 Agent 的长期记忆与任务交接，采用 Git 管理 Markdown 知识库与可重建索引。
-- **走红原因（推断）：** 跨 Agent、跨机器保留上下文和失败经验，填补长期项目缺口。
-- **适合人群：** 管理多 Agent 项目的个人和团队；需审计敏感信息、访问控制和删除链路。
-
-### 7. [stablyai/orca](https://github.com/stablyai/orca)
-
-- **数据：** 96,517 stars；Trending **+1,146 today**；TypeScript；Agent fleet/运行平台。
-- **确认用途：** 面向多个编码 Agent 的桌面、移动和远程运行平台。
-- **走红原因（推断）：** 统一不同订阅和运行环境，支持跨设备持续任务。
-- **适合人群：** 集中管理 Agent 任务的开发者；需审查凭据、远程执行隔离和数据驻留。
-
-### 8. [HKUDS/CLI-Anything](https://github.com/HKUDS/CLI-Anything)
-
-- **数据：** 54,538 stars；Trending **+582 today**；Python；Agent 工具接口。持续观察。
-- **确认用途：** 为软件构建 Agent CLI，并提供 CLI-Hub 浏览与安装社区 CLI。
-- **走红原因（推断）：** 将桌面/专业软件转成可组合命令，降低 Agent 接入现实工具的成本。
-- **适合人群：** 构建自动化工作流和适配器的工程师；需审计命令权限、参数校验和副作用。
-
-### 9. [debpalash/VoiceStudio](https://github.com/debpalash/VoiceStudio)
-
-- **数据：** 75,108 stars；Trending **+2,098 today**；Python；本地语音/媒体生产力。
-- **确认用途：** 本地语音克隆、语音设计、视频配音、听写、转录和有声书工具，仓库宣称支持 646 种语言。
-- **走红原因（推断）：** 语音生成变成可交付的本地媒体工作台，兼顾隐私和端到端制作。
-- **适合人群：** 研究本地多媒体 Agent 或内容生产的开发者；需核查声音授权、模型来源和滥用防护。
-
-### 10. [android/skills](https://github.com/android/skills)
-
-- **数据：** 8,732 stars；Trending **+381 today**；Kotlin；Android 领域 Skills。
-- **确认用途：** 为 Android 开发提供模块化 Agent 指令与资源，并支持 CLI 安装。
-- **走红原因（推断）：** 官方领域知识以可安装 Skill 分发，降低通用 Agent 处理平台细节的门槛。
-- **适合人群：** Android 开发者和编码 Agent 团队；需检查版本适配、构建权限和输出可复现性。
+### 8. [mistralai/timestral](https://github.com/mistralai/timestral)
+- **数据：** 548 stars；Python；2026-10-15 创建；时间序列基础模型。
+- **确认用途：** 支持协变量、32,768 步上下文与 CPU 的多变量概率预测。**走红原因（推断）：** 本地预测扩展了 Agent 的传感器与运营决策能力。**适合人群：** 数据/边缘团队；核对权重许可、漂移监控和校准。
 
 ## 技术趋势与社区偏好
 
-本期热度集中在 **Agent 的可安装能力、长期状态和可交付工作台**：插件/Skills 负责领域知识，ai-memory 与 ruflo 负责状态和编排，OpenCode/Orca 提供运行面，CLI-Anything 与 VoiceStudio 接入真实软件和媒体成品。个人求职自动化和 Android 官方 Skills 是增长入口；但 star 与 `stars today` 不能替代权限、许可证、隐私和真实任务质量审查。
+新仓库热度集中在**持久记忆、版本化动作、可编辑三维工件与低资源数据入口**。这不是官方当日排名；权限、数据来源和许可证仍须逐项验证。
 
 ## 历史归档
 
-报告按 [reports/](reports/) 下的 `YYYY-MM-DD/` 保存，保留每日 arXiv 与 GitHub Trending 独立文件。
+报告按 [reports/](reports/) 下的 `YYYY-MM-DD/` 保存，保留每日两份独立报告。
 
 ## 内容标准
 
-- arXiv 报告明确提交日期、问题、机制、实验、关注价值、局限与回溯日期。
-- GitHub 报告区分 Trending 页面确认、仓库元数据与编辑推断，排除营销、攻击、账号自动化和疑似灌星项目。
-- README 最新一期展示本次两份报告正文；跨期判断维护于 [CATEGORY_SUMMARY.md](CATEGORY_SUMMARY.md)。
+- arXiv 报告明确提交日期、问题、机制、实验、关注价值与局限。
+- GitHub 报告区分 Trending 证据、仓库元数据和编辑推断。
+- README 最新一期直接展示两份报告正文；跨期判断维护于 [CATEGORY_SUMMARY.md](CATEGORY_SUMMARY.md)。
