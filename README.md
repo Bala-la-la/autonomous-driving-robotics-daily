@@ -14,143 +14,156 @@
 
 每期 arXiv 报告按方向精选并说明问题、创新、机制、实验、价值和局限；GitHub 报告区分可核验元数据与编辑推断。归档位于 [`reports/`](reports/)。
 
-
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-13
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-14
 
 ## 日期与证据口径
 
-检索截至北京时间 2026-11-13 06:00。arXiv API 在 `cs.RO`、`cs.CV`、`cs.AI` 及关键词检索中最新可得相关 **v1** 批次仍为 **2026-11-10 UTC**；本期因此回溯该批、并与 11 月 10—12 日归档逐篇去重。下列六篇均为 11 月 10 日的新投稿，**不是 11 月 13 日的新稿**。作者、提交时间、方法和出现的数值来自 arXiv 元数据及摘要；元数据未给出可可靠核验的机构时不推断机构，摘要中的结果也不等于真实开放环境的安全保证。
+检索截至北京时间 2026-11-14 06:00。arXiv `cs.RO`、`cs.AI` 等检索中最新相关 v1 批次为 **2026-11-12 UTC**；本期回溯该批并与 11 月 10—13 日归档去重，以下七篇均为 **11 月 12 日新投稿，并非 11 月 14 日新稿**。作者、时间、方法与数值均据 arXiv 元数据和摘要；没有可可靠核验的机构信息时不臆测，摘要的实验描述不构成真实世界安全保证。
 
 ## 自动驾驶／移动自治
 
-### 1. [SIGMO: Sigmoid Gated Interaction-Aware Motion Planning](https://arxiv.org/abs/2611.14414)
+### 1. [ProtoVis-Nav: Prototypical Visual Imagination for Visual-Spatial Aligned UAV Navigation](https://arxiv.org/abs/2611.17330)
 
-- **作者／机构／提交：** Avinash Singh、Manish Saroya、Fatemeh Cheraghi Pouria、Faizan Tariq、Jovin D'sa、David Isele、Yosuke Sakamoto、Sangjae Bae；arXiv 元数据未列可核验机构；v1，2026-11-10 17:53 UTC。
-- **问题与创新：** 窄路、多车并线和无信号路口需要判断谁让行；端到端策略往往难解释，规则又难随其他参与者行为变化。SIGMO 将周边体的让行倾向写成由物理交互特征驱动的多项式 sigmoid，而不是黑箱的单一社交评分。
-- **机制／结构：** 解析式 yield score 捕捉速度、相对位置等驾驶直觉，再被置入 receding-horizon planner；规划器可接收任意轨迹预测，因此将交互评分与预测器解耦。
-- **实验与关键结果：** 作者在高交互仿真和硬件实验中验证其能在主动与防御间平衡，且计算开销较轻；摘要未给出统一成功率、碰撞率、实时延迟或与各基线的完整数表。
-- **关注价值：** 显式的让行接口便于诊断“冻结”或过度激进，适合作为端到端候选打分之外的可解释安全层。
-- **局限／跟进：** 解析特征的跨城市、异质交通参与者和预测失配鲁棒性尚未量化；应报告最坏时延、误判让行的伤害代价和真实交通长尾案例。
+- **作者／机构／提交：** Guangyuan Sui、Yunzhong Hou、Chi Harold Liu；arXiv 元数据未列可核验机构；v1，2026-11-12 18:59 UTC。
+- **问题与创新：** 无人机语言导航中，三维运动的小偏差会转为碰撞或航点偏差；现有方法往往直接由语言—图像预测 waypoint，缺少对执行后局部视觉的检验。ProtoVis-Nav 先“想象”目标位置的局部视觉表征，再据此输出动作。
+- **机制／结构：** 模型预测一组视觉 feature prototype，以线性组合估计下一意图位置的目标区域特征；这些预测 prototype 作为动作生成上下文，使视觉条件和 waypoint 对齐。
+- **实验与关键结果：** 摘要称大量实验相对基线有显著提升，但未提供可由摘要复核的成功率、碰撞率、延迟或场景数。
+- **关注价值：** 把语言导航中的未来状态从隐式 token 变为可检查的视觉中间目标，适合与安全过滤、重规划连接。
+- **局限／跟进：** prototype 是否在光照、动态障碍、深度误差下仍可靠尚未量化；需报告真实飞行失败类型、计算预算和闭环碰撞率。
 
-### 2. [RiSE-Drive: Risk-Sensitive Long-Horizon Candidate Evaluation for End-to-End Autonomous Driving](https://arxiv.org/abs/2611.13790)
+### 2. [UAV-Flow++: A Unified Suite for Benchmarking and Learning Language-Guided UAV Flight](https://arxiv.org/abs/2611.17163)
 
-- **作者／机构／提交：** Yu Zhao、Hongyi Duan、Ming Yin、Hongyuan Zhang、Fan Yang、Hongzhi Wang、Xiubo Liang；arXiv 元数据未列可核验机构；v1，2026-11-10 09:22 UTC。
-- **问题与创新：** 多轨迹系统的瓶颈逐渐从“生成候选”转为“在不确定未来下评价候选”；点分数会掩盖迟发失败和尾部风险。RiSE-Drive 将候选评价改为候选条件的长时 latent rollout 上的结果分布评估。
-- **机制／结构：** 对每个候选生成未来表征 rollout，估计长时结果分布而非单标量，并按 tail-risk-aware、扰动鲁棒的准则排序，从名义最优转向对安全关键偏差更稳的选择。
-- **实验与关键结果：** 摘要称其在 NAVSIM-v1、NAVSIM-v2 和闭环 HUGSIM 上达到 SOTA，并显著提高候选选择鲁棒性；未披露可在摘要中复核的分数、置信区间或安全事件绝对数。
-- **关注价值：** 与生成式规划兼容，直接瞄准候选覆盖已足够后仍会“选错”的长时风险问题。
-- **局限／跟进：** rollout 分布质量决定排序上限；需检验稀有交互、感知退化、模型失校准时的尾险估计，以及采样预算和车端延迟。
+- **作者／机构／提交：** Donglin Yang 等 9 位作者；arXiv 元数据未列可核验机构；v1，2026-11-12 17:39 UTC。
+- **问题与创新：** 语言引导飞行多偏向长距离路径，忽略“绕过物体、贴近某物”等短程连续动作。论文提出 Flying-on-a-Word（Flow），将简短指令、第一视角与动力学状态映射为连续飞行动作。
+- **机制／结构：** UAV-Flow 含 30,692 条真实专家轨迹、八类动作，以及含 10,109 条轨迹和任务验收条件的仿真环境；FlowVLA 先混合真机/仿真模仿预训练，再用根据 group reward 分布强化高回报序列的 Tail-Aware GRPO 后训练。
+- **实验与关键结果：** 在 273 个留出仿真 episode，预训练 FlowVLA 平均成功率 75.58%，较最强基线高 6.72 个百分点；TGRPO 后为 93.16%。作者还报告室内外实体机可执行物体相对指令。
+- **关注价值：** 数据、连续控制、验收条件和真机演示放在同一套基准，补足 VLM/VLA 只验证路线语义、不验证近距离飞行动作的缺口。
+- **局限／跟进：** 273 个 episode 与八类动作的覆盖仍有限；需独立测量 sim-to-real 退化、风扰、时延、视觉遮挡和尾部碰撞风险。
 
 ## 机器人／具身智能
 
-### 3. [From Video Frames to Robot Meta-Frames: A Unified Latent Interface for World Action Models](https://arxiv.org/abs/2611.14365)
+### 3. [HEIR: Harness Egocentric Intent for Human-Robot Interactions](https://arxiv.org/abs/2611.17238)
 
-- **作者／机构／提交：** Guoqiang Liang、Yiqi Lin、Yanzhe Chen、Kevin Yuchen Ma、Mike Zheng Shou；arXiv 元数据未列可核验机构；v1，2026-11-10 17:21 UTC。
-- **问题与创新：** 预训练视频扩散模型的 latent 先验主要来自自然视频；把动作、本体感觉和值函数逐项塞进额外 frame 或编码器会产生分布失配。MetaWAM 用冻结去噪器的相对重建误差诊断此失配，并提出单一 meta-frame 接口。
-- **机制／结构：** 每一种机器人信号占用不相交的频域通道，经逆 DCT 提升为空间 latent；固定 band layout 和 slot-aware routing 令同一 frame 同时服务 policy、world model 与 value 预测，无新增模块。
-- **实验与关键结果：** 摘要报告 RoboCasa 成功率 68.9%，相对逐信号 frame 的方案将推理时延降低 39%；三个真实 Franka 任务为 85.0% 成功率。代码和模型链接由作者提供。
-- **关注价值：** 将多模态条件注入从“格式选择”变成可测的预训练分布对齐问题，为复用视频模型提供轻量工程路径。
-- **局限／跟进：** 频带划分可能限制变量数、动态范围与跨机器人泛化；真机仅三任务，需报告任务数、重复次数、故障恢复和视觉干扰下的收益。
+- **作者／机构／提交：** Yichi Zhang 等 14 位作者；arXiv 元数据未列可核验机构；v1，2026-11-12 18:25 UTC。
+- **问题与创新：** 服务机器人不仅要听懂话，还要结合人的视线和第一视角意图，把连续请求分解为导航—操作子任务。HEIR 为此提供保留跨 episode 连续性的自然家庭交互资源。
+- **机制／结构：** 每段数据对齐人类语音、实测 gaze、第一视角视频、机器人观测和遥操作 nav-manip 轨迹，并附人工标注，用于意图 grounding、规划和完成度研究。
+- **实验与关键结果：** 作者进行了离线的人本上下文消融和真机任务完成测试；摘要未披露数据规模、各任务成功率或统计显著性。
+- **关注价值：** 将“用户究竟指向什么、希望机器人接着做什么”保留为与动作同等重要的训练信号，适合研究长任务的澄清与恢复。
+- **局限／跟进：** 家庭采集的参与者、对象及隐私边界会决定泛化性；需公开跨用户/跨房屋划分、标注一致性、失败恢复与安全接近策略。
 
-### 4. [From Prediction to Action: Learning Physical Context for Deformable Linear Object Manipulation](https://arxiv.org/abs/2611.14274)
+### 4. [XBot-Omni: An Omni-Modal Model for Embodied Understanding and Interaction](https://arxiv.org/abs/2611.17160)
 
-- **作者／机构／提交：** Chengxiao Dong、Alessio Caporali、Hongyu Lan、Gianluca Palli；arXiv 元数据未列可核验机构；v1，2026-11-10 16:17 UTC。
-- **问题与创新：** 能更准预测绳索等可变形线状物响应的表示，不一定更利于选动作。论文把 predictive utility 与 decision utility 分开检验，并给出 Geometry-Pointer-Flow（GPF）这一抓取点选择和抓后运动生成分离的骨干。
-- **机制／结构：** 在统一 GPF 上比较真实物理参数、估计参数和交互历史；前者服务下一步形状预测，后者作为动作条件上下文。训练全部在仿真完成，直接零样本迁移真机。
-- **实验与关键结果：** geometry-only GPF 相对 DLO diffusion policy 将一步执行形状误差降 32.8%，参数少 18.7 倍、推理约快 193 倍；470 对仿真试验中，交互历史再降执行误差 9.9%，而估计物理参数虽更利于预测却未带来可检测的控制增益。作者称闭环和零样本硬件也以历史表示最佳。
-- **关注价值：** 给 world model/物理表示一个更严格的评估原则：不要只看预测误差，要看它是否改善实际决策。
-- **局限／跟进：** 平面单抓取和仿真训练限制较强；需扩展到多接触、遮挡、材料突变和更复杂的真实操作，并公布硬件成功率与方差。
+- **作者／机构／提交：** Kerui Gu 等 13 位作者；arXiv 元数据未列可核验机构；v1，2026-11-12 17:38 UTC。
+- **问题与创新：** 具身交互不止理解多模态输入，还要以语言、语音、身体和面部动作表达意图。XBot-Omni 将 Omni 模型扩展为 Thinker—Talker—Actor，其中 Actor 是专门的流式具身输出部件。
+- **机制／结构：** Thinker 处理文本、图像、音频和视频，Talker 与 Actor 直接使用其原生表征，生成语音和协调肢体表达，避免分段转换造成信息损失。
+- **实验与关键结果：** 作者报告在七个通用和机器人中心视频基准上有较强理解能力，并验证协调动作／语音生成；摘要未给出分数、主观评分协议或端到端延迟。
+- **关注价值：** 把“能解释”扩展到“能用非语言行为传达状态”，对协作、陪护与远程操作界面有价值。
+- **局限／跟进：** 自然动作不等于安全动作；需要独立评估接触约束、动作可执行性、延迟、文化/用户偏好和故障时的可预测降级。
+
+### 5. [FORGE: Force-Aware Multi-Granularity Control for Efficient Humanoid Loco-Manipulation](https://arxiv.org/abs/2611.17142)
+
+- **作者／机构／提交：** Liangjun Xing 等 11 位作者；arXiv 元数据未列可核验机构；v1，2026-11-12 17:30 UTC。
+- **问题与创新：** 人形移动操作常靠昂贵全身遥操演示和腕部力传感器。FORGE 以速度、落脚、腕位姿到可选力条件的粗到细命令控制，训练不需要全身人体轨迹或关节参考。
+- **机制／结构：** 部署只输入骨盆相对的稀疏双腕姿态、粗运动命令和可选期望腕载荷；动量观测器加学习校正由本体感觉与低层 PD 力矩重建低频腕等效力，虚拟目标环据此修正腕目标，冻结 locomotion prior 以残差稳定全身。
+- **实验与关键结果：** 摘要覆盖统一控制稳定性、任务空间跟踪、等效力估计、推箱持续接触和跨载荷 squat-and-lift diffusion-policy 执行，但未给出统一成功率或力误差数值。
+- **关注价值：** 在减少演示与传感器负担的同时，显式处理力，提供面向现有 humanoid 硬件的工程折中。
+- **局限／跟进：** 等效力不是直接六维腕力；需在动态接触、滑移、多接触、不同手臂刚度和长期安全恢复上对比真实 F/T 传感器。
+
+### 6. [SALA: Semantically Aligned Latent Actions Enable Dual-Axis Scaling of Embodied Foundation Models](https://arxiv.org/abs/2611.17110)
+
+- **作者／机构／提交：** Jiachun Jin、Zetong Zhou、Haonan Wang、Xiao Yang、Jun Zhu、Zhijie Deng；arXiv 元数据未列可核验机构；v1，2026-11-12 17:04 UTC。
+- **问题与创新：** 从人类第一视角视频学 latent action 时，重建训练易按外观聚类，难以对齐人和机器人的同义动作。SALA 不需配对数据，以两端 clip 的语言描述建立语义对应。
+- **机制／结构：** 将未配对人类／机器人片段的语言相似度转成软邻域结构，把人类 latent action 拉向语义相关机器人 latent；机器人动作重建保持控制可落地，共享动作空间同时监督人类视频预训练和机器人任务后训练。
+- **实验与关键结果：** 摘要称增加通用人类视频会持续降低下游机器人动作预测误差，增加任务相关人类视频会明显提高真机成功率，但未披露规模—收益曲线和绝对成功率。
+- **关注价值：** 给“人类视频能否扩展机器人数据”一个更明确的对齐接口，避免只扩大视频量而让动作语义漂移。
+- **局限／跟进：** 语言相似不保证动力学或接触相似；应检验跨形态、遮挡、错误字幕、罕见动作及人—机动作可达性失配。
 
 ## 交叉方向：SLAM／长期自治
 
-### 5. [GEMOR-GS: Global Extrinsic-calibration-refined Mapping and Online Relocalization for 3D Gaussian-Splatting SLAM](https://arxiv.org/abs/2611.13528)
+### 7. [CT-SGAL-LIO: Causal Continuous Time Refinement of Discrete LiDAR Inertial Odometry](https://arxiv.org/abs/2611.16918)
 
-- **作者／机构／提交：** Yuchen Yang、Ming Ding、Xinyu Wu、Hesheng Wang；arXiv 元数据未列可核验机构；v1，2026-11-10 03:51 UTC。
-- **问题与创新：** LiDAR—惯性—视觉 SLAM 要同时保证可渲染地图的度量一致性和跟踪丢失后的可重入。GEMOR-GS 将离线外参校准、全局 Gaussian 重建和在线重定位串成一个生命周期。
-- **机制／结构：** 先在专用标定段直接对齐估计 LiDAR—相机外参；随后交替优化关键帧位姿与 Gaussian 参数，目标结合门控可微渲染和 LiDAR 投影；失跟后经 XFeat bypass map、RANSAC-PnP 粗定位及 Gaussian RGB-D warp refinement 返回地图。
-- **实验与关键结果：** 一条自采和五条公开序列上，离线图在配对关键帧比在线图高 14.3–19.9 dB，较 Gaussian-LIC2 的 PSNR 约高 9 dB；留出重定位成功率 86–100%，且与外参质量相关。
-- **关注价值：** 不只追求 3DGS 的视觉质量，也把“离开后重回地图”作为长期自治的明确能力指标。
-- **局限／跟进：** 离线标定段是部署前提，指标可能受数据与渲染条件影响；应测试外参随时间漂移、动态场景、夜间天气和端侧显存/回环延迟。
-
-### 6. [Persistent Metric-Semantic Maritime Scene Memory from Open-Vocabulary 3D Scene Graphs](https://arxiv.org/abs/2611.13903)
-
-- **作者／机构／提交：** Kim Alexander Christensen、Dina Zimmermann、Martin Steinert、Eleni Kelasidi；arXiv 元数据未列可核验机构；v1，2026-11-10 10:59 UTC。
-- **问题与创新：** 开放词汇 3D 场景图主要在室内/陆地验证；海上重复航行时，物理实体碎片化和“地点/海域”抽象不足。该工作研究迁移失败，并在保留底层 mapper 的前提下补上持续场景记忆。
-- **机制／结构：** 先汇总证据作 metric-semantic consolidation，再用几何支撑的多视图 VLM 把残余碎片对齐为实体、将观测归并为局部地点；并利用地图先验、水面和结构观测构造宏观海域，再关联地点。
-- **实验与关键结果：** 作者称零样本户外 3DSG 对其数据中大多数有几何证据的物体与标注一致；后处理比基线及仅 consolidation 都更少实体碎片，能跨重复航行对应固定地点，并提升所审阅查询的上下文检索。摘要未提供具体百分比。
-- **关注价值：** 将长期记忆的对象身份、地点重识别和大尺度空间层次拆开处理，对港口、海上机器人等稀疏视觉环境有参考价值。
-- **局限／跟进：** VLM 聚合可能引入幻觉，海况与季节变化的稳定性未量化；需开放更大规模标注、测量错误合并/拆分代价和实时资源消耗。
+- **作者／机构／提交：** Nam Tran、Thu Tran、Toan Nguyen、William J. Beksi、Tuan Dang；arXiv 元数据未列可核验机构；v1，2026-11-12 15:07 UTC。
+- **问题与创新：** 离散 LiDAR—IMU 估计虽然全局准，传播／校正交替仍会让短时姿态跳动；从原始传感器重建连续轨迹又增加优化延迟。CT-SGAL-LIO 在不改估计器的前提下，对其 SGal(3) posterior 做因果连续时间细化。
+- **机制／结构：** 在有限近期窗口拟合三次轨迹，以固定小滞后在已观测时间区间内插值而非外推，从而保持因果和原估计器的全局性质。
+- **实验与关键结果：** GRAND-TOUR、MCD、GEODE 共 17 序列中短时误差改善；GRAND-TOUR RTE 最高改善 70%，GEODE 七条序列均改善 9.9–51.1%；19.5 分钟 R-Campus 运行的 posterior jump 降 85.4%，起终间隙仅变化 4.7 mm。
+- **关注价值：** 将下游控制真正感受到的短时平滑性，与传统全局漂移指标分开优化，适合高速运动和传感器融合管线。
+- **局限／跟进：** 固定滞后会增加控制延迟，三次拟合在异常观测下的鲁棒性未明；应报告 CPU/GPU 开销、快速旋转失效情况及对闭环控制的实际收益。
 
 ## 趋势总结
 
-这批回溯论文共同强调“预测不是终点，而是接口选择”。SIGMO 和 RiSE-Drive 将交互/风险写入候选决策；MetaWAM 让视频先验能容纳机器人信号；GPF 证明最准物理预测未必最利于控制；GEMOR-GS 与海事情景记忆则把长期自治拆成可校准、可重定位、可维持实体身份的状态。后续应特别看这些显式接口在传感错误、时延和环境变化下是否仍能改善真实闭环决策。
+本批工作的共同线索是把具身系统的“未来”和“人”写成显式接口：UAV 通过可想象的目标视觉和可验收的连续动作减少未来失配；HEIR、XBot-Omni、FORGE 和 SALA 分别把人的意图、表达、接触力和跨形态动作语义拆开建模；CT-SGAL-LIO 则把短时连续性作为定位输出的独立质量。下一步应优先关注这些中间接口在真机时延、传感噪声、跨用户／跨形态和恢复场景中是否仍能改善闭环，而不是只报告离线理解或平均成功率。
 
 
-## 时间与证据口径
-
-# GitHub 开源趋势晨报｜2026-11-13
+# GitHub 开源趋势晨报｜2026-11-14
 
 ## 时间与证据口径
 
-检索于北京时间 2026-11-13 06:00。`+N/日` 和排名来自第三方镜像保存的 **2026-11-12 UTC 日榜**（采集于 2026-11-12 21:07 UTC），是其记录的 GitHub Trending `gained`，并非本次总 star 的相减值；当前 star、主语言、许可证和项目自述以 GitHub Repository API 于 2026-11-12 22:03 UTC 前后的复核为准。镜像非 GitHub 官方服务。用途为仓库自述可确认信息；走红原因和趋势结论均为编辑推断，star 不证明质量、安全或生产采用。
+检索于北京时间 2026-11-14 06:00。排名与 `+N/日` 来自第三方镜像保存的 **2026-11-13 UTC GitHub Trending 日榜**（`collectedAt` 为 2026-11-13 21:07 UTC）；这是镜像记录的 `gained`，不是本次总 star 相减。当前 star、主语言、许可证和自述由 GitHub Repository API 于本次运行复核。镜像不是 GitHub 官方服务；用途为仓库自述可确认信息，走红原因和趋势结论均是编辑推断，star 不证明质量、安全或生产采用。
 
 ## 精选项目
 
-### 1. [GoogleChrome/modern-web-guidance-src](https://github.com/GoogleChrome/modern-web-guidance-src)
+### 1. [alibaba/open-code-review](https://github.com/alibaba/open-code-review)
 
-- **数据：** API 当前 **2,767 stars**；日榜第 1、**+799/日**；TypeScript；Apache-2.0。证据：[Repository API](https://api.github.com/repos/GoogleChrome/modern-web-guidance-src)、[日榜快照](https://githubtrending.today/api/archive/2026-11-12.json)。
-- **确认用途：** 仓库自述为“让 coding agent 保持最新 Web 最佳实践”的指导源码。
-- **走红原因（推断）：** Agent 写前端时，团队更愿意把规范作为可版本化上下文，而不是依赖一次性提示词。
-- **适合人群：** 维护前端工程规范或 Agent 上下文的团队；须按版本审阅内容、兼容性和许可，不能把组织归属当作质量保证。
+- **数据：** API 当前 **50,536 stars**；日榜第 1、**+206/日**；Go；Apache-2.0。证据：[Repository API](https://api.github.com/repos/alibaba/open-code-review)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 自述为混合式代码审查工具：确定性流水线结合 LLM Agent，提供逐行评论和 NPE、线程安全、XSS、SQL 注入等多语言规则。
+- **走红原因（推断）：** Agent 写代码后，团队需要把可预测静态规则与模型判断放进同一个审阅环，而不是只让模型给自然语言建议。
+- **适合人群：** 希望把 AI 辅助审阅接入已有 CI 的工程／安全团队；应先用只读、隔离 PR 验证误报、数据出境和自动修复审批。
 
-### 2. [openai/codex-security](https://github.com/openai/codex-security)
+### 2. [GoogleChrome/modern-web-guidance-src](https://github.com/GoogleChrome/modern-web-guidance-src)
 
-- **数据：** API 当前 **12,349 stars**；日榜第 2、**+663/日**；TypeScript；Apache-2.0。证据：[Repository API](https://api.github.com/repos/openai/codex-security)、[日榜快照](https://githubtrending.today/api/archive/2026-11-12.json)。
-- **确认用途：** 用于发现、验证和修复安全漏洞的 Codex Security CLI 与 TypeScript SDK。
-- **走红原因（推断）：** 当 Agent 能产生和修改代码时，扫描、验证、修复的闭环成为把自动化接入工程流程的必要配套。
-- **适合人群：** 工程和安全团队；先在隔离仓库以只读扫描验证误报、数据边界和自动修复审批。
+- **数据：** API 当前 **4,705 stars**；日榜第 2、**+1,875/日**；TypeScript；Apache-2.0。证据：[Repository API](https://api.github.com/repos/GoogleChrome/modern-web-guidance-src)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 为 coding agent 保持最新 Web 最佳实践的指导源码。
+- **走红原因（推断）：** 前端团队更倾向把规范固化为可版本化、可审查的 Agent 上下文，替代一次性提示词和口头规则。
+- **适合人群：** 维护设计／前端工程约束的团队；应按项目技术栈审阅规则版本、浏览器兼容性和许可证。
 
-### 3. [QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)
+### 3. [openai/codex-security](https://github.com/openai/codex-security)
 
-- **数据：** API 当前 **29,754 stars**；日榜第 6、**+151/日**；TypeScript；Apache-2.0。证据：[Repository API](https://api.github.com/repos/QwenLM/qwen-code)、[日榜快照](https://githubtrending.today/api/archive/2026-11-12.json)。
-- **确认用途：** 项目自述为运行在终端中的开源 AI coding agent。
-- **走红原因（推断）：** 终端仍是最贴近仓库、测试和版本控制的 Agent 入口；开源可部署性对希望保留模型/凭据选择权的开发者有吸引力。
-- **适合人群：** 已有测试、审阅和最小权限沙箱的开发者；不要把工作区写权限、shell 命令或密钥暴露给未审阅任务。
+- **数据：** API 当前 **13,075 stars**；日榜第 3、**+754/日**；TypeScript；Apache-2.0。证据：[Repository API](https://api.github.com/repos/openai/codex-security)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 用于发现、验证与修复安全漏洞的 Codex Security CLI 和 TypeScript SDK。
+- **走红原因（推断）：** 当代码生成进入日常交付，扫描—验证—修复的可追踪闭环成为接入 Agent 的必要安全配套。
+- **适合人群：** 有代码审阅和最小权限环境的工程／安全团队；先在隔离仓库验证误报、依赖、数据边界和修复的人工批准点。
 
-### 4. [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)
+### 4. [backnotprop/plannotator](https://github.com/backnotprop/plannotator)
 
-- **数据：** API 当前 **116,617 stars**；日榜第 9、**+812/日**；JavaScript；MIT。证据：[Repository API](https://api.github.com/repos/addyosmani/agent-skills)、[日榜快照](https://githubtrending.today/api/archive/2026-11-12.json)。
-- **确认用途：** 面向 AI coding agent 的 production-grade engineering skills 集合。
-- **走红原因（推断）：** 热度延续表明团队在把设计、审阅与交付约束沉淀成版本化技能资产，而非仅扩展模型提示。
-- **适合人群：** 想标准化 Agent 工作流的平台与应用工程师；每个 Skill 都应视作依赖，逐项审阅脚本、网络访问、数据输入和许可证。
+- **数据：** API 当前 **10,403 stars**；日榜第 6、**+100/日**；TypeScript；Apache-2.0。证据：[Repository API](https://api.github.com/repos/backnotprop/plannotator)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 面向 Agent 工作的协作空间，可塑形／决策／规划／批注／审阅代码，并把反馈交回 Agent。
+- **走红原因（推断）：** 多人协作的瓶颈从“能否运行 Agent”转到能否在执行前后留下可讨论的计划和反馈工件。
+- **适合人群：** 需要团队审阅 Agent 改动的产品、设计与工程团队；应明确工作区、反馈、代码上下文和第三方凭据的访问范围。
 
-### 5. [meta/astryx](https://github.com/meta/astryx)
+### 5. [ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)
 
-- **数据：** API 当前 **26,413 stars**；日榜第 10、**+1,789/日**；TypeScript；MIT。证据：[Repository API](https://api.github.com/repos/meta/astryx)、[日榜快照](https://githubtrending.today/api/archive/2026-11-12.json)。
-- **确认用途：** 可高度定制、面向 Agent 的开源 design system。
-- **走红原因（推断）：** UI Agent 的关注点正从“生成一个页面”转向可编辑、受 design token 约束并能回到团队组件体系的工件。
-- **适合人群：** 已有设计系统的前端团队；先验证无障碍、主题、组件版本迁移和生成代码的审阅流程。
+- **数据：** API 当前 **55,418 stars**；日榜第 12、**+145/日**；TypeScript；Apache-2.0。证据：[Repository API](https://api.github.com/repos/ChromeDevTools/chrome-devtools-mcp)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 为 coding agent 提供 Chrome DevTools 能力。
+- **走红原因（推断）：** 当 Agent 编写 Web 代码时，浏览器中的网络、DOM 和性能证据比静态代码上下文更接近真实故障现场。
+- **适合人群：** 需要让 Agent 协助调试前端的开发者；需用专用浏览器 profile，避免暴露登录态、生产数据和可执行下载。
 
-### 6. [CopilotKit/OpenBot](https://github.com/CopilotKit/OpenBot)
+### 6. [louislam/uptime-kuma](https://github.com/louislam/uptime-kuma)
 
-- **数据：** API 当前 **11,522 stars**；日榜第 11、**+291/日**；TypeScript；MIT。证据：[Repository API](https://api.github.com/repos/CopilotKit/OpenBot)、[日榜快照](https://githubtrending.today/api/archive/2026-11-12.json)。
-- **确认用途：** 提供带浏览器、文件和工具的开源 AI coworkers；自述称每项行动会在执行前决定、执行后记录，并可接入 AG-UI agent。
-- **走红原因（推断）：** “可执行 Agent”开始把行动前计划与行动后记录作为产品面的一部分，回应可观察性和责任追踪诉求。
-- **适合人群：** 构建内部任务自动化的团队；应隔离会话与凭据、设置工具 allowlist，并对发布、支付、删除等不可逆动作加确认。
+- **数据：** API 当前 **93,811 stars**；日榜第 7、**+61/日**；JavaScript；MIT。证据：[Repository API](https://api.github.com/repos/louislam/uptime-kuma)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 自托管监控工具。
+- **走红原因（推断）：** Agent 与服务自动化增加后，轻量、可自托管的健康检查仍是最低成本的可观测性入口。
+- **适合人群：** 想快速监控内部服务的个人和小团队；应保护通知凭据、监控端点和管理界面，并建立真正的告警响应流程。
 
-### 7. [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp)
+### 7. [block/buzz](https://github.com/block/buzz)
 
-- **数据：** API 当前 **134,501 stars**；日榜第 13、**+287/日**；C++；MIT。证据：[Repository API](https://api.github.com/repos/ggml-org/llama.cpp)、[日榜快照](https://githubtrending.today/api/archive/2026-11-12.json)。
-- **确认用途：** C/C++ 实现的大模型推理项目。
-- **走红原因（推断）：** 与 Agent 应用层的增长并列出现，说明本地/可控推理仍是成本、隐私和离线部署的底层需求。
-- **适合人群：** 需要自托管或边缘推理的开发者；按目标硬件、量化质量、吞吐/延迟和模型许可证做基准，避免仅以 star 选择运行时。
+- **数据：** API 当前 **37,277 stars**；日榜第 8、**+95/日**；Rust；Apache-2.0。证据：[Repository API](https://api.github.com/repos/block/buzz)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 自述为 hive mind communication platform。
+- **走红原因（推断）：** 人—人、人—Agent 与多 Agent 的状态协同需要可共享的通信层；“群体协作”类原语正在成为工具生态的独立层。
+- **适合人群：** 探索协作式工作流的基础设施团队；上线前应核验身份、消息保留、权限模型和运行成熟度，不能仅按热门度采用。
+
+### 8. [tailscale/tailcat](https://github.com/tailscale/tailcat)
+
+- **数据：** API 当前 **9,405 stars**；日榜第 10、**+324/日**；Go；BSD-3-Clause。证据：[Repository API](https://api.github.com/repos/tailscale/tailcat)、[日榜快照](https://githubtrending.today/api/archive/2026-11-13.json)。
+- **确认用途：** 类似 netcat、但通过 Tailscale data plane 而非其 control plane 的工具。
+- **走红原因（推断）：** 开发与 Agent 自动化跨机器执行时，简单且可组合的连通性工具仍有吸引力，尤其是已有私有网络的团队。
+- **适合人群：** 熟悉网络边界的运维与开发者；需明确 ACL、监听范围、审计和传输数据分类，避免把临时连通性当作访问控制。
 
 ## 技术趋势与社区偏好
 
-本期热点从上到下形成一条可部署 Agent 链：Modern Web Guidance 与 Skills 提供版本化约束，Qwen Code 和 OpenBot 提供终端/工具执行，Astryx 固化可编辑 UI 工件，Codex Security 补上验证，llama.cpp 保留本地推理选择。社区偏好已不只是“会调用模型”，而是规范、执行权限、可观测记录和可控运行时的组合；安装或接入前仍应优先审计供应链、写权限、凭据、数据留存和许可证。
+11 月 13 日日榜显示出一条比“单体 Agent”更完整的工程链：guidance 固化规范，Plannotator 让计划与反馈可协作，DevTools MCP 扩展现场证据，open-code-review 与 Codex Security 建立审查／验证，Uptime Kuma 与 Tailcat 提供运行监测和网络底座。社区热度也覆盖协作通信，但这些工具的真实采用门槛仍是权限、凭据、数据留存、供应链和人工审批，而非 star。
 
 ## 证据链接
 
-- [GitHub Trending 2026-11-12 日榜归档 JSON](https://githubtrending.today/api/archive/2026-11-12.json)：排名、快照总 star 与 `gained`。
+- [GitHub Trending 2026-11-13 日榜归档 JSON](https://githubtrending.today/api/archive/2026-11-13.json)：排名、快照总 star 与 `gained`。
 - [GitHub Trending 数据方法](https://githubtrending.today/methodology/)：镜像采集和统计口径。
 - 各项目当前元数据以上述 Repository API 为准；走红原因均为编辑推断。
