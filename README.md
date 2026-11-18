@@ -2,132 +2,139 @@
 
 每日更新中文技术晨报，跟踪 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-11-18
+## 最新一期｜2026-11-19
 
-- [arXiv 独立报告](reports/2026-11-18/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-11-18/github-trending.md)
+- [arXiv 独立报告](reports/2026-11-19/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-11-19/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-18
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-19
 
 ## 日期与证据口径
 
-检索截至北京时间 2026-11-18 06:00。最新相关 v1 为 **2026-11-16 UTC**；以下七篇均为该批新稿，**不是 11 月 18 日投稿**。作者、提交时间、方法和数字来自 arXiv 元数据及摘要；机构未在元数据中可靠逐一核验时不作推断，实验数字均为作者报告、未独立复现。
+检索截至北京时间 2026-11-19 06:00。以下七篇均为 **2026-11-17 UTC** 的 v1 新稿，故是本期可得的最新批次，**不是 11 月 19 日投稿**。作者、时间、方法与数字来自 arXiv 元数据和摘要；未能可靠核验机构时不作推断，实验数字均为作者报告、未独立复现。
 
 ## 自动驾驶／移动自治
 
-### 1. [FlowRow: Learning Navigation Behaviors in Agricultural Environments with Long-Horizon Goal-Conditioned Flow Matching Policies](https://arxiv.org/abs/2611.21035)
+### 1. [Multimodal Masked Diffusion Autoencoder for Modeling Impaired Driving](https://arxiv.org/abs/2611.23211)
 
-- **作者／提交：** Utkarsh Bajpai、Cédric Pradalier、Stéphanie Aravecchia；v1，2026-11-16。
-- **问题、创新与机制：** 果园和葡萄园机器人可沿行驶，但跨行、转弯常依赖预先标定的田块几何与手调动作。FlowRow 将远期目标写为机器人坐标系中的相对目标，以深度观测和目标条件化 flow-matching 生成 SE(2) 局部路径；同时给出包含葡萄、柠檬、苹果园共 900 个 episode 的 RowNavBench。
-- **实验与关键结果：** 在该基准上报告 **87%** 成功率，按相同演示重训的最强生成式行为克隆为 **44%**。
-- **关注价值／局限与跟进：** 将“田间任务目标”而非固定行间模板作为规划接口，适合长周期巡检与作业；但仿真作物几何、深度失效、泥泞/打滑、人员车辆混行及真实机车的恢复代价尚未覆盖。
+- **作者／提交：** John Gideon、Anshul Gupta、Megan Applegate-Kenton 等；v1，2026-11-17 18:50 UTC。
+- **问题、创新与机制：** 驾驶分心、压力与视觉负荷的标签昂贵，且单独看视频或车辆轨迹会丢掉人—车—场景关系。ID-MAE 将受损状态预测做成 masked token，同时重建被遮蔽的注视与轨迹；并发布含视频、视线、车辆状态的 DIVERT 驾驶模拟数据。
+- **实验与关键结果：** DIVERT 含 **103 小时、109 人、10 类诱发状态**；同地点配对的受损识别 AUC 为 **0.706**，去掉重建损失为 **0.590**。
+- **关注价值／局限与跟进：** 可为驾驶员监测和条件化辅助系统提供多模态预警，而非将“受损”简化为单帧表情分类；但模拟诱发不等于自然道路行为，公平性、误报后的交互、隐私和跨相机/人群校准须在真实运行中验证。
 
-### 2. [Polygraph: Large-Scale Multi-Session Trajectory Optimization using Pose Graphs](https://arxiv.org/abs/2611.21163)
+### 2. [Learned versus Kinematic Trajectory Prediction under Reduced Observation Frequency](https://arxiv.org/abs/2611.23198)
 
-- **作者／提交：** Petar Lukovic、Tian Yi Lim、Marc Pollefeys、Pablo Speciale、Hermann Blum、Zuria Bauer；v1，2026-11-16。
-- **问题、创新与机制：** 重复通行的车、机器人或穿戴设备各自产生局部准确但坐标系不一致的轨迹；离线全局融合既需要所有 session 到齐，也易吸收错误回环。Polygraph 不建完整 3D 图，逐关键帧/局部簇在线处理；以图像检索提出跨 session 候选，再用稀疏匹配、单目米制深度与鲁棒位姿估计验证，并以双层共识门和增量图优化接纳约束、周期性批优化剔除外点。
-- **实验与关键结果：** 覆盖立体户外驾驶、HoloLens/iPad 室内、Spot 足式行走及户外手持路线；作者报告在同 GPU 对照的既有结果上更快、接纳更少回环边且精度持平或更好，摘要未给统一绝对误差表。
-- **关注价值／局限与跟进：** 适合把长期定位的“何时相信跨日重访”变成可审计图边；应补充跨季节外观变化、检索漏召回、时间戳/尺度漂移、在线内存上界和错误边误接入后的闭环导航风险。
+- **作者／提交：** Nukhbala Gadzhiev、Alexander Morochko；v1，2026-11-17 18:38 UTC。
+- **问题、创新与机制：** V2X 位置常以 1–10 Hz 到达，运动预测却通常假设固定高频历史。工作在 Argoverse 2 中系统降采样 5 秒历史，比对按频率单训的 LSTM、10 Hz 模型插值和 CV/CA 运动学基线，并预注册假设、以十个随机种子和 bootstrap 报不确定性。
+- **实验与关键结果：** 在 **24,984** 个测试场景，频率匹配 RNN 的 ADE 相对 10 Hz 增加：5 Hz **3.1%**、2 Hz **10.1%**、1 Hz **20.3%**；其相对较强运动学模型仍有 **24–30%** 优势。10 Hz 插值模型到 2 Hz 最多差 **1.3%**，1 Hz 差 **11.5%**。
+- **关注价值／局限与跟进：** 给出通信频率—预测精度的可部署基线，提醒工程上不必为 2 Hz 立即重训；未包含地图、邻车、丢包延迟与协作控制，不能直接推为闭环安全收益。
+
+### 3. [FIRE-Drive: Feasibility-Informed Risk Evaluation for End-to-End Diffusion Planning](https://arxiv.org/abs/2611.22297)
+
+- **作者／提交：** Qifeng Xie、Kai-Yuan Feng、Wenkang Wan、Yue Wu、Maoguo Gong、Kai Sheng；v1，2026-11-17 06:54 UTC。
+- **问题、创新与机制：** 扩散式端到端规划的随机初始化会生成不可行候选，相似轨迹也难按安全和交互风险区分。FIRE-Drive 以动态可行锚点初始化，用候选专属 BEV 风险证据评分，并以紧凑高质量候选监督配合轻量细化，将生成、风险选择和可行性对齐。
+- **实验与关键结果：** NAVSIM v1 上报告 PDM Score **91.5**（ResNet-34）；另在 **220** 条 Bench2Drive 闭环路线报告 Driving Score **71.43**、成功率 **42.73%**。
+- **关注价值／局限与跟进：** 将风险评分放在候选选择接口，便于审计“为何选这条”；仍须报告碰撞类别、候选覆盖、风险校准、长尾天气和真实道路中的降级策略，不能只以聚合分数判断安全。
 
 ## 机器人／具身智能
 
-### 3. [ScaleVLA: Scaling Vision-Language-Action Models to 552 Billion Parameters](https://arxiv.org/abs/2611.21607)
+### 4. [TCP4D: A Unified Tool-Center-Point Tracking and Generation Model for Robot Manipulation](https://arxiv.org/abs/2611.23143)
 
-- **作者／提交：** Ruixi Yu、Dairu Liu、Xuchuan Chen、Zekun Qi、Zekai Li 等（含 He Wang、Li Yi）；v1，2026-11-16。
-- **问题、创新与机制：** 大型视觉语言模型的广泛知识常未被充分转为机器人动作能力。ScaleVLA 把 **552B DeepSeek-V4.1-Flash** 视觉语言骨干接入可训练 action DiT，并在 2B–552B 统一训练设置下拆测样本效率、泛化与精细接触操作。
-- **实验与关键结果：** 仅 **10** 条演示即超过 2B 骨干用 50 条演示的结果（**87.8% vs. 85.6%**）；LIBERO-PRO **45.1%**、小模型最高 **31.3%**；真实充电器插入 **9/10**、基线 **4/10**；每 action chunk 中位延迟 **216 ms**。
-- **关注价值／局限与跟进：** 说明超大预训练表示可能以较少演示改善接触对齐；但单一延迟统计未涵盖尾延迟、云/本地部署成本、故障回退、任务分布偏差及大模型在真实场景的安全审计。
+- **作者／提交：** Haosong Peng、Xiangyang Liu、Zhengshen Zhang、Yunfeng Fan、Tianyu Qi、Xin Xia 等；v1，2026-11-17 17:59 UTC。
+- **问题、创新与机制：** RGB 操作视频通常缺少可迁移的动作和夹爪标注。TCP4D 以本体无关的工具中心点（TCP）位姿为动作空间，让共享 4D 场景表征同时追踪观测到的 SE(3) TCP/夹爪状态并生成未来轨迹；其跨本体增强把已恢复动作重定向并合成替代机器人观测。
+- **实验与关键结果：** DROID/RoboLab 的绝对轨迹误差为 **7.60/16.07 mm**；新本体只用 **10** 条示范适配。RoboTwin 平均成功率 **69.19%**，源数据加增强数据比只用增强高 **41.5%**。
+- **关注价值／局限与跟进：** 把视频数据转成可复用的动作接口，有助于降低采集门槛；单目尺度、遮挡、TCP 定义偏差和合成观测的 sim-to-real 差距会直接传给控制，需分任务报告失败恢复和接触安全。
 
-### 4. [Lazy-MOSAIC: Accelerating Skill-Centric Manipulation Planning with Learned Skill-Effect World Models](https://arxiv.org/abs/2611.21517)
+### 5. [SR-VLA: Stall-Reduced VLA Execution via Predicted-Input Lookahead and Selective KV Cache Repair](https://arxiv.org/abs/2611.22356)
 
-- **作者／提交：** Itamar Mishani、Mukund Krishnakumar、Oren Salzman、Maxim Likhachev；v1，2026-11-16。
-- **问题、创新与机制：** 长程操作的技能序列和参数空间很大，逐候选跑高保真物理仿真代价高。Lazy-MOSAIC 先用毫秒级 learned skill-effect world model 预测技能可行性与结果状态，在假设结果上搜索；仅对有希望的候选调用昂贵仿真，假设被推翻时只修补受影响的搜索部分，最终计划仍逐技能经仿真验证。
-- **实验与关键结果：** 杂乱货架取物难度阶梯和一台真机演示中，作者报告相较基线规划显著更快、仿真查询更少，且各设置成功率持平或更高；摘要未列逐任务数值。
-- **关注价值／局限与跟进：** 把学习模型限定为“筛选/提出假设”，保留高保真验证作为提交门；需测 learned effect 的校准、假阴性导致的解空间漏失、现实接触与仿真错配，以及重规划尾时延。
+- **作者／提交：** Tao Zhang、Yi Zhong、Jinhao Ruan、Yipeng Gao、Linfeng Zhong、Youming Yang；v1，2026-11-17 08:08 UTC。
+- **问题、创新与机制：** VLA 推理阻塞下一 action chunk 会造成控制停顿；提前推理又可能基于错误的下一帧。SR-VLA 用轻量动作条件预测器预取视觉/本体状态，投机生成 KV cache 与动作；真实输入到达后按预测—真实差异和任务条件选择接受动作或局部修复 KV，而非全量重算。
+- **实验与关键结果：** LIBERO 上对同步 $π_{0.5}$、OpenVLA-OFT 的查询加速分别 **2.67×/1.27×**，成功率保持有竞争力；目标运动扰动下仍有 **1.52–1.93×** 加速。
+- **关注价值／局限与跟进：** 直接针对“模型会做但来不及做”的部署瓶颈；摘要没有给错误投机被接受的频率、p95 延迟、真实机械臂碰撞后果及网络/API 推理条件，均应作为上线门。
 
-### 5. [ForceHarness: Turning Force into Action and Physics for Frozen Frontier Models](https://arxiv.org/abs/2611.21099)
+### 6. [Beyond Episodic Recall: Experience-to-Knowledge Evolution for Lifelong Embodied Navigation](https://arxiv.org/abs/2611.22321)
 
-- **作者／提交：** Ke Sun、Kevin Yuchen Ma、Yike Zhang、Yanzhe Chen、Mike Zheng Shou；v1，2026-11-16。
-- **问题、创新与机制：** 冻结、API 形式的多模态模型看不见接触力，且其决策速率慢于力变化。ForceHarness 先由腕力传感器或关节力矩标定手端力，再以会自终止的力原语在模型下方闭环；物理翻译层把力轨迹转为带不确定性的物理量回传，而非直接喂原始力序列。论文另建含隐藏物理变量的七任务 HiddenPhys。
-- **实验与关键结果：** 无腕力传感器真实机械臂上，GPT-6 Astra 零样本成功率 **3.3%→90.0%**；ForceBench +**17.5** 个百分点、HiddenPhys +**34.3** 个百分点，并称后者匹配手写专家控制器。
-- **关注价值／局限与跟进：** 为闭源/冻结模型提供“慢推理—快接触”分层接口；力标定、传感器漂移、原语的故障安全、模型产生错误高层意图和 API 时延仍可能造成风险，须报告碰撞/超力尾部事件而非只给成功率。
+- **作者／提交：** Weitao An、Chenghao Xu、Xu Yang、Cheng Deng；v1，2026-11-17 07:18 UTC。
+- **问题、创新与机制：** 长期导航直接存观测或高维 embedding 会持续膨胀，固定场景图又难把经验演化成环境规律。EvoNav 用稀疏 experience atoms 存语义、空间关系和任务反馈，在线合并重复观察；较慢时间尺度蒸馏物体共现与反馈成环境结构知识，并与当前可通行图联合检索目标。
+- **实验与关键结果：** 在单目标、连续多楼层和多模态导航测试中，作者报告以紧凑持久记忆提升路径效率，并展示真机迁移；摘要未给统一绝对数值。
+- **关注价值／局限与跟进：** 将“记住过什么”与“提炼出何种可迁移知识”分层，适合长期巡检；过期物体、错误反馈写入、环境重布置和隐私数据删除的回滚机制仍未由摘要量化。
 
-### 6. [WinDEX: Metric 3D Hand Motion Reconstruction in the Wild for Dexterous Teleoperation and Policy Learning](https://arxiv.org/abs/2611.21143)
+## 交叉方向：协同控制与目标理解
 
-- **作者／提交：** Hongyu Ma、Hairong Qu、Shiqi Zhao、Yongsong Yang、Kai Shi 等；v1，2026-11-16。
-- **问题、创新与机制：** 野外人手视频难以低成本生成米制、时序连续的灵巧操作监督。WinDEX 将几何—时间优化、双鱼眼校准立体视觉和视觉惯性 SLAM 合并为世界坐标手部标注；以模型辅助标注—再训练形成数据飞轮，并提供离线与因果流式蒸馏模型及 CyberCap 采集装置。
-- **实验与关键结果：** WinDEX-Hand 含 **1,000 小时**训练标注；离线 **43.61 FPS**、流式 **171 FPS**；留出集投影误差 **14.5 px**、世界坐标关节误差 **37.29 mm**；以其动作参考训练的 RL 策略任务成功率为 WiLoR/HaWoR 的 **7.6×/3.6×**。
-- **关注价值／局限与跟进：** 连接低成本人类动作采集、实时遥操和策略学习；数据授权、相机/IMU 标定漂移、遮挡接触、手—物尺度误差及由重建误差导致的危险控制命令需在真实机器人上单独量化。
+### 7. [Capability Composition in Heterogeneous Teams via Barrier-Guided Diffusion Sampling](https://arxiv.org/abs/2611.23149)
 
-## 交叉方向：多智能体安全／实时世界动作模型
-
-### 7. [Distilling Safety Filters for Filter-free Multi-agent RL](https://arxiv.org/abs/2611.19190)
-
-- **作者／提交：** Srikar Babu Gadipudi、Somayeh Sojoudi、Claire J. Tomlin；v1，2026-11-14 06:11 UTC（为补足多智能体安全主题的最近两日回溯，非 11 月 16 日新稿）。
-- **问题、创新与机制：** 多机器人 CBF 安全过滤器的集中约束随团队规模二次增长，而过滤器又掩盖了策略本应学习的危险代价。方法用 implicit Q-learning 只学习已执行的安全动作，并在合成近碰撞状态蒸馏过滤器；理论上将蒸馏损失与安全裕度违反、部署碰撞概率相连。
-- **实验与关键结果：** 仅局部观测且部署时无过滤器，在 **1,800** 个多智能体测试 episode 无碰撞；三智能体训练零样本迁至二十台、每体计算常数，至八台保持无碰撞；另在最多五台 Crazyflie 同飞测试。
-- **关注价值／局限与跟进：** 用可扩展策略替代运行期集中优化，有利于车队/无人机密集协同；覆盖部署状态是理论前提，现实通信丢失、定位误差、非合作参与者和未覆盖近碰撞仍须由运行期独立安全层或保守退化补偿。
+- **作者／提交：** Diana Laura Morales、Ruoyu Lin、Magnus Egerstedt、Fabio Pasqualetti；v1，2026-11-17 18:03 UTC。
+- **问题、创新与机制：** 异构机器人未必拥有协作示范，重训团队生成模型昂贵。方法从各个体独立示范训练生成模型，以已知物理能力条件写成轨迹约束，并在 diffusion sampling 时用 barrier-guided 约束合成协作轨迹；理论上刻画可生成的安全团队轨迹，并允许成员加入/离开而不重训。
+- **实验与关键结果：** 两类协作数值任务和多机器人实机测试显示可生成满足约束的团队轨迹；摘要未披露成功率、约束违反率或通信条件。
+- **关注价值／局限与跟进：** 是把“物理能力先验”用于零协作示范组合的清晰路线，可服务车队、无人机和异构移动机器人；barrier 模型误差、状态估计/通信延迟及约束不可行时的安全停机策略需要单列验证。
 
 ## 趋势总结
 
-- **把大模型降到可验证的动作接口：** ScaleVLA 追求表示规模，ForceHarness 将接触闭环放在冻结模型下方，Lazy-MOSAIC 又把世界模型限定为搜索筛选器；后续应一起报告模型错误、验证门覆盖与 p95 决策时延。
-- **长期自治依赖可回查状态而非单次感知：** Polygraph 的跨 session 图边和 WinDEX 的世界坐标动作监督均强调来源、尺度和时序；长期运行还需测外观变化、漂移累积与错误状态写入后的恢复。
-- **安全扩展要同时降低集中计算与物理风险：** FlowRow、过滤器蒸馏都把特定环境/团队约束编入策略，但仿真高成功率不能替代对未覆盖状态、通信和真实接触异常的保守回退。
+- **从离线高分到受资源约束的闭环接口：** FIRE-Drive 选择可行候选、SR-VLA 管推理停顿、低频轨迹研究给出通信下限；后续应共同报告校准、候选遗漏、p95 时延和实际控制代价。
+- **视频与经验正被压缩为可操作状态：** TCP4D 将视频变为 TCP 轨迹，EvoNav 将观察变为经验原子和知识。它们的价值取决于尺度、时间有效性和错误状态能否隔离/回滚，而非只看数据规模。
+- **多主体自主性需要约束能跨成员成立：** barrier-guided 组合说明单体能力并不自动变成协作能力；新成员、感知误差和通信中断应成为比平均仿真成功率更优先的测试轴。
 
-# GitHub 开源趋势晨报｜2026-11-18
+# GitHub 开源趋势晨报｜2026-11-19
 
 ## 时间与证据口径
 
-检索于北京时间 2026-11-18 06:00。排名与 `+N/日` 来自第三方镜像保存的 **2026-11-17 UTC GitHub Trending 日榜**（`collectedAt` 2026-11-17 21:07 UTC）；`gained` 是镜像从 GitHub Trending 读取的当日增星，不是本次查询的 star 差值。当前 star、主语言、许可证、创建时间和仓库自述经 GitHub Repository API 复核。镜像非 GitHub 官方服务；走红原因和趋势均为编辑推断。为避免与 11 月 14—17 日报告重复，本期排除了已选项目及安全攻击导向项目。
+检索于北京时间 2026-11-19 06:00。排名与 `+N/日` 来自第三方镜像保存的 **2026-11-18 UTC GitHub Trending 日榜**（`collectedAt` 2026-11-18 21:07 UTC）；`gained` 是镜像从 GitHub Trending 读取的当日增星，不是本次查询的 star 差值。当前 star、主语言、许可证、创建时间和仓库自述经 GitHub Repository API 复核。镜像并非 GitHub 官方服务；走红原因和趋势均为编辑推断。为减少与近日报告重叠，排除连续已选的 Agent/Skills 项目，保留本日新出现且覆盖开发基础设施与生产力的项目。
 
 | 项目 | 当前 stars | 日榜依据 | 语言／类别 |
 | --- | ---: | ---: | --- |
-| Tencent/LoopForge | 3,065 | 第 4，+590/日 | Go／Agent 交付编排 |
-| cursor/plugins | 16,864 | 第 8，+196/日 | TypeScript／插件生态 |
-| obra/superpowers | 319,255 | 第 9，+598/日 | Shell／Agent 工程方法 |
-| ag-ui-protocol/ag-ui | 19,951 | 第 10，+1,444/日 | TypeScript／Agent 前端协议 |
-| affaan-m/ECC | 305,414 | 第 13，+902/日 | JavaScript／Agent harness |
+| astral-sh/uv | 92,203 | 第 8，+260/日 | Rust／Python 工具链 |
+| appwrite/appwrite | 58,210 | 第 13，+239/日 | TypeScript／后端云基础设施 |
+| n8n-io/n8n | 211,024 | 第 18，+315/日 | TypeScript／工作流自动化 |
+| openvinotoolkit/openvino | 11,302 | 第 14，+18/日 | C++／边缘推理 |
+| sveltejs/svelte | 89,696 | 第 11，+694/日 | JavaScript／前端生产力 |
+| nvm-sh/nvm | 96,147 | 第 7，+111/日 | Shell／开发环境管理 |
 
 ## 精选项目
 
-### 1. [Tencent/LoopForge](https://github.com/Tencent/LoopForge)
+### 1. [astral-sh/uv](https://github.com/astral-sh/uv)
 
-- **确认信息：** [Repository API](https://api.github.com/repos/Tencent/LoopForge) 当前 **3,065 stars**，Go，许可证 API 为 `NOASSERTION`，创建于 2026-07-28；[日榜](https://githubtrending.today/api/archive/2026-11-17.json) 第 4、**+590/日**。仓库自述为自托管 coding-agent 交付工作流，可编排 CodeBuddy、Codex 与 Claude Code，并带脚本和人工审批门。
-- **用途：** 把编码 agent、脚本与人工审批组织成可自托管的交付流程。
-- **走红原因（推断）／适合人群：** 从单次聊天走到团队交付后，任务编排、审批和可见状态比另一个模型入口更紧缺；适合已有 CI/变更流程的工程平台团队。采用前应验证审批是否不可绕过、凭据隔离、任务重试幂等、审计日志与未声明许可证的复用边界。
+- **确认信息：** [Repository API](https://api.github.com/repos/astral-sh/uv) 当前 **92,203 stars**，Rust，Apache-2.0，创建于 2023-10-02；[日榜](https://githubtrending.today/api/archive/2026-11-18.json) 第 8、**+260/日**。自述为极速 Python package/project manager。
+- **用途：** 统一 Python 依赖、虚拟环境、锁定和项目工作流。
+- **走红原因（推断）／适合人群：** Agent、数据与应用团队要缩短“可复现环境”这段交付链，单一工具入口很有吸引力；适合 Python 开发与平台团队。应先验证 lockfile 与现有 pip/Poetry/CI 的兼容、私有源凭据、缓存隔离和供应链策略。
 
-### 2. [cursor/plugins](https://github.com/cursor/plugins)
+### 2. [appwrite/appwrite](https://github.com/appwrite/appwrite)
 
-- **确认信息：** [Repository API](https://api.github.com/repos/cursor/plugins) 当前 **16,864 stars**，TypeScript，许可证 API 为 `NOASSERTION`，创建于 2026-01-23；日榜第 8、**+196/日**。仓库定位为 Cursor 插件规范与官方插件。
-- **用途：** 为 IDE 内 agent/工具扩展提供规范和官方实现入口。
-- **走红原因（推断）／适合人群：** 工具调用逐步迁入日常编辑器，插件接口与升级兼容性成为生态分发层；适合编辑器平台、内部开发者体验团队。需要逐插件审计网络/文件权限、遥测、供应链固定、版本兼容和没有 SPDX 标识的许可风险。
+- **确认信息：** [Repository API](https://api.github.com/repos/appwrite/appwrite) 当前 **58,210 stars**，TypeScript，BSD-3-Clause，创建于 2019-04-08；日榜第 13、**+239/日**。项目自述为面向 agents 与开发者的开源云，含认证、数据库、存储、函数、消息、托管与实时能力。
+- **用途：** 为 Web/Agent 产品提供自托管或托管后端积木。
+- **走红原因（推断）／适合人群：** 把身份、数据、事件与函数合并能降低原型到产品的集成量；适合需要快速搭建多租户应用的全栈团队。投入生产前需审计租户隔离、服务账户范围、存储保留、备份恢复、函数 egress 与升级路径。
 
-### 3. [obra/superpowers](https://github.com/obra/superpowers)
+### 3. [n8n-io/n8n](https://github.com/n8n-io/n8n)
 
-- **确认信息：** [Repository API](https://api.github.com/repos/obra/superpowers) 当前 **319,255 stars**，Shell，MIT，创建于 2025-10-09；日榜第 9、**+598/日**。项目自述为 agentic Skills 框架与软件开发方法论。
-- **用途：** 将软件工程中的计划、实现、测试等过程封装为可调用的 Skills／工作法。
-- **走红原因（推断）／适合人群：** 大量 Agent 项目正在从 prompt 试验转向可复用的流程资产和团队约定；适合希望统一工程操作方式的开发团队。应把每个 Skill 当作可执行依赖审查：输入来源、命令副作用、测试门、版本锁定与组织规范的冲突均需检查。
+- **确认信息：** [Repository API](https://api.github.com/repos/n8n-io/n8n) 当前 **211,024 stars**，TypeScript，许可证 API 标为 `NOASSERTION`，创建于 2019-06-22；日榜第 18、**+315/日**。自述为支持原生 AI、可视化搭建与自托管/云端的 fair-code 工作流平台。
+- **用途：** 连接 SaaS、数据源、脚本与 Agent 步骤，编排自动化任务。
+- **走红原因（推断）／适合人群：** 团队需要把 Agent 放进现有业务事件和审批流，而不只是调用模型；适合运营自动化和内部工具团队。应重点检查连接器凭据、工作流写入副作用、人工确认、失败重放、执行日志和许可证/商业使用边界。
 
-### 4. [ag-ui-protocol/ag-ui](https://github.com/ag-ui-protocol/ag-ui)
+### 4. [openvinotoolkit/openvino](https://github.com/openvinotoolkit/openvino)
 
-- **确认信息：** [Repository API](https://api.github.com/repos/ag-ui-protocol/ag-ui) 当前 **19,951 stars**，TypeScript，MIT，创建于 2025-05-07；日榜第 10、**+1,444/日**。仓库描述为将 Agent 接入前端应用的 Agent-User Interaction Protocol。
-- **用途：** 为前端呈现 agent 状态、交互与事件流提供协议层。
-- **走红原因（推断）／适合人群：** Agent 产品需要把执行过程、人工输入和结果以可控 UI 暴露出来，协议层可降低应用间集成摩擦；适合构建 agent 产品前端的平台/全栈团队。需特别审查事件中的隐私数据、会话绑定、用户确认语义、重放攻击和后端授权是否与 UI 状态一致。
+- **确认信息：** [Repository API](https://api.github.com/repos/openvinotoolkit/openvino) 当前 **11,302 stars**，C++，Apache-2.0，创建于 2018-10-15；日榜第 14、**+18/日**。自述为优化与部署 AI 推理的开源工具包。
+- **用途：** 将模型转换、优化并部署到兼容硬件上的推理运行时。
+- **走红原因（推断）／适合人群：** 本地/边缘部署的成本、隐私和响应时间压力使推理优化重回开发优先级；适合机器人、视觉和端侧 AI 团队。评估时应实测目标硬件的精度回归、冷启动、p95 延迟、驱动版本和模型算子覆盖。
 
-### 5. [affaan-m/ECC](https://github.com/affaan-m/ECC)
+### 5. [sveltejs/svelte](https://github.com/sveltejs/svelte)
 
-- **确认信息：** [Repository API](https://api.github.com/repos/affaan-m/ECC) 当前 **305,414 stars**，JavaScript，MIT，创建于 2026-01-18；日榜第 13、**+902/日**。仓库自述为面向 Claude Code、Codex、OpenCode、Cursor 等的 Agent harness 性能优化系统，覆盖 Skills、instincts、memory、security 和 research-first development。
-- **用途：** 汇集多种 coding-agent 的上下文、记忆、流程与性能优化资产。
-- **走红原因（推断）／适合人群：** 高热度说明开发者正在寻找横跨不同 agent 的运行方法和持续改进框架；适合已有多 Agent 试验、需要比较与统一操作层的高级用户。范围很宽，不能将 star 数视为集成安全证明；应逐文件审阅默认指令、外部检索、记忆留存、写入权限和组织许可要求。
+- **确认信息：** [Repository API](https://api.github.com/repos/sveltejs/svelte) 当前 **89,696 stars**，JavaScript，MIT，创建于 2016-11-20；日榜第 11、**+694/日**。项目定位为 Web 开发框架。
+- **用途：** 构建交互式 Web 应用和面向用户的产品界面。
+- **走红原因（推断）／适合人群：** Agent 产品需要快速、易维护的审批、状态和结果界面，轻量框架仍具生产力价值；适合前端与全栈团队。迁移前要验证生态依赖、SSR/部署策略、无障碍、长会话状态和前后端授权边界。
+
+### 6. [nvm-sh/nvm](https://github.com/nvm-sh/nvm)
+
+- **确认信息：** [Repository API](https://api.github.com/repos/nvm-sh/nvm) 当前 **96,147 stars**，Shell，MIT，创建于 2010-04-15；日榜第 7、**+111/日**。项目自述为管理多个 active Node.js 版本的 POSIX shell 脚本。
+- **用途：** 在本地开发环境切换与管理 Node.js 运行时版本。
+- **走红原因（推断）／适合人群：** AI 工具链与前端依赖更新频繁，运行时漂移会直接破坏可复现构建；适合需并行维护多个 Node 项目的开发者。应将其作为开发机便利层而非生产部署方案，CI/容器仍应固定版本和镜像摘要。
 
 ## 技术趋势与社区偏好
 
-这份日榜的新增样本连接成“**工作流编排—扩展分发—工程方法—交互协议—跨 agent 运行时**”：LoopForge 管交付与审批，Cursor plugins 与 Superpowers 管能力资产化，AG-UI 管用户可见的执行面，ECC 管多 harness 的持续调优。社区偏好正由“让 agent 能执行”延伸到“如何接入团队、让用户看见并约束执行”。热度仍不能证明安全、质量或生产适用性；审批不可绕过、最小权限、事件/日志数据治理、供应链和许可证审计是共同前置条件。
+本日日榜的新增样本更像一条“**可复现开发环境—后端能力—业务编排—边缘推理—用户界面**”链：uv 与 nvm 稳定工具链，Appwrite 与 n8n 承接数据/事件/连接器，OpenVINO 控制推理落点，Svelte 提供用户操作面。社区热度说明 Agent 热潮正在拉动通用基础设施与可交付应用栈，而非只追逐新的模型包装。star 与日榜位置不等于安全、维护能力或生产适用性；凭据最小权限、可回放/可终止的工作流、依赖锁定、数据保留及许可证审计仍是共同前置条件。
 
 ## 证据链接
 
-- [GitHub Trending 2026-11-17 日榜归档 JSON](https://githubtrending.today/api/archive/2026-11-17.json)：排名、快照总 star 与 `gained`。
+- [GitHub Trending 2026-11-18 日榜归档 JSON](https://githubtrending.today/api/archive/2026-11-18.json)：排名、快照总 star 与 `gained`。
 - [GitHub Trending 数据方法](https://githubtrending.today/methodology/)：镜像采集和统计口径。
 - 各项目当前元数据以上述 Repository API 为准；走红原因均为编辑推断。
 
