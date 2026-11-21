@@ -2,155 +2,188 @@
 
 每日更新中文技术晨报，跟踪 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-11-21
+## 最新一期｜2026-11-22
 
-- [arXiv 独立报告](reports/2026-11-21/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-11-21/github-trending.md)
+- [arXiv 独立报告](reports/2026-11-22/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-11-22/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-21
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-22
 
 ## 日期与证据口径
 
-检索截至北京时间 2026-11-21 06:00。以下六篇为 **2026-11-19 UTC 的 v1 新稿**；`Accord` 为 2026-11-18 UTC 的补充，已明确标注。作者、时间、方法与数字来自 arXiv 元数据和摘要；机构未能稳定核验时不作推断，所有指标均为作者报告、未独立复现。
+检索截至北京时间 2026-11-22 06:00。因 11 月 21—22 日为周末，arXiv 无常规新发布批次，本期回溯至最新可用的 **2026-11-19 UTC（2026-11-20 公告）v1 批次**，精选 **8** 篇未在上一期（2026-11-21）入选的新论文，未将旧稿冒充当日新稿。作者、机构（以 arXiv HTML 页面披露为准，未完整标注时不作臆测）、提交时间、机制与数字均来自 arXiv 元数据、摘要及 arXiv HTML 正文头部；所有性能指标为作者报告，未经独立复现。
 
 ## 自动驾驶／移动自治
 
-### 1. [SpecFlow: Flow Matching in the Acceleration Spectrum for Multi-Agent Trajectory Forecasting](https://arxiv.org/abs/2611.26390)
+### 1. [BADAS-3.0: Real-Time Driving Perception and Planning from One Camera](https://arxiv.org/abs/2611.26294)
 
-- **作者／提交：** Ziyang Xu、Peng Han、Hai Zhou；v1，2026-11-19 16:44 UTC。
-- **问题、创新与机制：** 多主体预测直接生成逐帧坐标，速度与加速度关系没有被显式约束，易损害动力学一致性。SpecFlow 把未来加速度的 DCT 系数作为 flow-matching 生成状态，固定解析积分恢复速度和位置；由只看历史的终点预测器给候选目标，交替注意力建模轨迹假设与主体间互动。
-- **实验与关键结果：** best-of-20 下，ETH/UCY 平均 minADE/minFDE 为 **0.15/0.22**，NBA 四秒为 **0.69/0.86**，SDD 为 **7.38/11.57**；作者称 ETH/UCY 五个场景均达 SOTA，NBA 四秒 ADE 最低、FDE 并列最佳。
-- **关注价值／局限与跟进：** 以加速度谱作生成接口，适合把交通交互预测接到可行性/舒适性约束；但行人、篮球和户外数据不等同车辆闭环，需在车规采样率、地图约束、罕见急刹和不确定性校准下报告碰撞风险收益。
+- **作者／机构／提交：** Roni Goldshmidt、Hamish Scott、Lorenzo Niccolini（Empiric Earth）；v1，2026-11-19 15:49 UTC。
+- **问题：** 端到端自动驾驶模型通常依赖多相机与百亿级参数，推理慢且在换用未见相机位姿/内参（cross-rig）时容易失效；现有开环驾驶基准又以常规巡航为主，难以测出危险场景的碰撞风险。
+- **创新：** 验证仅用单颗前视相机和 **1B** 参数视频编码器能否同时实现跨相机迁移、50 ms 内实时规划，并在真实行车记录仪事故/险情与 Euro NCAP 场景中击败更大规模的多相机模型。
+- **机制／结构：** 以 1B 参数视频编码器读取单前视相机最近 **2 秒**视频，输出接入四个轻量预测头，单次前向同步预测：当前车速、刚驶过的度量级历史轨迹、碰撞风险分数，以及未来 **6.4 秒**的 **6** 条候选轨迹。
+- **实验与关键结果：** 在给定当前车速的条件下，推理延迟 **<50 ms**；跨 **5** 个轨迹基准的 $\text{minADE}_6$ 较 6 相机、34B 参数且慢逾 **100 倍**的 Alpamayo 2 Super 低 **44%**（增益主要来自两者均未训练过的相机 rig，在共享 rig 上两者持平）。作者额外构建真实行车记录仪碰撞/险情与 Euro NCAP 两套开环安全基准，称 BADAS-3.0 通过率高于所测全部已发表规划器。
+- **关注价值：** 为低成本量产辅助驾驶与端侧冗余校验提供了强基线：证明时间窗口内的单目结构化预测头比堆相机和参数更能抵抗相机配置漂移。
+- **局限／跟进：** 评估为开环与静态基准（且使用真实自车速度输入），无法直接等同实车闭环控制表现；单目对侧后方盲区、强逆光遮挡及长尾法规场景仍需多模态冗余与闭环实车统计。
 
-### 2. [AnyVIO: Feed-Forward Streaming Visual-Inertial Odometry Across Platforms](https://arxiv.org/abs/2611.26625)
+### 2. [FastRoverVLA: Fast Vision-Language-Action Execution for Off-Road Autonomous Driving](https://arxiv.org/abs/2611.26242)
 
-- **作者／提交：** Omoruyi Atekha、Marcus Greiff、Ray Zhang、Luca Carlone 等；v1，2026-11-19 18:59 UTC。
-- **问题、创新与机制：** 单目几何基础模型缺失可观测的尺度，滤波/因子图融合 IMU 又会引入手工调参和随轨迹增长的优化。AnyVIO 将 streaming GFM 与惯性基础模型并行预测相邻帧度量运动，用轻量学习融合头估计两路可靠性，单次前向输出位姿。
-- **实验与关键结果：** 覆盖汽车、腿足/轮式机器人、手持与头戴设备的 **9** 个数据集；相对纯视觉模型，度量位置误差降 **36%**，图像到位姿发布时间 **70 ms**；在两辆实车、最高 **140 km/h**、弱光和扬尘条件部署。
-- **关注价值／局限与跟进：** 给 SLAM/长期自治提供不依赖长轨优化的实时度量接口；仍需给漂移随时长的曲线、IMU 标定偏差、异常振动/丢帧、算力功耗和地图闭环后的整体误差，摘要的跨平台结果不能自动保证极端 ODD 安全。
+- **作者／机构／提交：** Changtao Zhao、Yingxue Guan、Li Wang 等（北京理工大学机械与车辆学院／重庆创新中心、长安大学等）；v1，2026-11-19 15:23 UTC。
+- **问题：** 越野自动驾驶的 VLA 模型能根据复杂地形语义生成路径，但每步重算多模态大模型计算开销极大；若直接复用旧预测轨迹，车辆在崎岖路面的实际运动偏离会导致开环指令失准。
+- **创新：** 提出免训练的视觉—运动解耦接口，将低频视觉语义规划与高频运动学状态修正分开，使 VLA 只在地形变化或误差需要刷新时触发。
+- **机制／结构：** 在视觉预测间隙维护一个可微调的**速度—曲率动作缓冲区（speed-curvature action buffer）**：每次控制步根据实测车速与转向对齐缓冲区并积分生成局部轨迹，消费当前动作后把修正后的剩余序列写回缓冲区，使历史运动修正跨步持久保留；同时用**有界刷新规则**对新解码轨迹的速度与曲率变化归一化，依据轨迹粗糙度（plan-roughness）动态分配短或长复用预算。该接口不依赖主干隐层特征，也无需额外训练驾驶策略。
+- **实验与关键结果：** 在 3 秒时域真实请求评估中，ORAD-3D 达到 ADE/FDE **0.328 / 0.596 m**，RELLIS-3D 达到 **0.266 / 0.526 m**；在仅 **6.0%** 与 **4.8%** 的视觉请求率下，FDE 反而分别下降 **18.0%** 与 **36.7%**，在 **4** 种 VLM 主干上均保持更低误差，串行回放下将 Qwen3-VL 请求处理耗时降低 **16.6 倍**与 **20.8 倍**，代码已开源。
+- **关注价值：** 不改大模型权重即可把慢 VLA 接上越野高频控制，消融验证“持久状态写回”是主要误差来源，工程迁移门槛低。
+- **局限／跟进：** 数据集仍属离线回放（ORAD-3D/RELLIS-3D），越野强打滑、悬架剧烈颠簸和突然出现的障碍物可能超出单纯速度—曲率缓冲区假设，需补实车闭环突发避障延迟测试。
+
+### 3. [GeoPillars: A Large-Kernel Pillar Detector for Single-Sweep LiDAR Under Point Sparsity, and a Decomposition of Its Gain](https://arxiv.org/abs/2611.25787)
+
+- **作者／机构／提交：** Chaitanya Dumbre、Shubham Sarkar、Akash Mohapatra 等（MIT World Peace University, Pune）；v1，2026-11-19 09:16 UTC。
+- **问题：** 稀疏预算下的单帧 LiDAR 3D 检测论文往往把多项结构改动打包对比，导致无法判断真实增益究竟来自复杂注意力还是简单的分辨率调整，也常忽略跨传感器域外迁移崩溃问题。
+- **创新：** 在每 0.4 m pillar 至多保留 8 个点（丢弃 **46.6%** 有效点）的硬预算下提出 GeoPillars，并对每个架构组件进行逐级（rung-by-rung）贡献拆解，同时公开失败的零样本真实域迁移结果。
+- **机制／结构：** 在 pillar 内加入几何特征与分组向量注意力（grouped vector attention），在 BEV 网格引入可学习绝对位置先验、大核主干网络、辅助表面法向监督与全分辨率检测头。
+- **实验与关键结果：** 在 12.3 万帧合成 CARLA 扫描上评测车辆类别，BEV AP@0.7 达 **81.33**，同点云预算下比 CenterPoint 高 **13.76** 个点，比全密度 CenterPoint 高 **1.91** 个点。但逐级分解显示：**仅把检测头分辨率升至全分辨率就贡献了 10.19/13.76 分**，编码器/主干/neck/位置先验合计仅加 **3.37** 分，法向监督仅 **+0.20** 分（处于运行方差内），且 GeoPillars 是 7 个对比模型中最慢的（虽朝向反转率减半）。此外，零样本评测 **6,743** 帧真实 nuScenes 关键帧时，所有模型均只保留原精度的 **3.7%–12.2%**（文中自陈因采集缺陷导致 CARLA 强度值为常数、模型仅学到几何且验证集为同场景按帧划分）。代码与权重已公开。
+- **关注价值：** 极有价值的“反过拟合/消融诚实性”样本：提醒自动驾驶感知研发先对齐检测头分辨率与推理延迟，再评估复杂编码器是否真的划算。
+- **局限／跟进：** 论文自述存在验证集同场景泄漏与强度通道常数缺陷，CARLA 分数偏乐观；后续应按场景切分并在多真实传感器扫描密度与全类别目标下重测。
 
 ## 机器人／具身智能
 
-### 3. [AgentRoboCritic: Understanding the Capability of Frontier Agents on Direct Robot Control](https://arxiv.org/abs/2611.26613)
+### 4. [Reasoning on Call: Efficient Agentic Robot Control for Long-Horizon Robot Manipulation](https://arxiv.org/abs/2611.26341)
 
-- **作者／提交：** Yiyang Du、Yuxuan Kuang、Qitao Zhao、Yixuan Wang、Zhanqiu Guo、Yi Xu 等；v1，2026-11-19 18:57 UTC。
-- **问题、创新与机制：** 回合成功率看不到直接输出低层数值动作的多模态 Agent 如何失败。AgentRoboCritic 要策略在每步给出局部意图，critic 对照意图评估动作结果与失败类型，把审计粒度降到 action level。
-- **实验与关键结果：** 覆盖 **12** 个操作基准；发布 **12,844** 个动作标注和 **400** 动作人工标注验证集。微调的开源 Muse-Glimmer-30B 失败类型准确率由 **32.58%** 升至 **74.24%**。作者观察到零样本语义 grounding 与局部恢复能力，但抓取/对齐和不同失败模式的恢复不均衡。
-- **关注价值／局限与跟进：** 为“Agent 直接控机器人”补上可审计的失败标签和触发恢复入口；critic 的意图文本可能事后合理化，且仿真/基准动作不覆盖力、延迟和不可逆风险，应检验 critic 误放行是否导致真实损伤。
+- **作者／机构／提交：** Zilang Cen、Chao Tang、Fangcheng Liu 等（武汉大学、中关村学院、Samsung Robotics eXperience、三星中国研究院等）；v1，2026-11-19 16:18 UTC。
+- **问题：** 多模态大模型能支撑长程机器人操作规划与纠错，但高频调用导致高延迟和巨额 token 消耗；更难的是判断何时真正需要大模型介入，以及故障时需要修补底层动作执行、改写子任务计划还是两者联动。
+- **创新：** 提出 RoC（Reasoning on Call）按需推理框架，用轻量在线任务状态监控器替代定频大模型轮询，仅在事件触发时协同修正执行与规划。
+- **机制／结构：** 系统在底层执行策略与高层推理 Agent 之间加入**在线任务状态监控器**，结合时序视觉观测与**有序交互记忆（ordered interaction memory）**联合估计当前子任务进度并预测下一子任务；一旦进度停滞、异常或接近切换边界，触发**事件驱动 Agent 审阅**，联动决策执行修复与计划重排，经核验的结果再更新记忆与子任务状态，常规执行期完全交由本地低层策略完成。
+- **实验与关键结果：** 在 RMBench 上，RoC 相比最强 Agent 基线将任务成功率提升 **24.0 个百分点**，同时降低 **65.3%** token 消耗；相比最强纯策略基线，成功率高 **15.1 个百分点**；并在 **3** 项真实世界长程操作任务上验证有效。
+- **关注价值：** 把“大模型何时闭嘴、何时叫醒”做成显式监控接口，是降低具身 Agent 运行成本与响应抖动的可行工程范式。
+- **局限／跟进：** 摘要未公布真机绝对成功率、监控器误报/漏报率及极端不可逆动作下的触发延迟上界；若有序交互记忆被错误状态核验污染，仍可能触发连锁规划误判。
 
-### 4. [PGX: Physically Grounded Execution for Long-Horizon Humanoid Loco-Manipulation](https://arxiv.org/abs/2611.26596)
+### 5. [TacInno: Teaching Vision-Language-Action Models the Contact Dynamics Beyond Vision and Action](https://arxiv.org/abs/2611.26405)
 
-- **作者／提交：** Kai Lu、Chenyang Ma、Ioannis Havoutis；v1，2026-11-19 18:52 UTC。
-- **问题、创新与机制：** 单体 VLA 很难同时处理长程阶段、行走—操作协同和接触精度。PGX 将执行拆成谓词状态机（阶段门、恢复、导航/等待协调）、活动阶段内的 VLA skill，以及以站位、物体相对位置、接触目标维持空间一致性的 world-coordinate locking；其中状态机和锁定模块不需训练。
-- **实验与关键结果：** 在 **3** 个仿真任务与 Unitree G1 的 **1** 个真机长程 loco-manipulation 任务上，作者报告阶段推进和任务成功率提升；摘要未给绝对成功率。
-- **关注价值／局限与跟进：** 把慢推理、任务进度和几何约束分层，是人形落地更清晰的故障隔离方式；需公开谓词误判、站位漂移、恢复次数、阶段转换延迟与跌倒/接触失败代价，不能只以最终成功率判断。
+- **作者／机构／提交：** Weile Li、Yunfan Lou、Muqing Shi 等（上海科技大学、中国科学院工业人工智能研究所、北京大学等）；v1，2026-11-19 16:53 UTC。
+- **问题：** 为 VLA 引入触觉传感后增益常不稳定，且模型往往忽视触觉信号——因为很大一部分触觉变化（例如夹爪闭合时的硅胶形变）本身就可从视觉和已执行动作中推知，导致触觉通道被冗余信号淹没。
+- **创新：** 提出“触觉创新（tactile innovation）”概念，专门剥离视觉和动作无法解释的纯接触动力学增量，并仅将其作为训练期的辅助监督目标，推理部署零额外模块开销。
+- **机制／结构：** **TacInno tokenizer** 以历史视觉观测和已执行动作为条件，将未来触觉变化中无法被视觉与动作解释的残差压缩为离散编码（code）；**TacInno-VLA** 策略在训练时联合学习动作输出与预测该离散触觉创新编码，但部署推理阶段不需要运行 tokenizer 或额外模块，实现跨形态触觉知识内化。
+- **实验与关键结果：** 在 **6** 项仿真接触密集任务上平均成功率达 **87.5%**，在 **4** 项真机任务上达 **70.5%**，分别超出最强视触觉基线 **10.7** 与 **9.0 个百分点**；消融验证了视觉—动作条件剥离、多帧编码和辅助离散预测的贡献。
+- **关注价值：** 解释了“直接喂入原始触觉为何效果有限”，用残差信息瓶颈训练法让纯视觉部署或轻量传感器端也能获得接触动力学表征。
+- **局限／跟进：** 仅在训练目标中监督接触残差时，遇到视觉被遮挡且无实时触觉传感的真机突发滑移/刚度突变场景，推理期缺少实时闭环反馈仍可能反应滞后。
 
-### 5. [Risk-Controlled Test-Time Adaptation for Vision-Language-Action Models](https://arxiv.org/abs/2611.26438)
+### 6. [PhyDEX: A Benchmark for Physical Reasoning in Vision-Language-Action Models via Dynamic Extrinsic Dexterity](https://arxiv.org/abs/2611.26565)
 
-- **作者／提交：** Zixuan Liu、Hashem Haghbayan、Zizhan Zheng、Siavash Khajavi；v1，2026-11-19 17:12 UTC。
-- **问题、创新与机制：** 检索示范虽能让 VLA 免更新适配，但模型未必会用到正确示范。R2-VLA 用不确定性预测器决定自主执行还是请求专家，并校准阈值以满足用户指定的任务失败风险；专家修正持续写入检索记忆。
-- **实验与关键结果：** 在 **3** 种 VLA backbone、**4** 个 LIBERO suite 上，平均任务成功率提高 **9.2–11.2 个百分点**，并以更少专家请求达成设定目标。
-- **关注价值／局限与跟进：** 将“是否求助”变成有任务级风险口径的运行时接口；基准中的校准不保证分布外接触任务仍有效，部署还需报告置信度漂移、拒绝率、专家响应延迟和错误记忆的可撤销性。
+- **作者／机构／提交：** Hao Vo、Taisei Hanyu、Yuki Ikebe 等（VinUniversity、阿肯色大学、斯图加特大学、DFKI 等）；v1，2026-11-19 18:33 UTC。
+- **问题：** 现有 VLA 基准大多聚焦夹爪—物体准静态抓取接触，忽略重力、摩擦、惯量与质量分布如何通过环境协同完成操作，难以检验模型是真正理解物理规律还是在插值训练分布。
+- **创新：** 提出 **PhyDEX** 动态外在灵巧性（抛掷）基准与自动数据管线，要求机器人必须隐式推断物体质量、质心和摩擦并将物体抛向运动学工作空间之外的目标点。
+- **机制／结构：** 构建包含 **35,000** 条轨迹（**143** 小时）、覆盖 **9** 个任务和 **100** 个场景的数据集，涵盖均匀、不规则及动态质量物体以及静止、多目标、移动目标位置；通过自动抓取生成、运动规划和物理随机化下的闭环抛掷优化生成真值轨迹。
+- **实验与关键结果：** 评测 **GR00T N1.7**、**DynamicVLA** 和 **ForceVLA** 三款代表性 VLA 模型，**三者成功率均低于 3%**。诊断分析指出两大瓶颈：预训练模型基础抓取/抛前阶段鲁棒性不足，以及严重“物理盲区”——一旦把真实物理参数提供给模型，成功率大约翻倍；在人形机器人及真实场景试验中复现了相同失败模式。
+- **关注价值：** 用硬指标揭穿当前大型 VLA 在动力学外推和隐式物理参数辨识上的脆弱性，为评估“真物理理解 vs 表面语义拟合”提供了标准化标尺。
+- **局限／跟进：** 基准聚焦抛掷任务，对连续接触滑移、柔顺装配与形变物体物理推理覆盖有限；把动力学辨识接入闭环前还需先解决抛前阶段的高失败率。
 
-### 6. [Awaken-HI: Scaling Humanoid Intelligence with Whole-Body Human Experience](https://arxiv.org/abs/2611.26420)
+## 交叉方向：VLA 安全停止与多机空间对齐
 
-- **作者／提交：** EngineAI；v1，2026-11-19 17:03 UTC。
-- **问题、创新与机制：** 第一视角视频通常没有同步全身运动，难为人形 loco-manipulation 提供可转移动作监督。Awaken-Human 配对约 **50,000 小时**第一视角双目视频与全身人体运动、覆盖逾 **100** skills；Awaken-HI 以共享动作 expert 同时预测人类运动和重定向的机器人动作。
-- **实验与关键结果：** 随人类预训练数据增加，留出机器人动作误差呈经验 scaling law 下降；全量预训并适配 T800 后，**8** 个真机单任务平均成功率 **93.75%**，作者称超过 GR00T N1.7 与 $π_{0.5}$，并测试未见物体及新物体—目标配对。
-- **关注价值／局限与跟进：** 同步全身数据可能缓解人形数据瓶颈；需进一步审计人—机运动重定向误差、稀有接触/跌倒、标注许可与隐私、长程任务的置信区间，单一机型比较不能代表跨本体泛化。
+### 7. [Teaching Vision-Language-Action Models to Stop Safely](https://arxiv.org/abs/2611.26239)
 
-## 交叉方向：长期空间状态
+- **作者／机构／提交：** Zheyuan Liu、Chuhan Wang、Jinduo Guo 等（圣母大学、佐治亚理工、MIT）；v1，2026-11-19 15:14 UTC。
+- **问题：** 已有 VLA 安全研究主要关注从初始状态拒绝或抑制禁止指令；一旦动作已经执行到半途才接管禁止指令，模型仍可能惯性完成危险任务，或者虽中断任务却松开夹爪摔落已抓取物体，“未完成任务”不等于物理安全。
+- **创新：** 提出状态感知回退模仿学习 **SAFI（State-Aware Fallback Imitation）**，在执行中段被禁止时教策略进入安全的“静止悬停/保持握持（holding）”回退状态，而不是简单清零或放手。
+- **机制／结构：** 分两阶段：（1）**回退目标构造**，沿被禁止任务的演示轨迹各中间状态，构造机械臂保持静止指令及与当前状态一致的夹爪保持目标；（2）**联合策略适应**，在保留任务原始动作的同时联合微调这些中间态回退目标，使 OpenVLA-OFT 在任何中途接管点都能立刻稳定保持现状。
+- **实验与关键结果：** 基于 OpenVLA-OFT 在 LIBERO 与 BadLIBERO 任务上同时评测禁止任务完成率、物理事故（如摔落物体、动作饱和）与保留任务性能：SAFI 将中途接管后的禁止任务汇总完成率降至 **1.3%**，且**未记录到物理事故或动作饱和**，同时维持较高的常规保留任务成功率。
+- **关注价值：** 填补了 VLA 安全评测中“过程态可中断性与物理保持”的空白，证明仅测初始拒答率会严重高估具身系统的实际安全性。
+- **局限／跟进：** 目前仅在单一训练种子、OpenVLA-OFT 架构及 LIBERO 仿真环境下验证，“保持静止+握持”也不适用于移动中需避让或需主动释放热/危物体的场景，须扩展到多构型真机测试。
 
-### 7. [Accord: Universal Online Metric Localization and Dense Mapping from one Camera and an IMU](https://arxiv.org/abs/2611.25279)（2026-11-18 UTC 补充）
+### 8. [I See You: Initial Multi-Robot LiDAR Registration with Mutual-Observation Checks](https://arxiv.org/abs/2611.26276)
 
-- **作者／提交：** Jaafar Mahmoud、Arthur Movsesyan、Cuong Huynh、Mikhail Iumanov、Sergey Zagoruyko、Sergey Kolyubin；v1，2026-11-18 23:16 UTC。
-- **问题、创新与机制：** 单目 IMU-VIO 有度量运动却几何稀疏，深度基础模型有稠密结构却缺尺度一致性。Accord 用 VIO 位姿产生度量锚点，将短 keyframe window 的深度以双向共视一致性校正逐图尺度，再用因子图融合子图；不按相机/数据集单独调参。
-- **实验与关键结果：** 在 **5** 种公开 camera-IMU 设置和新的 Phone-rig/GoPro 数据上，作者报告每个平台 5 cm mean F-score 均为最佳或次佳；开源代码与 phone-rig 数据。
-- **关注价值／局限与跟进：** 把基础模型的稠密预测接回可核对的多视几何，可服务手机、车载和机器人建图；仍应报告动态场景、回环、长程尺度漂移、设备同步误差和端侧吞吐，5 cm F-score 不是导航安全证据。
+- **作者／机构／提交：** Jonathan Lichtenfeld、Oskar von Stryk（德国达姆施塔特工业大学 SIM 组）；v1，2026-11-19 15:40 UTC（已被 IEEE SSRR Nov 2026 接收）。
+- **问题：** 搜救（SAR）等多机器人团队需要无外部基础设施、在任务开始时从静止单帧直接将各机对齐到统一坐标系；现有单帧全局 LiDAR 点云配准在对称/重复/退化环境中极易发生“静默错配”，且超过两台机器人的真机验证极少。
+- **创新：** 提出集中式起动前多机器人初始 LiDAR 配准框架，引入基于**互相观测（mutual-observation）**的确定性物理合理性检查，主动拒绝不可能的位姿假设。
+- **机制／结构：** 系统先执行成对由粗到细（coarse-to-fine）的点云配准，随后利用各机器人在视野中应能互见或遮挡自洽的几何约束进行确定性合理性校验，剔除物理上自相矛盾的成对位姿假设再完成全队图对齐。
+- **实验与关键结果：** 在自采 **4** 台时间同步实机机器人多场景带真值数据集上评测，互相观测检查剔除了**超过三分之一**的错误成对配准，同时误杀正确配准的比例**低于 1%**，将包含错误机器人位姿的整队配准案例减少了 **38%**；代码与数据集均已公开。
+- **关注价值：** 多机 SLAM/协同导航最怕错误的初始闭环边污染整张全局图；该工作把低成本互见几何校验做成启动前门控，工程实用性强。
+- **局限／跟进：** 要求机器人彼此处于 LiDAR 有效视距且时间同步，极端烟雾/遮挡或队友完全在盲区外时互见检查无法触发，仍需结合后续运动轨迹与多传感器回环校验。
 
 ## 趋势总结
 
-- **具身系统正将“何时相信策略”显式化：** R2-VLA 的风险阈值、AgentRoboCritic 的动作级意图审计、PGX 的物理谓词共同把求助、恢复与阶段切换从隐含行为变为接口；下一步应统一报告误触发、漏触发、p95 延迟和真实损伤代价。
-- **规模数据与结构化执行互补而非替代：** Awaken-HI 用大规模同步人体运动扩展人形监督，PGX 用几何锁定和状态机收紧部署。数据 scaling 不等于接触可靠性，转换误差和回退策略必须独立评测。
-- **长期自治需要“度量且可更新”的状态：** AnyVIO 与 Accord 均让学习式几何接受 IMU/多视约束，SpecFlow 将未来动作的动力学结构前置。跨设备、跨时间和动态物体下的状态来源、更新与失效条件比单帧指标更重要。
+- **端到端驾驶与具身模型正在补“运行接口层”：** BADAS-3.0 用单目时空头抵抗相机配置变化，FastRoverVLA 用速度—曲率缓冲和粗糙度预算把低频 VLA 接到高频越野控制，RoC 用进度监控与有序记忆按需唤醒推理模型——共同主线是不靠硬堆参数和调用频率，而是设计显式、低耦合的中间执行与触发接口。
+- **物理盲区与诚实归因成为模型能力试金石：** PhyDEX 揭露前沿 VLA 在抛掷动力学推理上不足 3% 的成功率，TacInno 发现必须剥离视觉—动作可解释部分才能让触觉真正起作用，GeoPillars 的逐级分解则证明大量所谓“结构创新”其实被检测头分辨率掩盖；基准与消融正从“刷总分”转向“定位到底缺哪层物理/几何信号”。
+- **具身安全与多机空间系统走向“可中断、可拒真”的硬门控：** SAFI 证明 VLA 在执行中途被叫停时不能只靠拒答、必须显式保住物体避免摔落事故；I See You 则用互见几何校验在多机 SLAM 启动阶段提前拒掉假阳性对齐。相比平均成功率，错误拦截率、误杀率与中间态物理代价正成为核心验收指标。
 
-# GitHub 开源趋势晨报｜2026-11-21
+# GitHub 开源趋势晨报｜2026-11-22
 
 ## 时间与证据口径
 
-检索于北京时间 2026-11-21 06:00。排名与 `+N/日` 来自第三方镜像保存的 **2026-11-20 UTC GitHub Trending 日榜**（`collectedAt` 2026-11-20 21:07 UTC）；`gained` 是镜像读取的当日增星，并非本次抓取的 star 差值。当前 star、主语言、许可证、创建时间和自述经 GitHub Repository API 复核。镜像不是 GitHub 官方服务；走红原因和趋势判断均为编辑推断。排除攻击/漏洞利用导向和疑似异常项目。
+检索于北京时间 2026-11-22 06:00。日榜排名与 `+N/日` 来自第三方镜像保存的 **2026-11-21 UTC GitHub Trending 日榜**（`collectedAt` 2026-11-21 21:07 UTC）与同期 GitHub 官方 Trending 页面（全站日榜、周榜及 TypeScript 分区日榜）；`gained` / `stars today` / `stars this week` 为榜单抓取周期内的增星统计，并非两次本地轮询的差值。当前总 star、主语言、许可证、创建时间与仓库自述均经 GitHub Repository API 本次复核。为避免连续重复，排除了昨日（11 月 21 日）已入选的 8 个项目，以及存在红队/漏洞利用敏感标签的高热度榜单条目。文中严格区分**确认信息**与**编辑推断**。
 
-| 项目 | 当前 stars | 日榜依据 | 语言／类别 |
-| --- | ---: | ---: | --- |
-| obra/superpowers | 322,788 | 第 2，+888/日 | Shell／Agent Skills 与工程方法 |
-| HKUDS/CLI-Anything | 61,322 | 第 3，+774/日 | Python／Agent 原生 CLI |
-| cursor/plugins | 17,814 | 第 5，+292/日 | TypeScript／IDE 插件规范 |
-| firecrawl/firecrawl | 205,168 | 第 6，+1,226/日 | TypeScript／网页知识基础设施 |
-| openvinotoolkit/openvino | 11,766 | 第 8，+219/日 | C++／边缘推理 |
-| cathrynlavery/diagram-design | 69,236 | 第 9，+634/日 | HTML／可编辑设计 Skills |
-| Tracer-Cloud/opensre | 13,564 | 第 13，+465/日 | Python／CI/CD 可靠性 Agent |
-| toeverything/AFFiNE | 75,737 | 第 14，+686/日 | TypeScript／知识与生产力 |
+| 项目 | 当前 stars | 榜单增量依据 | 语言／类别 |
+| --- | ---: | --- | --- |
+| kajisho5/ffmpeg-skill | 9,241 | 周榜第 13，+3,268/周 | Python／Agent 本地媒体技能与 MCP |
+| mjmirza/app-store-compliance | 3,337 | 日榜第 12，+724/日 | Shell／合规检查与 Agent Skill |
+| jingyaogong/minimind | 68,112 | 日榜第 4，+488/日 | Python／从零训练教学与小模型 |
+| zhouxiaoka/autoclip | 12,798 | 日榜第 16，+689/日 | Python／AI 视频剪辑桌面应用 |
+| mvanhorn/last30days-skill | 71,947 | 日榜第 10，+566/日（周榜第 5，+3,788/周） | Python／多源趋势研究 Skill |
+| google-labs-code/stitch-skills | 11,383 | 日榜第 11，+324/日（周榜第 2，+2,152/周） | TypeScript／开放标准 UI 设计 Skills |
+| bendlang/bend | 25,727 | TypeScript 日榜第 5，+58/日 | TypeScript／形式证明与并行语言 |
+| nginx/nginx | 32,714 | 日榜第 7，+195/日 | C／Web 服务器与反向代理基础设施 |
 
 ## 精选项目
 
-### 1. [obra/superpowers](https://github.com/obra/superpowers)
+### 1. [kajisho5/ffmpeg-skill](https://github.com/kajisho5/ffmpeg-skill)
 
-- **确认信息：** [Repository API](https://api.github.com/repos/obra/superpowers) 当前 **322,788 stars**，Shell、MIT，创建于 2025-10-09；日榜第 2、**+888/日**。自述定位为 Agentic skills framework 与软件开发方法。
-- **用途：** 将编码 Agent 的计划、执行、验证等做成可复用技能与工作流。
-- **走红原因（推断）／适合人群：** 团队正在寻求把一次性 prompt 变成可审查工程流程；适合使用 coding agent 的开发团队。采用前应固定 skill 版本、审查外部工具权限、明确人工审批点和许可证边界。
+- **确认信息：** [Repository API](https://api.github.com/repos/kajisho5/ffmpeg-skill) 当前 **9,241 stars**、835 forks，Python、MIT 协议，创建于 2026-09-03；GitHub 官方周榜第 13、**+3,268/周**。自述提供 42 个 FFmpeg 本地工具、机器可读契约及 MCP 服务器，适配 Claude Code、Cursor 与 Codex，无须云端或 API 密钥，并包含编辑后自检输出机制。
+- **用途：** 让编码 Agent 在本地安全调用 FFmpeg 完成剪辑、字幕、画面重框（reframe）、响度规范化与多平台导出。
+- **走红原因（推断）／适合人群：** 把容易写错参数的 FFmpeg CLI 封装成带契约和输出自检的 MCP/Skill，直接解决了媒体自动化“调用盲飞”问题；适合多模态工具开发者与内容工程团队。使用前须限制文件系统读写目录，防止路径穿越或误覆写原始素材。
 
-### 2. [HKUDS/CLI-Anything](https://github.com/HKUDS/CLI-Anything)
+### 2. [mjmirza/app-store-compliance](https://github.com/mjmirza/app-store-compliance)
 
-- **确认信息：** API 当前 **61,322 stars**，Python、Apache-2.0，创建于 2026-03-08；日榜第 3、**+774/日**。项目自述为让软件 Agent-native 的 CLI-Hub。
-- **用途：** 为图形/传统软件补充可由 Agent 调用的命令行操作面。
-- **走红原因（推断）／适合人群：** 可组合 CLI 能降低 Agent 操作桌面软件的脆弱性；适合自动化和工具链团队。需先在隔离环境验证命令副作用、参数校验、版本漂移、文件覆盖及权限最小化。
+- **确认信息：** [Repository API](https://api.github.com/repos/mjmirza/app-store-compliance) 当前 **3,337 stars**、208 forks，Shell，创建于 2026-06-06；API 许可证字段为 `NOASSERTION`（仓库 `LICENSE` 文件声明为 OpenRoots Agent License 2.3）。2026-11-21 日榜第 12、**+724/日**。自述整理了 117 条 App Store / Google Play 常见拒审模式与修复、隐私清单与 Data safety 检查、95 个合规截止时间节点及 AI 编码 Agent 专用 Skill。
+- **用途：** 作为移动端发版前的自动化合规检查清单与 Agent 可调用审核守卫。
+- **走红原因（推断）／适合人群：** 移动应用商店审核规则与 EU AI Act、COPPA 等法规频繁变更，把法务/审核文档转成结构化“pre-submission guard + Agent Skill”切中刚需；适合独立开发者与移动发版团队。须注意非标准许可证（OpenRoots Agent License 2.3）商用限制，并须以苹果/谷歌官方最新审核条款做最终核验，不能将脚本检查等同合规背书。
 
-### 3. [cursor/plugins](https://github.com/cursor/plugins)
+### 3. [jingyaogong/minimind](https://github.com/jingyaogong/minimind)
 
-- **确认信息：** API 当前 **17,814 stars**，TypeScript，许可证字段为空，创建于 2026-01-23；日榜第 5、**+292/日**。自述为 Cursor plugin specification 与官方插件。
-- **用途：** 为编辑器内 Agent 扩展定义和提供插件能力。
-- **走红原因（推断）／适合人群：** Agent 扩展从单一提示词转向可发现、可安装的能力包；适合维护 IDE 工作流的团队。应审计插件来源、网络/文件权限、升级兼容性和许可证缺失带来的使用限制。
+- **确认信息：** [Repository API](https://api.github.com/repos/jingyaogong/minimind) 当前 **68,112 stars**、8,902 forks，Python、Apache-2.0 协议，创建于 2024-07-27（近期仍有 PR 合并提交）；2026-11-21 日榜第 4、**+488/日**。自述主打“两小时从 0 训出你的 64M 大模型”，覆盖完整极简训练管线。
+- **用途：** 提供从分词、预训练到微调的轻量 LLM 全流程教学与复现代码基线。
+- **走红原因（推断）／适合人群：** 随着模型黑盒化和微调脚本复杂化，低成本可单卡复现、代码极简的从零训练项目持续吸引学习者与实验验证；适合入门研究者、高校教学及需要快速验证训练/分词改动的工程师。小模型指标仅作原理验证，不代表百亿级模型的收敛规律。
 
-### 4. [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl)
+### 4. [zhouxiaoka/autoclip](https://github.com/zhouxiaoka/autoclip)
 
-- **确认信息：** API 当前 **205,168 stars**，TypeScript、AGPL-3.0，创建于 2024-04-15；日榜第 6、**+1,226/日**。自述提供搜索、抓取和数百数据提供方的 Agent 知识基础设施。
-- **用途：** 将网页检索、抓取和结构化内容输入 Agent/RAG 流程。
-- **走红原因（推断）／适合人群：** 高质量、可溯源外部数据仍是 Agent 产品的瓶颈；适合需要网页知识管线的应用团队。生产前须评估 robots/版权、PII、抓取频率、数据保留、供应商出口和 AGPL 合规。
+- **确认信息：** [Repository API](https://api.github.com/repos/zhouxiaoka/autoclip) 当前 **12,798 stars**、2,070 forks，Python、MIT 协议，创建于 2025-07-08；2026-11-21 日榜第 16、**+689/日**。自述为开源 AI 视频剪辑桌面工具，支持从链接或长视频（播客、访谈、课程）自动切分为短视频并生成字幕、封面与发布文案，同时在 README 声明了 MCP 标识。
+- **用途：** 面向创作者和中短视频运营的本地桌面端长转短剪辑与分发文案工作台。
+- **走红原因（推断）／适合人群：** 将本地渲染控制与云端模型按量能力结合，且同时提供桌面界面与 MCP 接入潜力；适合自媒体、播客及教育内容团队。部署前应检查第三方视频下载来源版权、云端模型 API 费用上限以及本地临时大文件清理策略。
 
-### 5. [openvinotoolkit/openvino](https://github.com/openvinotoolkit/openvino)
+### 5. [mvanhorn/last30days-skill](https://github.com/mvanhorn/last30days-skill)
 
-- **确认信息：** API 当前 **11,766 stars**，C++、Apache-2.0，创建于 2018-10-15；日榜第 8、**+219/日**。自述为 AI 推理优化和部署开源工具包。
-- **用途：** 进行模型转换、优化与硬件侧推理部署。
-- **走红原因（推断）／适合人群：** 本地/边缘 Agent 和机器人重视成本、隐私、时延；适合视觉、机器人及端侧平台团队。应实测目标硬件的精度回归、算子覆盖、冷启动、p95 延迟和驱动兼容性。
+- **确认信息：** [Repository API](https://api.github.com/repos/mvanhorn/last30days-skill) 当前 **71,947 stars**、6,372 forks，Python、MIT 协议，创建于 2026-01-23；2026-11-21 日榜第 10、**+566/日**，周榜第 5、**+3,788/周**。自述为跨 Reddit、X、YouTube、HN、Polymarket 与网页的 30 天近期趋势研究 Agent Skill，并输出带依据的综述。
+- **用途：** 为编码或研究型 Agent 注入多社区实时舆情与技术讨论检索能力。
+- **走红原因（推断）／适合人群：** 通用大模型知识存在时间截止，把社区信号采集打包成标准化 Skill 可快速补足“近 30 天发生了什么”；适合产品调研、投研辅助及技术布道人员。使用前须评估多平台抓取速率限制、数据源可信度去噪及账号/API 合规要求。
 
-### 6. [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design)
+### 6. [google-labs-code/stitch-skills](https://github.com/google-labs-code/stitch-skills)
 
-- **确认信息：** API 当前 **69,236 stars**，HTML、MIT，创建于 2026-04-16；日榜第 9、**+634/日**。自述为适用于多种 coding agent 的 **45** 种图表设计，产物是自包含 HTML+SVG。
-- **用途：** 将架构、流程和汇报图做成可编辑、可发布的代码化工件。
-- **走红原因（推断）／适合人群：** Agent 的价值越来越依赖可交付而非纯文本；适合产品、技术写作和方案团队。应人工复核图中事实、可访问性、品牌规范与 SVG/HTML 的嵌入安全。
+- **确认信息：** [Repository API](https://api.github.com/repos/google-labs-code/stitch-skills) 当前 **11,383 stars**、1,433 forks，TypeScript、Apache-2.0 协议，创建于 2026-01-16；2026-11-21 日榜第 11、**+324/日**，周榜第 2、**+2,152/周**。自述为配合 Stitch MCP server 的 Agent Skills 库，遵循 Agent Skills 开放标准，兼容 Codex、Claude Code、Cursor 等多款工具。
+- **用途：** 将 UI/界面设计生成能力作为跨 IDE、跨 Agent 的标准化插件与技能包分发。
+- **走红原因（推断）／适合人群：** 开放 Skill 标准降低了不同编码 Agent 生态间的重复适配成本；适合前端工程团队与设计—开发协同工作流搭建者。引入时需核验外部 MCP 服务的数据隐私条款与生成组件的可访问性/代码规范。
 
-### 7. [Tracer-Cloud/opensre](https://github.com/Tracer-Cloud/opensre)
+### 7. [bendlang/bend](https://github.com/bendlang/bend)
 
-- **确认信息：** API 当前 **13,564 stars**，Python、Apache-2.0，创建于 2026-01-13；日榜第 13、**+465/日**。项目自述为 CI/CD reliability 的开源 Agent。
-- **用途：** 辅助诊断和处理持续集成、发布流水线的可靠性问题。
-- **走红原因（推断）／适合人群：** Agent 正进入具有明确日志与回滚边界的运维场景；适合平台/SRE 团队。需从只读诊断起步，配置变更必须审批，并保留审计日志、密钥隔离和回滚演练。
+- **确认信息：** [Repository API](https://api.github.com/repos/bendlang/bend) 当前 **25,727 stars**、822 forks，TypeScript、Apache-2.0 协议，创建于 2023-08-29（11 月 18 日仍有运行时与编译器提交）；TypeScript 分区日榜第 5、**+58/日**。自述将 Bend 2 定位为“通过证明拦截 AI 编程错误”的高性能语言，强调 laws、proofs 与面向 CPU/GPU 的高并行编译。
+- **用途：** 探索面向 AI 生成代码时代的强类型、线性与形式证明辅助编程语言及并行编译运行时。
+- **走红原因（推断）／适合人群：** 当越来越多代码由 Agent 生成，“人类如何用机械可验证的约束与证明检验 AI 输出”成为前沿议题；适合编程语言研究者、编译器工程师与关注形式化验证的架构师。该项目仍处快速演进阶段，导入生产核心链路前需独立验证编译器稳定性与真实算子基准。
 
-### 8. [toeverything/AFFiNE](https://github.com/toeverything/AFFiNE)
+### 8. [nginx/nginx](https://github.com/nginx/nginx)
 
-- **确认信息：** API 当前 **75,737 stars**，TypeScript，许可证 API 标为 `NOASSERTION`，创建于 2022-07-31；日榜第 14、**+686/日**。自述为强调隐私、可定制的知识库，结合规划、整理与创作。
-- **用途：** 承载个人/团队笔记、白板和知识工作流。
-- **走红原因（推断）／适合人群：** Agent 输出需要进入人可编辑、可组织的长期工作空间；适合重视本地控制的知识工作团队。导入前审查许可、同步/备份、访问控制、数据导出与第三方 AI 连接范围。
+- **确认信息：** [Repository API](https://api.github.com/repos/nginx/nginx) 当前 **32,714 stars**、8,373 forks，C、BSD-2-Clause 协议，创建于 2015-06-23（11 月仍有 `nginx-1.31.9-RELEASE` 等主线维护提交）；2026-11-21 日榜第 7、**+195/日**。官方 NGINX 开源主仓库。
+- **用途：** 高性能 HTTP/HTTPS、反向代理、负载均衡、缓存及流媒体/邮件代理基础设施。
+- **走红原因（推断）／适合人群：** 大量本地及云端 Agent 服务、MCP 网关和边缘推理节点仍依赖稳定可控的反向代理、TLS 卸载与限流层，经典基础软件在架构回归中被反复纳入技术选型；适合后端、SRE 与 AI 基础设施团队。部署时应优先跟踪官方安全公告与版本分支策略，避免默认配置暴露管理接口或触发限流失效。
 
 ## 技术趋势与社区偏好
 
-本日日榜串起一条更完整的 Agent 交付链：Superpowers、Cursor plugins 和 CLI-Anything 提供可安装的能力与操作面，Firecrawl 提供外部知识，OpenVINO 将推理落到边缘，OpenSRE 管理交付可靠性，diagram-design 和 AFFiNE 承接人可审阅的产物与知识。社区偏好不再只是“更会生成”的模型包装，而是可执行、可验证、可编辑的运行面；但高日增星不能证明安全或生产成熟度，插件/CLI 权限、抓取数据权利、CI 写入审批、依赖固定和许可证应作为共同准入门。
+- **Agent 能力继续向“垂直领域契约 + 开放标准”收敛：** 无论是本地媒体处理的 `ffmpeg-skill`、移动发版守卫 `app-store-compliance`、社区情报 `last30days-skill`，还是跨端 UI 技能 `stitch-skills`，共同特征是把原本松散的自然语言提示词收拢为带工具契约、检查清单或开放 Skill 规范的可复用组件，减少 Agent 执行时的幻觉与参数漂移。
+- **验证面与经典底座同步升温：** 从语言级试图用证明约束 AI 错误的 `bend`，到作为基础教学对照的 `minimind` 与支撑流量网关的 `nginx`，社区在追逐应用层效率的同时，也开始重视“AI 产出如何被形式化/确定性规则验证”以及底层运行底座的可控性；高 star 增幅同样不能替代安全沙箱、权限隔离与非标准许可证审查。
 
 ## 证据链接
 
-- [GitHub Trending 2026-11-20 日榜归档 JSON](https://githubtrending.today/api/archive/2026-11-20.json)：排名、快照总 star 与 `gained`。
-- [GitHub Trending 数据方法](https://githubtrending.today/methodology/)：镜像采集和统计口径。
-- 各项目当前元数据以上述 Repository API 为准；走红原因均为编辑推断。
+- [GitHub Trending 2026-11-21 日榜归档 JSON](https://githubtrending.today/api/archive/2026-11-21.json)：日榜排名、快照总 star 与 `gained`。
+- [GitHub 官方 Trending（日榜）](https://github.com/trending?since=daily)／[（周榜）](https://github.com/trending?since=weekly)／[（TypeScript 日榜）](https://github.com/trending/typescript?since=daily)。
+- [GitHub Trending 数据方法](https://githubtrending.today/methodology/)：第三方镜像采集与统计口径说明。
+- 各项目当前总 star、主语言与许可证以上述 GitHub Repository API 复核为准；走红原因与趋势研判均为编辑推断。
 
 ## 内容标准与归档
 
