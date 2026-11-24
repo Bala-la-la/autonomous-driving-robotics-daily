@@ -2,163 +2,85 @@
 
 每日更新中文技术晨报，跟踪 arXiv 研究与 GitHub 开源趋势。
 
+## 最新一期｜2026-11-25
 
-## 最新一期｜2026-11-24
-
-- [arXiv 独立报告](reports/2026-11-24/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-11-24/github-trending.md)
+- [arXiv 独立报告](reports/2026-11-25/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-11-25/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-24
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-25
 
-## 日期与证据口径
-
-检索截至北京时间 2026-11-24 06:00。本期采用最新可用的 **2026-11-20 UTC v1** 提交（周末后首个可检索批次），并非将其冒充为 11 月 24 日当日投稿；全部 **7** 篇均未出现在 11 月 21—23 日报告。题目、作者、提交时间、方法与数值来自 arXiv API、摘要页；机构未在可核验元数据中完整披露时不推测。性能数字均为作者报告，未经独立复现。
+本期精选 2026-11-23 UTC v1（不是 11 月 25 日当日投稿）。数字均为作者报告；详尽问题、机制、实验和局限见上方独立报告。
 
 ## 自动驾驶／移动自治
 
-### 1. [Generalist Action Critic: Harnessing Frontier Models in Autonomous Driving](https://arxiv.org/abs/2611.27804)
+### 1. [MoOP：Pruning Autonomous Driving VLAs](https://arxiv.org/abs/2611.31240)
 
-- **作者／机构／提交：** Yun Yan、Shizhi Hu、Zhichao Li 等；机构未完整披露；v1，2026-11-20 16:32 UTC。
-- **问题：** 专用驾驶规划器能生成可执行轨迹，但在少见危险场景中会选错候选；直接把大模型微调成动作输出又昂贵且难验证。
-- **创新与机制：** 提出零训练的 **GAC** 推理 harness：专用规划器生成并初选多条轨迹，冻结的前沿模型读取相机图、空间叠加层、驾驶原则与受控上下文，只负责保留或重选候选，而不直接控制车辆。
-- **实验与关键结果：** 在 HUGSIM，作者报告 DrivoR 的 HD-Score 达 **43.2**，相对三个规划器最高提升 **32.1%**；NAVSIM v1 中纠正 **52.13%** 可纠正的不安全选择，而原本高质量选择引入新失败仅 **0.67%**。
-- **关注价值：** 是把通用推理接到安全关键系统的一种更窄接口：模型的作用、输入与输出都可审计，且保留专用控制器的实时执行边界。
-- **局限／跟进：** 候选集若未含安全轨迹，critic 无法创造解；闭环仿真增益也不能替代实车时延、视觉误读和大模型服务失效下的安全论证。
+Seongchan Kim 等提出以推理/轨迹双目标 Taylor importance 剪枝驾驶 VLA，并跨去噪步保留稳定 MLP channel。39.4% 参数削减仍有竞争性闭环表现，推理 1.37× 加速、峰值显存降 36.6%；长尾 ODD、量化和不安全尾部仍待审计。
 
-### 2. [Interactive Semi-Parametric On-Track Learning for Vehicle Dynamics in Autonomous Racing](https://arxiv.org/abs/2611.27932)
+### 2. [CoSel：Cooperation as Selection](https://arxiv.org/abs/2611.30918)
 
-- **作者／机构／提交：** Jungbin Kim、Youngim Nam、Cheolhyeon Kwon；机构未完整披露；v1，2026-11-20 18:08 UTC。
-- **问题：** 极限工况下，纯物理模型漏掉轮胎/路面残差，纯数据残差又难解释；两者分别更新会互相改变学习目标。
-- **创新与机制：** 用共享预测误差交替学习名义模型物理参数与数据残差；每次迭代只有在不增加共同目标时接受，从而给出单调不增、收敛的更新门。
-- **实验与关键结果：** 相比名义模型，一步横向速度／横摆角速度预测误差在仿真下降 **90.0%／81.6%**，实车下降 **54.0%／59.4%**；作者称数值和硬件试验均优于对照。
-- **关注价值：** 对赛车、自动泊车和高动态越野控制，提供“可解释参数 + 残差”的在线校准路径，而非一次性黑盒替代。
-- **局限／跟进：** 结果主要是一阶预测误差，尚需报告闭环圈速、碰撞/越界尾部风险和在轮胎突变、雨雪等非平稳条件下的更新安全性。
+Yiping Li 等让独立协同预测器使用 ego/RSU/CAV 证据，仅在风险显露时重选 ego planner 候选。V2Xverse score 70.7（高 7.5 点）；缺失 ego 检测下碰撞 17→19、对照 19→32。候选覆盖与通信失效是边界。
+
+### 3. [P2-TTA：协调感知与规划适配](https://arxiv.org/abs/2611.30739)
+
+Shiyu Fang 等用感知熵、回溯规划一致性、EMA teacher 和历史 loss 拒绝门稳定在线更新。平均更新 0.11‰ 参数、适配 19.9 ms；L2/碰撞/PDMS 恢复 36.4%/30.0%/9.3%，但历史一致性不等于未来安全。
 
 ## 机器人／具身智能
 
-### 3. [Task2Hand: A Contact-Grounded Skill for Parametric Dexterous-Hand Morphology Design](https://arxiv.org/abs/2611.27967)
+### 4. [ACAP：异步 Coding Agents](https://arxiv.org/abs/2611.31205)
 
-- **作者／机构／提交：** Haoyang Wang、Weibo Gao、Zhengxiong Li、Lingfeng Tao；机构未完整披露；v1，2026-11-20 18:48 UTC。
-- **问题：** 灵巧手设计要反复处理几何、URDF/MJCF、碰撞、抓取初始化与策略训练，生成式设计容易把昂贵训练浪费在早期就不可行的候选上。
-- **创新与机制：** **Task2Hand** 把功能说明变为参数化手模型，并按成本排序通过接触、动力学、学习三类 gate；每个 gate 留存证据，失败时只修改有界参数组并从最早阻塞点重跑，关键取舍交由人类确认。
-- **实验与关键结果：** 生成的 4 指、16 驱动 DoF SAGE Hand 在六棱柱任务 **45.6% vs. LEAP 37.3%**、双色圆柱 **70.8% vs. 51.6%**；稠密仿真触觉将圆柱掉落率降逾一半。受控迭代中，Skill 路径保持 **164/165** 次有效捕获，对照仅 **14/165**。
-- **关注价值：** 将 Agent 从“生成 CAD”推进到带回归守卫、可追溯设计资产的具身协同流程，适合把仿真训练预算投入真正有前景的本体。
-- **局限／跟进：** 结果依赖匹配的仿真协议；真实制造公差、耐久、驱动成本和触觉 sim-to-real 偏差尚未验证。
+Zexin He 等以 persistent agents 并行控制机器人部件，hyper-agent 管物理依赖和控制权。72 次真机 rollout 的时间成本降 28.2%；还需公开冲突、尾延迟、停机与成功率。
 
-### 4. [Non-penetrating World Models](https://arxiv.org/abs/2611.27963)
+### 5. [WeaveVLA：3D Relational Grounding](https://arxiv.org/abs/2611.31126)
 
-- **作者／机构／提交：** Yuhang Dai、Yinwei Wu、Ziyue Lin 等；机构未完整披露；v1，2026-11-20 18:44 UTC。
-- **问题：** 交互视频世界模型会让物体穿过障碍，造成看似合理但物理不可能的 roll-out，直接削弱其用于规划与训练的价值。
-- **创新与机制：** 建立 **NoPeBench**，并以冻结 DiT 隐状态上的轻量预测头读出候选动作是否会穿透；对不安全动作选择最能保留原意图的安全替换，形成 **NoPeWorld**。
-- **实验与关键结果：** 六个视频世界模型平均物理违规率由 **74%** 降至 **16%**；作者报告可零样本迁移到开放域图像、第三人称视角和移动障碍，并开放代码、基准和权重。
-- **关注价值：** 显示通用生成模型的内部表征可能已经含有物理违规线索，先加读出/门控层可比重训整个世界模型更实际。
-- **局限／跟进：** “不穿透”只是物理正确性的一个维度；摩擦、稳定性、遮挡下的碰撞和替换动作的长期可达性仍需闭环机器人验证。
+Zien Wang 等用稀疏关系图和跨观测 edge state 条件化 VLA。LIBERO-Plus 74.9→82.0%、85.7→87.8%；真机标准/OOD 55.6→70.0%、33.3→53.3%。需验证标定、遮挡和深度误差。
 
-### 5. [What Must a Model Tell a Planner? Outcome Interfaces for Risk-Aware Planning After Robot Damage](https://arxiv.org/abs/2611.27939)
+### 6. [Real2Worlds2Real](https://arxiv.org/abs/2611.31098)
 
-- **作者／机构／提交：** Hassan Iqbal、Krishna Kumar；机构未完整披露；v1，2026-11-20 18:12 UTC。
-- **问题：** 机器人受损后，固定惩罚的端到端策略无法随着任务风险阈值改变路线；规划器需要的是可组合后果，而不是单一“该怎么走”。
-- **创新与机制：** 比较决策策略、固定罚项策略、预测可行性/时间的 outcome model 与预测成功概率/时间并沿路径组合的 **capability contract**；全部使用相同经验、调参和不确定性 guard。
-- **实验与关键结果：** 在弱电机、增载或低摩擦的 Go2/H1 仿真中，两个低风险探测即可使 capability contract 对危险地形的排序接近每种危险额外四次试验；在经验不可行路线选择限制 **5%** 时，Go2 拒绝任务由约 **32%** 降至 **7–8%**，H1 由 **57%** 降至 **35–36%**。
-- **关注价值：** 将世界模型输出设计为规划可消费的风险—时间契约，支持同一经验库下按不同任务安全要求重规划。
-- **局限／跟进：** 仅覆盖仿真 Go2/H1 与若干损伤类型；真实损伤诊断、传感失真和探索过程中的物理安全成本尚未纳入。
+Jinzhong Gu 等从视觉和文字构建 twin/digital cousins，以 rollout 反馈改进并沉淀 Skills。作者称多样世界、数据和复用提升迁移，但摘要未给统一绝对指标；物理偏差、资产许可和真机预算仍关键。
 
-### 6. [EvoTER: Evolving Embodied Agents via Tool-Use Experience and Reflection](https://arxiv.org/abs/2611.27797)
+## 交叉方向：长期导航
 
-- **作者／机构／提交：** Yingting Zhou、Yuyin Zhou、Yongliang Wang 等；机构未完整披露；v1，2026-11-20 16:28 UTC。
-- **问题：** 长程具身 Agent 的局部修复或记忆总结未必改善完整任务，也难安全吸收新工具和失败经验。
-- **创新与机制：** 不更新模型参数的三角色演化环：Explorer 记录工具轨迹，Diagnoser 从成败中提炼选工具、算参数、后置检查和恢复 Skill，Validator 仅在新 session 的完整任务成功率提升时保留修订。
-- **实验与关键结果：** 仿真完整任务成功率由 **53.60%** 升至 **80.40%**；作者报告实物实验中继续演化让长程任务由 **20%** 升至 **80–100%**，并能吸收仿真后新增工具能力。
-- **关注价值：** 强调经验库应以新会话的端到端收益验收，而不是以一次局部补丁或语言反思的流畅度验收。
-- **局限／跟进：** 小规模真实任务的 80–100% 需要明确样本数、失败代价与跨环境复现；Skill 迭代也会带来权限膨胀和错误经验污染，须有版本回滚与人工审批。
+### 7. [GlanceNav](https://arxiv.org/abs/2611.30900)
 
-## 交叉方向：边缘感知与移动平台
+Anh Dao 等用固定大小流式记忆和反事实回退归因偏航。4B 模型 R2R-CE/RxR-CE 达 71.9%/73.6%，单步 104 ms；还应报告长期错误记忆、真实传感失配和 p95 延迟。
 
-### 7. [Real-time neuromorphic audio and vision perception for autonomous robotic applications](https://arxiv.org/abs/2611.27953)
+## arXiv 趋势总结
 
-- **作者／机构／提交：** Guillem Fustier-Castillo、Ruben Ribes-Serrano、Javier Naranjo-Alcazar 等；机构未完整披露；v1，2026-11-20 18:27 UTC。
-- **问题：** 神经形态感知多停留在离线基准，少有被整合进可行动移动机器人的端到端运行证据。
-- **创新与机制：** 四轮 rover 将 Jetson 上的 PANNs 音频、Xylo Audio 2 上 SNN 音频与事件相机 + SpikeYOLO 锥桶检测容器化为 ROS 2 服务，并由可配置 action dispatcher 将类别映射为机器人行为。
-- **实验与关键结果：** 原型演示了主机只配置并读取 Xylo 输出时的片上音频分类，以及声类反应与锥桶检测共同闭环；论文定位为系统集成可行性报告，摘要未给出统一能耗、端到端延迟或任务成功率对照。
-- **关注价值：** 将“低功耗模型”落到传感器、芯片、ROS 服务和行为调度的完整接口，对受限算力巡检/救援平台有工程参考。
-- **局限／跟进：** 仍是概念验证；需与 GPU-only 基线对比 p95 延迟、能耗、噪声鲁棒性和多传感器冲突处理，才能判断神经形态链路的实际收益。
+协同和在线更新正收紧为可拒绝、可追溯的运行时层；效率来自能力重要性、物理依赖、关系状态和固定记忆结构。Real2Sim2Real 的关键资产转向可验证流程。
 
-## 趋势总结
+# GitHub 开源趋势晨报｜2026-11-25
 
-- **运行时 gate 正成为具身系统的共同骨架：** GAC 复核候选轨迹、NoPeWorld 拦截穿透动作、Task2Hand 早停不可行设计、EvoTER 仅接受整任务增益；研究重点正从“一次生成最好答案”转到何时拒绝、替换或回滚。
-- **世界模型的价值取决于输出接口：** 损伤机器人研究要求输出可组合的风险—时间契约，NoPeWorld 则从冻结生成器读出安全信号；对下游规划有用的不是更逼真视频本身，而是可校准、可验证的后果预测。
-- **实物自治需补齐端侧证据：** 赛车半参数更新和神经形态 rover 都把模型放回硬件回路，但下一步必须并报闭环安全、尾延迟、能耗与故障退化，而非只给预测误差或演示视频。
+11 月 24 日第三方日榜头部已在前几期报道，首位还带红队/漏洞定位，故本期改用 GitHub Search API 选 11 月 18—24 日创建的新仓库。以下 stars 为创建至本次查询的累计值，不是官方日增；元数据由 Repository API 复核，走红原因均为推断。
 
-# GitHub 开源趋势晨报｜2026-11-24
+### 1. [EL4CTEO/fast-anything](https://github.com/EL4CTEO/fast-anything)
 
-## 时间与证据口径
+3,573 stars，Rust，MIT，11-21 创建。先 profile 再将少量热点交给 Agent 改写 Rust 并验证等价；适合渐进性能改造，需验证异常、并发、数值与 ABI，使用 feature flag 回滚。
 
-检索于北京时间 2026-11-24 06:00。日榜排名与 `+N/日` 来自 [githubtrending.today](https://githubtrending.today/api/archive/2026-11-23.json) 保存的 **2026-11-23 UTC** 日榜（`collectedAt` 2026-11-23 21:07 UTC）；这是采集窗口内的增星，并非本地轮询差值。当前 stars、forks、语言、许可证、创建／更新时间与项目描述来自本次 [GitHub Repository API](https://docs.github.com/rest/repos/repos#get-a-repository) 复核。排除了过去数期已选和明显面向漏洞利用/红队操作的高热项目；“走红原因”为编辑推断。
+### 2. [sybil-solutions/skill-distill](https://github.com/sybil-solutions/skill-distill)
 
-| 项目 | 当前 stars | 榜单增量依据 | 语言／类别 |
-| --- | ---: | --- | --- |
-| HKUDS/CLI-Anything | 63,532 | 日榜第 3，+783/日 | Python／软件 CLI 化与 Agent 执行 |
-| firecrawl/firecrawl | 207,822 | 日榜第 6，+920/日 | TypeScript／网页数据与 Agent 检索基础设施 |
-| openvinotoolkit/openvino | 12,268 | 日榜第 8，+183/日 | C++／边缘 AI 推理 |
-| cathrynlavery/diagram-design | 70,899 | 日榜第 9，+624/日 | HTML／设计工件 Skill |
-| Tracer-Cloud/opensre | 14,784 | 日榜第 13，+438/日 | Python／CI/CD SRE Agent |
-| toeverything/AFFiNE | 77,336 | 日榜第 14，+593/日 | TypeScript／本地优先知识工作 |
+699 stars，Python，MIT，11-21 创建。将成功 coding-agent session 蒸馏为本地模型 Skill；适合内部知识沉淀，前提是脱敏、许可审查和独立复现。
 
-## 精选项目
+### 3. [w01fb0ss/PiBot](https://github.com/w01fb0ss/PiBot)
 
-### 1. [HKUDS/CLI-Anything](https://github.com/HKUDS/CLI-Anything)
+557 stars，TypeScript，Apache-2.0，11-21 创建。本地优先多 Agent、computer use、浏览器、MCP 与审批工作台；应设沙箱、审批、allowlist、秘密隔离和动作审计。
 
-- **确认信息：** Repository API：**63,532** stars、5,772 forks，Python、Apache-2.0，创建于 2026-03-08；11 月 23 日日榜第 **3**、**+783/日**。项目目标是将图形软件转为 Agent 可调用的 CLI，并链接 CLI-Hub。
-- **用途：** 为 Agent 把原本依赖 GUI 的软件能力暴露为脚本化、可编排命令接口。
-- **走红原因（推断）／适合人群：** Agent 从代码生成扩展到操控现有软件时，CLI 是最易记录、测试和串联的执行面；适合构建本地工作流、桌面自动化与可复现设计/媒体流水线的开发者。
-- **采用提醒：** GUI 软件的副作用仍需文件隔离、dry-run、命令 allowlist 和产物校验；“能调用”不代表默认安全或幂等。
+### 4. [Developing-Gamer/agent-sim](https://github.com/Developing-Gamer/agent-sim)
 
-### 2. [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl)
+538 stars，Rust，Apache-2.0，11-21 创建。Linux 上面向 Agent 的 iOS simulator layer；应核对 SDK/许可、模拟覆盖、真机差异和敏感数据。
 
-- **确认信息：** Repository API：**207,822** stars、10,861 forks，TypeScript、AGPL-3.0，创建于 2024-04-15；日榜第 **6**、**+920/日**。仓库自述为 Agent 数据基础设施，提供搜索、抓取及 550+ 数据提供方的统一 API。
-- **用途：** 为 RAG、研究 Agent 和数据采集工作流提供网页获取、清洗与访问层。
-- **走红原因（推断）／适合人群：** 真实业务 Agent 的瓶颈常是新鲜、可引用的外部数据，而不是再换一个模型；适合需要网页检索/抽取管线的产品与数据平台团队。
-- **采用提醒：** AGPL-3.0 对服务化集成有合规影响；同时需处理站点 robots/条款、速率限制、个人数据、提示注入与抓取结果溯源。
+### 5. [sous-labs/songe](https://github.com/sous-labs/songe)
 
-### 3. [openvinotoolkit/openvino](https://github.com/openvinotoolkit/openvino)
+595 stars，Python，Apache-2.0，11-20 创建。利用闲置算力训练本地模型；先用非敏感任务验证隔离、功耗/热管理、恢复能力、权重许可与 checkpoint 完整性。
 
-- **确认信息：** Repository API：**12,268** stars、3,678 forks，C++、Apache-2.0，创建于 2018-10-15；日榜第 **8**、**+183/日**。OpenVINO 是优化并部署 AI 推理的开源工具包。
-- **用途：** 在 Intel CPU、GPU、NPU 等硬件上做模型转换、图优化和部署，服务视觉、语音与边缘 Agent。
-- **走红原因（推断）／适合人群：** 随着多模态与本地 Agent 落地，成本、隐私和尾延迟促使团队重新关注推理部署底座；适合边缘 AI、机器人和平台工程团队。
-- **采用提醒：** 性能需按目标芯片、模型版本和真实 batch/上下文长度实测，不能由单一吞吐 benchmark 外推；也应准备驱动和算子回退路径。
+### 6. [lukendeasy/open-diagram](https://github.com/lukendeasy/open-diagram)
 
-### 4. [cathrynlavery/diagram-design](https://github.com/cathrynlavery/diagram-design)
+386 stars，Python，MIT，11-18 创建。可自检布局的架构图代码构件，输出版本化 SVG；布局正确不保证架构语义正确，仍需来源、无障碍和敏感拓扑审查。
 
-- **确认信息：** Repository API：**70,899** stars、4,745 forks，HTML、MIT，创建于 2026-04-16；日榜第 **9**、**+624/日**。自述提供面向 Claude Code、Codex、Copilot、Cursor 等的编辑式图表设计，覆盖 **52** 种图表类型，输出自包含 HTML + SVG。
-- **用途：** 让编码 Agent 产出可继续编辑、可嵌入文档或网站的架构图、流程图和叙事图形。
-- **走红原因（推断）／适合人群：** 社区正在偏好“可交付工件”而非一段提示词：结构化 SVG/HTML 更便于版本控制、审阅和品牌化；适合产品、解决方案和技术写作团队。
-- **采用提醒：** 生成图应经过事实、可访问性（文字替代、色彩对比）与品牌规范审阅；不要把视觉整洁误认为架构正确。
+## GitHub 趋势总结
 
-### 5. [Tracer-Cloud/opensre](https://github.com/Tracer-Cloud/opensre)
-
-- **确认信息：** Repository API：**14,784** stars、1,987 forks，Python、Apache-2.0，创建于 2026-01-13；日榜第 **13**、**+438/日**。仓库定位为开源 CI/CD 可靠性 Agent。
-- **用途：** 辅助排查构建、测试和部署流程故障，并把运维诊断接入交付流水线。
-- **走红原因（推断）／适合人群：** 代码生成提速后，CI 失败、发布回滚与环境差异成为团队新瓶颈；能读取日志并参与排障的 Agent 贴近实际交付价值。
-- **采用提醒：** CI/CD 是高权限执行面：应强制只读诊断优先、生产变更审批、短期凭据、命令审计和网络/密钥隔离，不能把自动建议直接升级为自动发布。
-
-### 6. [toeverything/AFFiNE](https://github.com/toeverything/AFFiNE)
-
-- **确认信息：** Repository API：**77,336** stars、5,662 forks，TypeScript，许可证字段为 `NOASSERTION`，创建于 2022-07-31；日榜第 **14**、**+593/日**。项目自述是隐私优先、可定制的开源知识库，融合规划、整理与创作。
-- **用途：** 提供本地优先的文档、白板与知识组织环境，可作为个人或团队知识工作基座。
-- **走红原因（推断）／适合人群：** 生成式工作流促使用户希望把资料、画布与计划放在可导出、可控的空间中；适合重视本地数据控制与可定制知识管理的个人/团队。
-- **采用提醒：** API 的 `NOASSERTION` 不可当作已确认开源许可，部署/二次分发前需核对仓库实际许可文本、同步/备份设置和团队数据 ACL。
-
-## 技术趋势与社区偏好
-
-- **Agent 栈由“会调用”走向受约束执行：** CLI-Anything、OpenSRE 与 Firecrawl 分别占据软件操作、发布可靠性和外部数据入口；社区兴趣已经覆盖完整执行链，但高权限命令、网页不可信内容和生产变更必须有最小权限与可回放证据。
-- **可编辑工件和本地部署同时升温：** diagram-design 将图形变为版本化 HTML/SVG，AFFiNE 提供可控知识空间，OpenVINO 指向端侧推理。热度反映对可交付、可迁移、可控制资产的偏好，不能替代许可证、硬件兼容性和数据治理核验。
-
-## 证据链接
-
-- [GitHub Trending 2026-11-23 日榜归档](https://githubtrending.today/api/archive/2026-11-23.json)：排名、快照总 star 与 `gained`。
-- [GitHub Trending 数据方法](https://githubtrending.today/methodology/)：第三方快照口径。
-- 各项目的当前 metadata 以上述项目链接对应的 GitHub Repository API 为准；走红原因和趋势为编辑推断。
+新样本围绕“测量—生成—验证—复用”：profile 后改写、成功轨迹蒸馏、可重置模拟器和可版本化图表都将 Agent 放进可测环境。本地优先不自动降低权限、数据、权重许可和硬件风险。
 
 ## 内容标准与归档
 
