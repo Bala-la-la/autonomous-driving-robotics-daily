@@ -1,164 +1,155 @@
 # 自动驾驶、机器人与开源趋势日报
 
-每日更新中文技术晨报，跟踪 arXiv 研究与 GitHub 开源趋势。
 
-## 最新一期｜2026-11-27
+## 最新一期｜2026-11-28
 
-- [arXiv 独立报告](reports/2026-11-27/arxiv.md)
-- [GitHub Trending 独立报告](reports/2026-11-27/github-trending.md)
+- [arXiv 独立报告](reports/2026-11-28/arxiv.md)
+- [GitHub Trending 独立报告](reports/2026-11-28/github-trending.md)
 - [分类趋势总结](CATEGORY_SUMMARY.md)
 
-# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-27
+# arXiv 自动驾驶、机器人与具身智能晨报｜2026-11-28
 
 ## 日期与证据口径
 
-检索截至北京时间 2026-11-27 06:00。本期精选 **2026-11-25 UTC v1** 的 7 篇投稿；它们不是 11 月 27 日当日投稿，且未出现在 11 月 25--26 日报告。题目、作者、提交时间、方法与数值来自 arXiv 摘要/API；未能由元数据完整核验机构时不臆测。性能均为作者报告，尚未独立复现。
+检索截至北京时间 2026-11-28 06:00。常规 arXiv 最新相关批次仍为 **2026-11-25 UTC v1**；本期从该批次补选 6 篇、均未出现在 11 月 25--27 日报告，因此明确属于回溯而非当日新稿。题目、作者、时间、方法与数值来自 arXiv API 摘要；未能完整核验单位时不臆测。所有性能为作者报告，尚未独立复现。
 
 ## 自动驾驶／移动自治
 
-### 1. [FeaXDrive2: Body-Scene Spatial Grounding for Feasibility-Aware Generative Driving](https://arxiv.org/abs/2611.34658)
+### 1. [Towards Closing the Performance Gap in Cross-Modal Place Recognition](https://arxiv.org/abs/2611.34877)
 
-- **作者／机构／提交：** Bo Leng、Baoyun Wang、Wenxin Wen 等；机构未完整披露；v1，2026-11-25 16:30 UTC。
-- **问题：** 生成式驾驶规划器常只看参考点，忽略整车车身扫掠，导致中心线看似可行而车角擦碰场景约束。
-- **创新与机制：** **FeaXDrive2** 从车身角点发起空间 query，并随 Flow-DiT 的轨迹估计更新视觉取样位置；RC-F 用高风险轨迹监督同时保留参考行为，再做 planning-supervised VLM--Action 对齐。其反事实分析固定轨迹、改变车身几何来检验安全差异。
-- **实验与关键结果：** NAVSIM 上相对 base planner at-fault collision 降 **36.5%**、PDMS **87.0→88.8**；NAVSIM v2 EPDMS **86.5→88.3**。
-- **关注价值：** 把“车能否通过”从轨迹点提升为可审计的车体--场景接口，适合接入安全壳、不同车型和窄路 ODD。
-- **局限／跟进：** 仿真车体 clearance 不等于真实制动、定位延迟和动态体预测风险；应报告候选遗漏、不同轴距/外廓、p95 延迟及实车近失事件。
+- **作者／机构／提交：** Ofer Idan、Dan Badur、Yoli Shavit 等；机构未完整披露；v1，2026-11-25 18:38 UTC。
+- **问题：** 用自然语言在带地理标注的图像库中定位，适于语言导航；现有视觉—语言检索难区分相似地点，显著落后纯视觉 place recognition。
+- **创新与机制：** CrossPlace 先将 DINOv2-B/14 与逐步微调的 BGE-Large 做全局召回，再以轻量 token 级 cross-attention 重排候选；论文系统分解视觉 token 密度、文本编码器容量和任务微调的贡献。
+- **实验与关键结果：** 在既有及新增城市级、恶劣天气/照明测试上，相对既有跨模态方法有双位数 Recall@1 提升，并缩小到单模态 VPR 的差距；摘要未披露统一绝对数值。
+- **关注价值：** 它把语言描述变为可检索的空间锚点，可为车辆/机器人在无实时视觉查询、需要解释目标地标时提供候选重定位接口。
+- **局限／跟进：** 地理标注库与文本描述的时效、歧义和隐私不在 Recall@1 中；应报告闭环导航收益、候选错误的安全回退、跨城市/语言漂移和端侧延迟。
+
+### 2. [One Ocean, Many Tasks: A Data-Grounded Simulation Suite and Benchmark for Marine Robotics](https://arxiv.org/abs/2611.34925)
+
+- **作者／机构／提交：** Shuaijun Liu、Qifu Wen、Xingwei Chen 等；机构未完整披露；v1，2026-11-25 18:58 UTC。
+- **问题：** 海洋机器人仿真通常在视觉逼真、吞吐和真实海流/潮汐之间取舍，导致不同导航、巡检和多艇工作流难以比较。
+- **创新与机制：** OneOcean 用统一时空海洋环境产品融合水深、数据驱动海流/潮汐及可选污染场；建立从定点、航线、扫描、管线巡检到 2--10 艘协同巡逻/围控/清污的任务阶梯，并固定 run manifest 与度量。
+- **实验与关键结果：** 覆盖 3--6 DoF，在不同场景/难度中比较启发式、行为克隆与 LLM planner，揭示它们在数据驱动扰动下的取舍；摘要未给可横比的单一胜率。
+- **关注价值：** 将“海况”从背景贴图提升为可复现的动态扰动，适合把规划、控制、能耗和多主体通信放入同一评测记录。
+- **局限／跟进：** 再分析海洋数据不保证局地突发流、传感故障和执行器退化一致；需公开数据时间覆盖、sim-to-sea 偏差、通信丢包与真实水池/海试闭环。
 
 ## 机器人／具身智能
 
-### 2. [Cairn: Object-Centric 3D Trajectory Priors for Steering Frozen VLAs](https://arxiv.org/abs/2611.34914)
+### 3. [FineDex: Bridging Fine-Grained Human-Object Interaction Generation to Dexterous Humanoid Manipulation](https://arxiv.org/abs/2611.34884)
 
-- **作者／机构／提交：** Agelos Kratimenos、Kostas Daniilidis、Evangelos Chatzipantazis；机构未完整披露；v1，2026-11-25 18:57 UTC。
-- **问题：** 冻结 VLA 会把物体送往训练布局中的位置；障碍或物体移位时，逐任务微调既昂贵又可能遗忘旧技能。
-- **创新与机制：** 小型 prior 读取点云、持物姿态和指令，采样至释放点的 SE(3) 物体轨迹；它与冻结 VLA 双向耦合：VLA 意图选择/重塑轨迹，轨迹再拉动去噪动作向下一 waypoint 靠近。
-- **实验与关键结果：** 1,941 个留出 LIBERO 场景中，冻结 π0.5 成功率 **24.5→95.1%**；LIBERO-PRO **27.3→38.0%**，被 steering 的 episode 为 **54.4→81.1%**；纯仿真 prior 在 Franka 真机障碍绕行展示可行性。
-- **关注价值：** 将通用低层 VLA 与可检查的物体轨迹接口解耦，可更直接审计碰撞、可达性和任务布局改变。
-- **局限／跟进：** 点云质量、抓取变换和轨迹采样失败会传递给策略；还需统计真实接触、感知遮挡、错误 waypoint 的回退及在线计算。
+- **作者／机构／提交：** Yujia Zeng、Yuxin Chen、Yuzhen Song 等；机构未完整披露；v1，2026-11-25 18:40 UTC。
+- **问题：** 灵巧操作常把五指简化成夹爪，或复制单个示范，难以表达“哪只手、哪根手指、以何种接触”以及将生成动作落到物理执行。
+- **创新与机制：** FineDex 按手、手指和关节物接触的细粒度文本条件生成人体—手—物协同运动；将生成交互当作先验，在物理 digital twin 中由 agent 练习可行接触策略，并在测试时适配而非逐实例重训。
+- **实验与关键结果：** 作者报告 HOI 生成质量、细粒度可控性和灵巧成功率均优于比较方法，并在真实灵巧人形机器人上完成部署；摘要未提供统一绝对成功率。
+- **关注价值：** 将人类意图、接触先验和物理可执行性拆成可审计层，有助于定位失败来自生成、接触规划还是控制。
+- **局限／跟进：** 数字孪生中的摩擦、手部标定和接触力误差会累积；应披露手指级碰撞/滑落、适配试次、真实对象分布与不可逆动作的安全策略。
 
-### 3. [DexLink: Synthesizing Dexterous Behaviors from Chained Hand-object Poses](https://arxiv.org/abs/2611.34936)
+### 4. [HOG-WAM: Improving Visual Robustness through Future Gradient Prediction](https://arxiv.org/abs/2611.34811)
 
-- **作者／机构／提交：** Meenal Parakh、Deep Patel、Beining Han、Jia Deng；机构未完整披露；v1，2026-11-25 18:59 UTC。
-- **问题：** 灵巧操作依赖难规模化的人类示范；通用奖励又难精细指定抓型、时序和手--物接触。
-- **创新与机制：** 将稀疏、可复用 hand-object interaction template 优化重定向到目标物，保持空间关系；把重定向姿态链为近似参考轨迹，再由 residual RL 在仿真中细化成闭环策略。
-- **实验与关键结果：** 覆盖单手、双手、关节物和动态任务；作者称不需物体特定演示即可匹配 dense reference-tracking，并展示跨尺度/实例/类别模板迁移及 sim-only zero-shot 部署潜力；摘要未给统一绝对成功率。
-- **关注价值：** 用“可编辑接触模板”替代端到端示范，可将人类意图、优化器与策略学习的责任边界分开审查。
-- **局限／跟进：** 近似参考可能隐藏不安全手指接触；需披露优化失败率、接触力/滑落、模板库覆盖度及真机跨手型结果。
+- **作者／机构／提交：** Boxuan Dong、Yupeng Qian、Ying Wu 等；机构未完整披露；v1，2026-11-25 17:59 UTC。
+- **问题：** world-action model 以 RGB 预测未来及动作，观察噪声或腐蚀会直接污染控制表征。
+- **创新与机制：** HOG-WAM 从示范图像导出未来 HOG 结构监督；训练期以辅助 HOG DiT 对 RGB feature 做非对称注意力，推理时去掉该模块，保留 FastWAM 的 RGB-to-action 架构和成本。
+- **实验与关键结果：** RoboTwin-Plus 混合噪声成功率 **78.86→82.86%**；LIBERO Plus 总体 **74.49→75.26%**、传感噪声 **74.14→78.89%**；四项 Franka 任务平均 clean/noisy 成功率 **40→59%**、**17→24%**。
+- **关注价值：** 以不增加部署模块的结构监督增强动作表征，是在既有 VLA/WAM 栈上降低视觉脆弱性的实用路径。
+- **局限／跟进：** HOG 对低纹理、反光和遮挡未必稳定，且合成 corruption 不能代替相机曝光/同步/标定故障；需要 p95 延迟、真实传感扰动与接触任务回退数据。
 
-### 4. [RoboEvo²: Recursive Robot Self-Improvement via Harness-Policy Co-Evolution](https://arxiv.org/abs/2611.34675)
+### 5. [Nav4Manip: From Navigation to Dexterous Mobile Manipulation through Co-Evolution](https://arxiv.org/abs/2611.34655)
 
-- **作者／机构／提交：** Chenzhi Liu、Jiehong Lin、Wei Huang 等；机构未完整披露；v1，2026-11-25 16:39 UTC。
-- **问题：** VLA 遇到新场景常需人工示范；代码 Agent 虽可试错，却反复推理和修复成本高。
-- **创新与机制：** P2H 根据 policy failure 让 coding agent 搜索 Code／Code+ICL／Code+Policy 路径，固化验证过的 skill、路由和 memory；H2P 将验证轨迹用于监督训练，并以同起点成功修正对失败的反事实偏好蒸馏更新 policy。
-- **实验与关键结果：** LIBERO-PRO standalone **11.0→84.1%**、hybrid **30.4→90.5%**；Unitree G1-D hybrid **95.0%**，作者称 RoboTwin C2R 也有相近增益和更低 agent 成本。
-- **关注价值：** 明确把“探索 harness”和“执行 policy”作为互相改进但可分别评测的资产，适合研究具身技能如何累积。
-- **局限／跟进：** 高分来自何种试错预算、筛选器和安全约束尚不清楚；应开放失败轨迹、权限/动作 allowlist、真机损伤与跨任务遗忘曲线。
+- **作者／机构／提交：** Yusen Feng、Zixi Kang、Zhijun Yin 等；机构未完整披露；v1，2026-11-25 16:29 UTC。
+- **问题：** 到达米级目标并不意味着底座位置和朝向足以操作；导航与操作分训也无法让前者从后者失败中修正。
+- **创新与机制：** Nav4Manip-N 学长程导航和 manipulation-aware affordance，并经多任务 co-tuning、拒绝采样微调、RLAIF 迭代；Nav4Manip-M 为下游灵巧操作训练 WAM。Nav-N-Manip benchmark/Pairs 把导航—操作 rollout 与 affordance 监督配对。
+- **实验与关键结果：** 作者称在公开 VLN 与 Nav-N-Manip 上达 SOTA，并在真实环境完成多样灵巧移动操作；摘要未给统一数值，不能据此比较真实成功率。
+- **关注价值：** 把操作反馈反哺“最后一米”导航，使移动底座的精度、可达性和任务完成不再被割裂评估。
+- **局限／跟进：** 需报告导航失败/操作失败各自占比、重定位次数、回退动作和真实长时段碰撞率；RLAIF 的偏好来源与安全边界也应公开。
 
-### 5. [DemoFoundry: Toward Scalable Photorealistic Robot Data with Coding Agents and Generative Rendering](https://arxiv.org/abs/2611.34671)
+## 交叉方向：SLAM／3D／世界模型
 
-- **作者／机构／提交：** Ruixiang Wang、Xinyue Yao、Xuanning Zhou 等；机构未完整披露；v1，2026-11-25 16:37 UTC。
-- **问题：** 仿真数据缺真实视觉，生成视频又往往没有物理一致动作标签；为每个新场景手工建模不可扩展。
-- **创新与机制：** coding agent 从已有 robot episode 构造真实--proxy 配对训练视频 renderer，并按场景/指令重建关键几何、写可执行交互程序；物理仿真产出对齐 state/action，渲染器转为场景一致的 photorealistic observation，任务检查筛出成功轨迹。
-- **实验与关键结果：** 作者报告生成数据提升视觉质量和 action--video 一致性；训练策略优于 raw simulation，并接近等量真实示范训练，摘要未列统一成功率/样本量。
-- **关注价值：** 将生成外观、物理执行和 action supervision 留在同一可追溯流水线，避免只看“视频像不像”。
-- **局限／跟进：** renderer 可能掩盖接触/遮挡错误；需审计生成资产许可、程序沙箱、sim exploit、real-to-sim 偏差及真机验证成本。
+### 6. [Motion Beyond Pixels: Learning Future Visual Representations for Object-Centric Dynamics](https://arxiv.org/abs/2611.34644)
 
-## 交叉方向：SLAM／长期空间智能
-
-### 6. [MERLoc: Robust Robot Localization in Dynamic Environments with Pose-Based Retrieval over 3D Gaussian Splatting References](https://arxiv.org/abs/2611.34932)
-
-- **作者／机构／提交：** Michael Baumgartner、Dario Mylonopoulos、Sammy Christen、Markus Gross、Moritz Bacher；机构未完整披露；v1，2026-11-25 18:59 UTC。
-- **问题：** 动态空间中按外观检索少量 reference image 易被人群、物体重排和重复纹理误导。
-- **创新与机制：** 从一次 metric 3D Gaussian Splatting scan 离线渲染与机器人形态/传感器匹配的稠密 Functional Reference Memory，并预编码 localizer；有先验时按空间邻近与朝向而非外观选 reference。
-- **实验与关键结果：** 在真实动态数据的 10 个 backend/split 组合中 9 个 position RMSE 降 **15--60%**；Jetson Orin NX 以 **5 Hz** 运行，并完成有人流/重排走廊导航。
-- **关注价值：** 将“地图存什么、何时检索”从被动图像缓存变成与机器人可达姿态相关的长期状态设计。
-- **局限／跟进：** 依赖可用位姿先验和一次高质量扫描；应报告跨日变化、全局重定位失败、3DGS 内存增长、先验错位和隐私数据保留。
-
-### 7. [Memory Is Not Ground Truth: Revising Navigation Authority under Unreliable VLM Evidence for Persistent Semantic Navigation](https://arxiv.org/abs/2611.34915)
-
-- **作者／机构／提交：** Sumukh Shrote、Shenbagaraj Kannapiran、Eric Eaton、Camillo Jose Taylor；机构未完整披露；v1，2026-11-25 18:57 UTC。
-- **问题：** VLM 多次“未看到”目标并不能证明目标已消失；将持久记忆直接作为导航目标会让机器人追逐过期对象。
-- **创新与机制：** 在 Spot 四相机与持续时空 visual memory 上量化负验证的相关性；提出 dependence-aware、可逆 memory update：不重复计数相关 miss，证据不足时撤销记忆的导航权威但不宣称目标不存在，后续正证据可恢复。
-- **实验与关键结果：** 三个匹配真机决策场景中，episode-local baseline 每次都选择 stale memory；该方法三次均改选 semantic frontier；补充试验在运动中重新验证目标并恢复 fresh memory。
-- **关注价值：** 它把“记忆真假”与“记忆能否驱动动作”分开，是长期自治中避免错误状态直接进入控制的关键契约。
-- **局限／跟进：** 三个决策上下文样本很小；须扩展到更多目标/楼层/照明，公开误撤销成本、相关性模型校准、p95 感知延迟及人机接管策略。
+- **作者／机构／提交：** Chengzhi Zhao、Juelin Li、Zhennan Wang 等；机构未完整披露；v1，2026-11-25 16:24 UTC。
+- **问题：** 以 RGB 重建训练的具身世界模型，不一定保留物体级语义与几何运动所需状态。
+- **创新与机制：** MotionRep 以 DINO-VAE 压缩时序/通道特征；统一 diffusion transformer 在图像、物体 query point 与语言条件下联合预测未来 DINO 表征和 3D object flow，并用非对称噪声日程让视觉流先于 flow 收敛。
+- **实验与关键结果：** 在仿真及真实操作基准上，作者报告相对 pixel baseline 有更佳 3D object-flow 精度和未见场景泛化，推理仅 3 个 denoising step；摘要未列绝对指标。
+- **关注价值：** 用“可解释的语义表征 + 3D 流”取代单纯像素未来，可能成为规划/抓取前的紧凑对象动态接口。
+- **局限／跟进：** DINO 特征并非物理状态真值，flow 误差如何影响动作尚未量化；应增加遮挡、接触、相机外参漂移、闭环规划收益与计算内存上界。
 
 ## 趋势总结
 
-- **几何/物理中间接口正成为冻结基础模型的安全阀。** FeaXDrive2 的车角 query、Cairn 的持物轨迹、DexLink 的接触模板，都让策略的空间假设能被逐项检查，而非只看最终 success。
-- **自我改进开始强调“什么可写回系统”。** RoboEvo²、DemoFoundry 和记忆权威修订都先筛验证轨迹/证据再复用；下一步需要将数据/程序版本、试错伤害和回滚规则纳入同一报告。
-- **长期空间状态从“多存一点”转向“谁有资格驱动行动”。** MERLoc 以姿态检索限制参考，Memory Is Not Ground Truth 可撤销陈旧记忆的行动权；变化场景下的重定位、错误隔离和资源上界仍是缺口。
+- **移动自治的交接面被前移。** CrossPlace、OneOcean 与 Nav4Manip 都把“到达”拆为检索、环境扰动、最终操作可达性；未来报告应同时给候选错误、控制尾延迟和任务终止证据。
+- **具身模型的中间表征更强调结构而非像素。** FineDex 的手指/接触、HOG-WAM 的未来边缘、MotionRep 的 DINO+3D flow 都让控制依赖的状态可单独验证。
+- **真实部署仍是短板。** 多数摘要只报相对提升或定性真机展示；摩擦、传感同步、长程重试、失败恢复和人工接管仍需独立统计。
 
-# GitHub 开源趋势晨报｜2026-11-27
+
+# GitHub 开源趋势晨报｜2026-11-28
 
 ## 时间与证据口径
 
-检索于北京时间 2026-11-27 06:00。GitHub Trending/第三方日榜快照可见，但官方页面只展示“当天增星”且会滚动；本期当前 stars、forks、语言、许可证、创建时间和项目描述均以 Repository API 复核。下表的 **增量依据** 仅为第三方 2026-11-26 日榜/近 7 天可见度，绝不将累计 stars 误写为官方 `stars today`；走红原因均为编辑推断。
+检索于北京时间 2026-11-28 06:00。官方 GitHub Trending 页面本次请求超时，因此**不宣称官方 `stars today`**。以下项目均由 GitHub Search 以创建日期 2026-11-21 至 11-25、按 stars 排序发现，再用 Repository API 复核当前 stars、forks、语言、许可证、创建/更新时间和描述；“增量依据”是从创建至本次查询的可确认累积增长（不等于 24 小时增量），走红原因均为编辑推断。
 
 | 项目 | 当前 stars | 增量依据 | 语言／类别 |
 | --- | ---: | --- | --- |
-| [deepseek-ai/dsh-superagent-prototype](https://github.com/deepseek-ai/dsh-superagent-prototype) | 24,663 | 11 月日榜单日峰值 +4,369（第三方快照） | TypeScript／Agent 系统 |
-| [pingdotgg/t3code](https://github.com/pingdotgg/t3code) | 80,844 | 11-25 第三方榜单 +1.9k | TypeScript／远程 Agent 控制 |
-| [stablyai/orca](https://github.com/stablyai/orca) | 140,269 | 11-25 第三方榜单 +1.9k | TypeScript／Agent fleet |
-| [KKKKhazix/agent-autoloop](https://github.com/KKKKhazix/agent-autoloop) | 6,643 | 11 月日榜单日峰值 +1,613（第三方快照） | TypeScript／后台 Agent 编排 |
-| [Parcha-ai/agentrun](https://github.com/Parcha-ai/agentrun) | 1,275 | 11-26 日榜可见（第三方快照） | JavaScript／Agent runtime |
-| [shinyobjectz/raea](https://github.com/shinyobjectz/raea) | 5,283 | 11-26 日榜可见（第三方快照） | TypeScript／本地创作引擎 |
+| [EL4CTEO/fast-anything](https://github.com/EL4CTEO/fast-anything) | 4,440 | 11-21 创建至查询累计 | Rust／性能优化 Agent |
+| [nexu-io/opengame](https://github.com/nexu-io/opengame) | 2,176 | 11-25 创建至查询累计 | TypeScript／Agent 游戏创作 |
+| [alesha-pro/llm.asm](https://github.com/alesha-pro/llm.asm) | 2,131 | 11-25 创建至查询累计 | Assembly／端侧推理教育 |
+| [qianyiai/KuroCat](https://github.com/qianyiai/KuroCat) | 1,757 | 11-21 创建至查询累计 | TypeScript／桌面生产力 |
+| [sybil-solutions/skill-distill](https://github.com/sybil-solutions/skill-distill) | 997 | 11-21 创建至查询累计 | Python／Skills 工程 |
+| [xikhar/papercraft](https://github.com/xikhar/papercraft) | 930 | 11-21 创建至查询累计 | JavaScript／创作 Skill |
 
 ## 精选项目
 
-### 1. [deepseek-ai/dsh-superagent-prototype](https://github.com/deepseek-ai/dsh-superagent-prototype)
+### 1. [EL4CTEO/fast-anything](https://github.com/EL4CTEO/fast-anything)
 
-- **确认信息：** Repository API：**24,663** stars、3,103 forks，TypeScript、MIT，2026-10-31 创建；项目简介为“Towards a More Autonomous Agent System”。第三方月度快照记录其 11 月单日峰值 **+4,369**。
-- **用途：** 用于研究或原型化更自主的 Agent 系统；具体运行面、权限与部署模型须以版本化文档为准。
-- **走红原因（推断）／适合人群：** 以“superagent”叙事切中自主执行热度，且由模型厂商组织发布；适合 Agent 架构研究者和愿意在隔离环境评估的工程团队。
-- **采用提醒：** 名称与热度不代表可生产使用；先核验工具调用、持久状态、审批/stop 条件、遥测外发和模型许可。
+- **确认信息：** Repository API：**4,440** stars、318 forks，Rust、MIT；2026-11-21 创建，11-27 更新。项目主张只将 profile 发现的热点 5% 迁到 Rust，并让 coding agent 证明新旧实现行为相同，覆盖 Python、JS/TS、Java、Go 等。
+- **用途：** 为既有应用选择性做性能剖析、热点重写和等价性验证，而不是全量重写。
+- **走红原因（推断）／适合人群：** 它把 Agent 编码从“产出更多代码”转为有性能边界和验证要求的改造流程；适合维护多语言遗留系统、愿意先建立 benchmark 的工程团队。
+- **采用提醒：** 自动迁移不能保证语义、并发、FFI 和异常行为等价；应锁定基准/测试、保留人工 code review 与可回滚变更。
 
-### 2. [pingdotgg/t3code](https://github.com/pingdotgg/t3code)
+### 2. [nexu-io/opengame](https://github.com/nexu-io/opengame)
 
-- **确认信息：** Repository API：**80,844** stars、14,263 forks，TypeScript、MIT，2026-02-08 创建；自述为从任意电脑或手机控制 Claude Code、Codex 等。第三方 11-25 榜单记录 **+1.9k** 当日增量。
-- **用途：** 提供跨设备访问/控制 coding-agent 的工作流入口。
-- **走红原因（推断）／适合人群：** 将长运行代码任务从单机终端扩展到移动端和远程控制，契合开发者对随时查看、干预与接管的需求；适合已有可控开发环境的个人/小团队。
-- **采用提醒：** 远程控制扩大密钥、代码与命令权限边界；应先审计认证、设备绑定、会话过期、命令确认、日志脱敏和网络暴露。
+- **确认信息：** **2,176** stars、355 forks，TypeScript、Apache-2.0；2026-11-25 创建。自述为面向 AI agent 的 Unity/Unreal 式游戏创作平台，可协调 20+ coding agent 并发布 3D/小游戏至多个平台。
+- **用途：** 将代码 Agent、游戏模板、构建和多渠道发布连接成创作流水线。
+- **走红原因（推断）／适合人群：** “Agent 直接交付可玩的工件”传播性强，且把多 Agent 协作落到具体媒介；适合 game jam、教育和原型团队。
+- **采用提醒：** 多平台发布涉及账号、素材版权、未成年人内容和构建供应链；先隔离凭据、审查发布审批和第三方资源许可。
 
-### 3. [stablyai/orca](https://github.com/stablyai/orca)
+### 3. [alesha-pro/llm.asm](https://github.com/alesha-pro/llm.asm)
 
-- **确认信息：** Repository API：**140,269** stars、8,970 forks，TypeScript、MIT，2026-03-17 创建；项目称可用自有订阅运行 Claude Code、Grok、Agy、Codex 等 bot fleet，并提供桌面、移动与远程 runtime。第三方 11-25 榜单记录 **+1.9k**。
-- **用途：** 对多 Agent/多任务进行集中启动、查看和调度。
-- **走红原因（推断）／适合人群：** “用已有订阅调度一组 bots”直指成本与并行生产力；适合需管理多个隔离任务的高级用户与平台原型团队。
-- **采用提醒：** fleet 把凭据、目录、并发预算和外部写入集中化；必须采用每 agent 最小权限、沙箱、成本上限、审批队列和可回放审计。
+- **确认信息：** **2,131** stars、324 forks，Assembly、MIT；2026-11-25 创建。项目包含 12 KB Qwen3-0.6B inference、22 KB 可启动 bare-metal OS 与 32 KB Mini-GPT trainer，均为 x86-64 NASM、无 C/libc/依赖。
+- **用途：** 用极小、可读的底层实现学习推理运行时、启动链与训练的资源约束。
+- **走红原因（推断）／适合人群：** 在大模型栈日益复杂时，极简实现能帮助开发者理解真正的内存/指令成本；适合系统研究、教育和实验性端侧开发。
+- **采用提醒：** 小体积 demo 不代表通用模型性能或安全；裸机代码应在隔离虚拟机/专用硬件上测试，且不要把实验模型用于敏感推理。
 
-### 4. [KKKKhazix/agent-autoloop](https://github.com/KKKKhazix/agent-autoloop)
+### 4. [qianyiai/KuroCat](https://github.com/qianyiai/KuroCat)
 
-- **确认信息：** Repository API：**6,643** stars、1,238 forks，TypeScript、MIT，2026-11-03 创建。项目自述让命令行 Agent 在后台接活、跟进到底，仅在拿不准时出卡片请求决策；第三方月度快照记录单日峰值 **+1,613**。
-- **用途：** 将任务队列、后台持续执行和人工决策点组合到 CLI Agent 工作流。
-- **走红原因（推断）／适合人群：** 它把“不要频繁打断人、但关键处升级”做成明确产品行为，契合异步 coding-agent 的操作习惯；适合愿意定义明确任务边界的开发者。
-- **采用提醒：** “自动跟进”最容易越过授权边界；请核查默认写入/网络命令、取消语义、重试上限、队列持久化、提示注入和 secrets 隔离。
+- **确认信息：** **1,757** stars、248 forks，TypeScript、MIT；2026-11-21 创建。自述为跨 Win/macOS/Linux/Android 的 3D/2D desktop typing cat 与 AI coding companion，采用 Tauri v2、Rust、MCP，可接 Claude/Codex/DeepSeek/OBS。
+- **用途：** 提供可视化桌面陪伴/状态展示，并连接 coding-agent 与 OBS 等本地工具。
+- **走红原因（推断）／适合人群：** 它把抽象的 Agent 运行状态变成可见、可分享的桌面交互，覆盖创作者与开发者的轻量生产力场景。
+- **采用提醒：** MCP 和桌面集成可能触及本地文件、窗口和 token；需检查每个 server 的权限、网络出口和会话保存策略。
 
-### 5. [Parcha-ai/agentrun](https://github.com/Parcha-ai/agentrun)
+### 5. [sybil-solutions/skill-distill](https://github.com/sybil-solutions/skill-distill)
 
-- **确认信息：** Repository API：**1,275** stars、106 forks，JavaScript、Apache-2.0，2026-09-23 创建；自述为在既有 Agent harness、算力和模型之上提供 self-improvement、durable execution 与 control plane。11-26 第三方日榜可见。
-- **用途：** 为现有 Agent 包装持久执行、控制面和改进循环的 runtime。
-- **走红原因（推断）／适合人群：** 不强迫替换既有 harness，而把可靠执行/控制层拆出，适合已有原型但缺少运行治理的团队。
-- **采用提醒：** durable execution 意味着状态与重试会跨会话存留；部署前应检查幂等键、失败补偿、租户隔离、状态加密、模型/工具版本固定和成本熔断。
+- **确认信息：** **997** stars、85 forks，Python、MIT；2026-11-21 创建。项目目标是把高质量 Claude Code/Codex 会话蒸馏为开放权重模型可复现任务的 skill。
+- **用途：** 将一次性 agent 操作整理为可复用技能资产，服务后续模型或团队工作流。
+- **走红原因（推断）／适合人群：** Skill 从提示词转向可积累操作知识是当前 Agent 工程热点；适合有重复工程流程、希望降低昂贵模型调用的团队。
+- **采用提醒：** 会话可能含 secrets、私人代码和错误操作；蒸馏前应脱敏、固定输入/工具版本、添加评测与人工审批，避免把偶然成功固化为规范。
 
-### 6. [shinyobjectz/raea](https://github.com/shinyobjectz/raea)
+### 6. [xikhar/papercraft](https://github.com/xikhar/papercraft)
 
-- **确认信息：** Repository API：**5,283** stars、423 forks，TypeScript，许可证字段 `NOASSERTION`，2026-10-18 创建；自述为将 Agent 编写的 React/TypeScript 在自有 GPU 渲染成视频、运动图形、3D 场景或游戏，采用 Rust + Bevy，支持 macOS/Linux/Windows。11-26 第三方日榜可见。
-- **用途：** 将生成式代码直接落成可预览的 GPU 视觉工件，面向视频、动态图形和 3D/游戏原型。
-- **走红原因（推断）／适合人群：** 把 Agent 代码能力与本地可见产物绑定，demo 可传播性强且避免将渲染完全交给云端；适合创意技术开发者与需要快速原型的团队。
-- **采用提醒：** GPU 渲染代码应视为不可信输入；需要进程/文件/网络沙箱、资源配额、依赖锁定与素材版权检查，且 `NOASSERTION` 许可证必须在采用前澄清。
+- **确认信息：** **930** stars、102 forks，JavaScript、MIT；2026-11-21 创建。它是一个用于制作 pop-up papercraft 风格游戏、交互场景、网页和动画的 Agent skill。
+- **用途：** 为网页/互动内容提供可重复调用的视觉风格和实现约束。
+- **走红原因（推断）／适合人群：** 社区正偏好能直接产生区别化、可见成品的 Skills；适合创意编码、教学和原型演示。
+- **采用提醒：** 风格 skill 不等于无版权风险或无障碍合格；需审查素材来源、bundle 体积、移动端性能与生成代码的安全性。
 
 ## 技术趋势与社区偏好
 
-- **自主性正在从模型能力转向运行契约。** superagent、后台 loop、durable runtime 和 fleet 关注的是任务如何持续、何时升级人工、怎样停止，而不只是“能否调用模型”。
-- **远程/多端控制放大了治理需求。** t3code 与 Orca 的便利性同时扩大凭据、命令和代码资产的攻击面；任何“随处控制”设计都应先落地会话隔离与可撤销授权。
-- **Agent 产物继续从文本走向可运行工件。** raea 的本地 GPU 渲染体现社区对直接交付视频、3D、游戏的偏好；但运行不受信任代码、素材权利和许可证确认不能由星增代替。
+- **Agent 工程转向“可验证的改造”。** fast-anything 的性能/等价性约束与 skill-distill 的经验复用，都要求把一次运行变成可测试资产，而非只追求自动化产出。
+- **可交付工件仍是强驱动力。** opengame、KuroCat、papercraft 将 Agent 能力落到游戏、桌面交互和网页视觉，社区更愿意传播可直接体验的产物。
+- **本地可控与底层透明度回潮。** llm.asm 的热度显示，在云端 Agent 扩张之外，开发者仍关注资源上限、可解释实现和离线实验；这不免除权限、发布和供应链审计。
 
 ## 证据链接
 
-- [GitHub Trending 日榜](https://github.com/trending?since=daily)：官方可见度背景，数值随页面滚动。
-- [GitTrend 2026-11-25 快照](https://gittrend.io/) 与 [upcurrent 11 月归档](https://upcurrent.dev/github-trending/2026-11/)：第三方增量/日榜依据；非 GitHub 官方计数。
-- 当前 metadata 以对应项目的 [GitHub Repository API](https://docs.github.com/rest/repos/repos#get-a-repository) 复核。
+- [GitHub Trending 日榜](https://github.com/trending?since=daily)：本次页面连接超时，未用其数值。
+- [GitHub Search API](https://docs.github.com/rest/search/search#search-repositories) 与 [Repository API](https://docs.github.com/rest/repos/repos#get-a-repository)：用于发现和复核本期当前 metadata；创建至查询累计 stars 仅作近期增长下界。
+
 
 ## 内容标准与归档
 
